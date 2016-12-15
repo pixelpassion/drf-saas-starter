@@ -118,3 +118,8 @@ A Django starter kit, helping to start a typically project
 
 * tbd 
 
+##  Activity stream
+
+* tbd
+
+## Messaging stream

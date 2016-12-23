@@ -8,10 +8,12 @@
 $ ./local_setup {{project_name}}        # Will create a database and an virtual environment folder .venv
 $ source .venv/bin/activate             # Start the virtual environment
 $ pip install fabric3                   # Installs fabric3
-$ fab update                            # Updates requirements etc.
+$ fab update                            # Updates requirements and migrations etc.
 ```
 
+## Administration
 
+* https://einhorn-starter.herokuapp.com/admin/ (admin / test1234)
 
 ## Heroku
 
@@ -33,6 +35,18 @@ Push to heroku
 
 ```
 $ git push heroku master
+```
+
+Check the logs
+
+```
+$ heroku logs --app einhorn-starter -f                                                                                                                                              
+```
+
+Run commands or a shell
+
+```
+heroku run "python manage.py shell" --app einhorn-starter
 ```
 
 ## Environments

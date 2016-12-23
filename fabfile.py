@@ -119,6 +119,12 @@ def push_to_heroku():
 
 
 @task
+def docker():
+    local("docker-compose -f dev.yml build")
+    local("docker-compose -f dev.yml up")
+
+
+@task
 def doc():
     """ Creates the sphinx documnentation for a new developer """
 

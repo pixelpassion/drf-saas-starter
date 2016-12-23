@@ -1,6 +1,63 @@
-# django-starter
+# einhorn-starter
 
-A Django starter kit, helping to start a typically project
+* Helps to get a Einhornmanufaktur project started
+
+## Local setup
+
+```
+$ ./local_setup {{project_name}}        # Will create a database and an virtual environment folder .venv
+$ source .venv/bin/activate             # Start the virtual environment
+$ pip install fabric3                   # Installs fabric3
+$ fab update                            # Updates requirements etc.
+```
+
+
+
+## Heroku
+
+Download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
+
+If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
+
+```
+$ heroku login
+```
+
+For existing repositories, simply add the heroku remote
+
+```
+$ heroku git:remote -a einhorn-starter
+```
+
+Push to heroku
+
+```
+$ git push heroku master
+```
+
+## Environments
+
+Copy the .env.example to .env and edit the missing configs to get everything working
+
+## Sentry
+
+* Errors are pushed to Sentry. Update the SENTRY_DSN setting in the .env
+
+## Docker
+
+* (will be added later)
+
+## Celery
+
+Install the RabbitMQ Management Docker file 
+
+Start the worker
+
+```
+$ ...
+```
+
+# Old stuff
 
 ## Strategic Basics
 
@@ -123,3 +180,4 @@ A Django starter kit, helping to start a typically project
 * tbd
 
 ## Messaging stream
+

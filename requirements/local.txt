@@ -1,0 +1,6 @@
+-r base.txt
+
+# Developer tools
+django-extensions==1.7.4
+Fabric3==1.12.post1
+ipython==5.1.0

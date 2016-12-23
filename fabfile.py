@@ -113,6 +113,12 @@ def pull_and_update(branch="master"):
 
 
 @task
+def push_to_heroku():
+    local("git push heroku master")
+    local('heroku run "python manage.py migrate" --app einhorn-starter')
+
+
+@task
 def doc():
     """ Creates the sphinx documnentation for a new developer """
 

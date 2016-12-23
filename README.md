@@ -35,6 +35,10 @@ Push to heroku
 
 ```
 $ git push heroku master
+
+or
+
+$ fab push_to_heroku
 ```
 
 Check the logs

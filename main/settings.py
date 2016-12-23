@@ -8,6 +8,7 @@ ROOT_DIR = root()
 MAIN_DIR = root.path('main')
 
 DEBUG = env.bool('DEBUG', False)                # don't run with debug turned on in production ==> Default=False
+STAGE = env.str('STAGE')                        # Every environment needs to set the stage
 
 SECRET_KEY = env('SECRET_KEY')                  # Raises ImproperlyConfigured exception if SECRET_KEY not set
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the site URL for production
@@ -25,6 +26,11 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',             # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
 ]
+
+if DEBUG is True and STAGE == 'local':
+        INSTALLED_APPS += [
+            'django_extensions'
+        ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -110,3 +116,7 @@ STATICFILES_DIRS = (
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+# Mail handling
+
+SENDGRID_API_KEY=env("SENDGRID_API_KEY", default=None)

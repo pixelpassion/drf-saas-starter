@@ -9,9 +9,6 @@ MAIN_DIR = root.path('main')
 
 DEBUG = env.bool('DEBUG', False)                # don't run with debug turned on in production ==> Default=False
 
-print(ROOT_DIR)
-print(MAIN_DIR)
-
 SECRET_KEY = env('SECRET_KEY')                  # Raises ImproperlyConfigured exception if SECRET_KEY not set
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the site URL for production
 
@@ -42,7 +39,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [root.path('templates')],
+        'DIRS': [str(root.path('templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,9 +91,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-MEDIA_ROOT = root.path('media')
+MEDIA_ROOT = str(root.path('media'))
 MEDIA_URL = '/media/'
-STATIC_ROOT = root.path('static')
+STATIC_ROOT = str(root.path('static'))
 STATIC_URL = '/static/'
 
 

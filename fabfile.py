@@ -131,3 +131,36 @@ def doc():
     local('sphinx-apidoc . -o docs/ -f */migrations/*')
     with lcd("docs"):
         local('make html')
+
+
+@task
+def create_heroku_app(app_name):
+
+    local('heroku create %s --buildpack https://github.com/heroku/heroku-buildpack-python  --region eu' % app_name)
+
+    # Attach addons from einhorn-default
+    local('heroku addons:attach cloudamqp-opaque-72597 --app %s' % app_name)
+    local('heroku addons:attach postgresql-acute-80214 --app %s' % app_name)
+    local('heroku addons:attach redis-octagonal-12968 --app %s' % app_name)
+    local('heroku addons:attach librato-flat-96442 --app %s' % app_name)
+
+    # Enabling the labs
+    local('heroku labs:enable log-runtime-metrics --app %s' % app_name)
+    local('heroku labs:enable runtime-dyno-metadata --app %s' % app_name)
+
+    # Setting up backups
+    local('heroku pg:backups schedule DATABASE_URL --at "02:00 UTC" --app %s' % app_name)
+
+    # Setting up config
+    local('heroku config:set ADMIN_URL="$(openssl rand -base64 32)" '
+          'PYTHONHASHSEED=random '
+          'SECRET_KEY="$(openssl rand -base64 64)" '
+          'ALLOWED_HOSTS=%s.herokuapp.com --app %s' % (app_name, app_name))
+
+    local('heroku git:remote --app %s' % app_name)
+
+    #local('heroku config:set SENTRY_DSN=%s --app %s' % (os.getenv('SENTRY_DSN'), app_name))
+
+    #
+    # local('heroku run python manage.py createsuperuser --app %s' % app_name)
+

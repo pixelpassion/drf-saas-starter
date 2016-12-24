@@ -1,6 +1,9 @@
-# einhorn-starter
+# Einhornmanufaktur Boilerplate
 
-* Helps to get a Einhornmanufaktur project started
+* Helps a project kickoff with ALWAYS needed services (asynchronous tasks, Websockets, mail sending, cache, error handling etc.)
+* The added apps are pretty modular and can be turned on / off or configured on the fly
+* Uses Django 1.10.x and Python 3.5.2
+* About an individual (project setup)[docs/project_setup.md)
 
 ## Local setup
 
@@ -55,7 +58,7 @@ heroku run "python manage.py shell" --app einhorn-starter
 
 ## Environments
 
-Copy the .env.example to .env and edit the missing configs to get everything working
+Start ./local_setup.py to generate an .env and edit missing configs to get everything working.
 
 ## Sentry
 
@@ -77,7 +80,7 @@ Start Docker
 $ fab docker
 ```
 
-It will start different services
+It will start different services locally.
 
 * RabbitMQ Management: http://192.168.99.100:15672/
 * Mailhog Mailserver: http://192.168.99.100:8025
@@ -85,15 +88,19 @@ It will start different services
 * PGAdmin: http://192.168.99.100:5050/
 * Local Jenkins: http://192.168.99.100:8090/
 
-## Celery
+## Asynchronous tasks
 
-Install the RabbitMQ Management Docker file 
+Asynchronous tasks are used for taks, which really run asynchronous - for example bills, which are created in the background and then send to a user.
 
-Start the worker
+We are using RabbitMQ / CloudAMQP as a message broker and Nameko for prodiving the services.
 
-```
-$ ...
-```
+## Websockets & django-channels
+
+This is used for asynchronous, but more directly tasks - like messages to the user or an activity stream. 
+
+## SSL (letsencrypt)
+
+Checkout cookiecutter!
 
 # Old stuff
 
@@ -104,41 +111,6 @@ $ ...
  * A product page to advertise + test ideas. A onepage landingpage with an introduction, a form, a newsletter signup, A/B-testing and Adwords + FB ads integration
  * The market place for products and companies with profile pages for each product and the possibility to order or buy things - with statistics and logins for either stakeholder.
  * ...
-
-## Technical basics
-
-* newest Django 1.10.x, Python 3.x
-* all apps should be seperated logically, so that they could run stand alone or the rest would still work
-* please have all tested correctly
-
-## Should be deployable on Heroku
-
-* Check modern-webpages for that
-* Use whitenoise
-* On https://dashboard.heroku.com/apps/einhorn-default
-* Maybe we integrate Digital Ocean as a fallback as well
-
-## django-environ for environment variables & one settings file & .env
-
-* Check modern-webpages for that
-
-## Install Sentry + test error logging
-
-* https://sentry.io/einhornmanufaktur/django-starter/getting-started/python-django/
-* SENTRY_DSN='https://d8149058f0924193aa9af8a87e8dca83:fec43582f54b4c448882b44a7ce308a3@sentry.io/122593'
-
-## Docker compose
-
-* It should be easy to get a local Docker image for RabbitMQ and Mailhog, I can help you with that
-* We can orientate on cookiecutter django for that or https://github.com/realpython/dockerizing-django
-
-## Asynchronous server
-
-* Use Celery + CloudAmq on Heroku
-
-## letsencrypt SSL
-
-* Checkout cookiecutter!
 
 ## Mail sending with django-anymail & Mailgun
 
@@ -169,11 +141,6 @@ $ ...
 * Setup Django Flatpages for the setup of pages in the Admin (checkout modern webpages)
 * Static pages: Startpage, Imprint 
 * Integration from a cool template we buy or make
-
-## Integrate django-channels
-
-* Have a live test, where you send something to the server and it gets reloaded in the other one (for example automatically logout, when you logout on another browser)
-* https://channels.readthedocs.io/en/stable/
 
 ## A nice form integration
 

@@ -22,6 +22,7 @@
 * Setup Django Flatpages for the setup of pages in the Admin (checkout modern webpages)
 * Static pages: Startpage, Imprint 
 * Integration from a cool template we buy or make
+* an adapter (maybe helpful): http://drf-schema-adapter.readthedocs.io/en/latest/
 
 ## A nice form integration
 

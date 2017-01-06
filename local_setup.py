@@ -52,6 +52,11 @@ class EinhornEnvBuilder(venv.EnvBuilder):
 
 # Creates venv and pip installs everything in the environment
 def create_venv(requirements_path):
+
+    print("*** Virtual env setup ***")
+
+    print("Making venv... please wait (may take some time)...")
+
     venv = EinhornEnvBuilder(requirements_path, with_pip=True)
     venv.create(os.path.join(os.getcwd(), '.venv'))
 
@@ -65,21 +70,31 @@ def create_venv(requirements_path):
     #     return return_code
 #   return 0
 
-def generate_secret_key():
-    return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
 
 def create_env_file(project_name): 
-    print("")
-    print("")
-    print("Please use the following entries for your local .env")
 
-    print("")
-    print("DEBUG=True")
-    print("STAGE=local")
-    print("ALLOWED_HOSTS='*'")
-    print("DATABASE_URL=postgres:///{}".format(project_name))
-    print("SECRET_KEY='{}'".format(generate_secret_key()))
+    def generate_secret_key():
+        return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
 
+    env_file_name = ".env"
+    env_path = os.path.join(os.getcwd(), env_file_name)
+
+    print("*** .env file setup ***")
+
+    try: 
+        with open(env_path, 'x') as env_file: 
+            print("The .env file will be created at: {}".format(env_path))
+            print("Creating .env...", end=" ")
+
+            env_file.write("DEBUG=True\n")
+            env_file.write("STAGE=local\n")
+            env_file.write("ALLOWED_HOSTS='*'\n")
+            env_file.write("DATABASE_URL=postgres:///{}\n".format(project_name))
+            env_file.write("SECRET_KEY='{}'\n".format(generate_secret_key()))
+
+            print("...Done!")
+    except FileExistsError: 
+        print(".env file already exists. Skipping .env creation")
 
 
 def main(argv):
@@ -94,8 +109,6 @@ def main(argv):
     # Maybe some project name validation checking here
 
     requirements_path = os.path.join(os.getcwd(), 'requirements.txt')
-
-    print("Working... please wait...")
 
     try: 
 #       create_database(project_name)

@@ -1,56 +1,61 @@
 import sys
 import os
 import subprocess
+import platform
 import json
 import random
+import venv
 
+class EinhornEnvBuilder(venv.EnvBuilder): 
+    """
+    This builder configures a virtualenv for use with EinhornStarter.
 
-def create_database(project_name):
+    Currently: It installs requirements.txt file after venv setup. 
+    
+    This class may be easily modified to add more post-setup configuration steps.
+    """
 
-    return_code = os.system("createdb " + project_name)
-    if return_code != 0:
-        return return_code
+    # Constructor
+    def __init__(self, requirements_path, *args, **kwargs): 
+        super().__init__(*args, **kwargs)
+        
+        self.requirements_path = requirements_path
 
-    print("Created new database {}!".format(project_name))
+    # Helper methods for pip and pip install
+    def pip(self, context, *args): 
+        output = subprocess.check_output([context.env_exe, '-m', 'pip'] + list(args))
+        print(str(output.decode()))
+    def pip_install(self, context, *args): 
+        self.pip(context, 'install', *args)
 
-    return 0
+    # This method is run after the virtualenv is created
+    def post_setup(self, context): 
+        super().post_setup(context)
 
+        # Make sure pip is up-to-date
+        self.pip_install(context, '--upgrade', 'pip')
 
-def create_venv():
+        # Install requirements.txt file
+        if self.requirements_path: 
+            self.pip_install(context, '-r', self.requirements_path)
 
-    return_code = os.system("python3 -m venv .venv")
-    if return_code != 0:
-        return return_code
+        # Show what was installed
+        print("Installed packages:")
+        self.pip(context, 'freeze')
+        
 
-    print("Created .venv!")
+# create database
+# def create_database(project_name):
+#    output = subprocess.check_output(["createdb", project_name])
+#    print(output)
+#    print("Created new database {}!".format(project_name))
 
-    return_code = os.system("source .venv/bin/activate")
-    if return_code != 0:
-        return return_code
+# Creates venv and pip installs everything in the environment
+def create_venv(requirements_path):
+    venv = EinhornEnvBuilder(requirements_path, with_pip=True)
+    venv.create(os.path.join(os.getcwd(), '.venv'))
 
-
-    # Activating venv right away in a python script (and using it) does not work, we do it with fabric for now
-
-    # http://devmartin.com/blog/2015/02/how-to-deploy-a-python3-wsgi-application-with-apache2-and-debian/
-    # https://www.pythonanywhere.com/forums/topic/994/
-
-    # activate_this_file = ".venv/bin/activate_this.py"
-    # with open(activate_this_file) as f:
-    #     code = compile(f.read(), activate_this_file, 'exec')
-    #     exec(code, dict(__file__=activate_this_file))
-    #
-    #
-    # print("Activated environment")
-    #
-    # return_code = os.system("pip install --upgrade pip setuptools")
-    # if return_code != 0:
-    #     return return_code
-
-    return 0
-
-
-def docker_setup():
-
+# def setup_docker():
     # return_code = os.system("eval $(docker-machine env)")
     # if return_code != 0:
     #     return return_code
@@ -58,40 +63,12 @@ def docker_setup():
     # return_code = os.system("docker-compose -f dev.yml build")
     # if return_code != 0:
     #     return return_code
-
-    return 0
-
+#   return 0
 
 def generate_secret_key():
-
     return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
 
-
-def main(argv):
-
-    if len(sys.argv) != 2:
-        print("ERROR: Incorrect number of args!")
-        print("This command takes zero argument exactly:")
-        print("name:   the name of the project to be created")
-        return 1
-
-    project_name = sys.argv[1]
-
-    # return_code = create_database(project_name)
-    # if return_code != 0:
-    #     print("Creation of the database failed!")
-    #     return 2
-
-    return_code = create_venv()
-    if return_code != 0:
-        print("Creation of the the virtual env failed!")
-        return 3
-
-    return_code = docker_setup()
-    if return_code != 0:
-        print("Docker setup failed!")
-        return 4
-
+def create_env_file(project_name): 
     print("")
     print("")
     print("Please use the following entries for your local .env")
@@ -102,6 +79,38 @@ def main(argv):
     print("ALLOWED_HOSTS='*'")
     print("DATABASE_URL=postgres:///{}".format(project_name))
     print("SECRET_KEY='{}'".format(generate_secret_key()))
+
+
+
+def main(argv):
+
+    if len(sys.argv) != 2:
+        print("ERROR: Incorrect number of args!")
+        print("This command takes zero argument exactly:")
+        print("name:   the name of the project to be created")
+        return 1
+    project_name = sys.argv[1]
+
+    # Maybe some project name validation checking here
+
+    requirements_path = os.path.join(os.getcwd(), 'requirements.txt')
+
+    print("Working... please wait...")
+
+    try: 
+#       create_database(project_name)
+        create_venv(requirements_path)
+#       setup_docker()
+        create_env_file(project_name)
+    except subprocess.CalledProcessError as e:
+        print("Command: {}\nReturn code: {}\n{}\n{}".format(e.cmd, 
+                                                            e.return_code, 
+                                                            e.output, 
+                                                            e.stderr))
+
+    # It worked!
+    print("Done!")
+    return 0
 
 
 if __name__ == '__main__':

@@ -137,3 +137,23 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Mail handling
 
 SENDGRID_API_KEY=env("SENDGRID_API_KEY", default=None)
+
+
+# Heroku
+
+ON_HEROKU = env('HEROKU_APP_ID', default=False)
+
+if ON_HEROKU:
+
+    HEROKU_RELEASE_CREATED_AT = env('HEROKU_RELEASE_CREATED_AT', default=None)
+    HEROKU_RELEASE_VERSION = env('HEROKU_RELEASE_VERSION', default=None)
+    HEROKU_SLUG_DESCRIPTION = env('HEROKU_SLUG_DESCRIPTION', default=None)
+    HEROKU_SLUG_COMMIT = GIT_BRANCH = env('HEROKU_SLUG_COMMIT', default=None)
+
+    SECURE_SSL_REDIRECT = True
+
+    # In order to detect when a request is made via SSL in Django (for use in request.is_secure())
+    # https://devcenter.heroku.com/articles/http-routing#heroku-headers
+
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+

@@ -25,6 +25,7 @@ class EinhornEnvBuilder(venv.EnvBuilder):
     def pip(self, context, *args): 
         output = subprocess.check_output([context.env_exe, '-m', 'pip'] + list(args))
         print(str(output.decode()))
+
     def pip_install(self, context, *args): 
         self.pip(context, 'install', *args)
 
@@ -34,29 +35,31 @@ class EinhornEnvBuilder(venv.EnvBuilder):
 
         # Make sure pip is up-to-date
         self.pip_install(context, '--upgrade', 'pip')
+        self.pip_install(context, '--upgrade', 'setuptools')
 
         # Install requirements.txt file
         if self.requirements_path: 
             self.pip_install(context, '-r', self.requirements_path)
 
-        # Show what was installed
-        print("Installed packages:")
-        self.pip(context, 'freeze')
-        
+def create_database(project_name):
 
-# create database
-# def create_database(project_name):
-#    output = subprocess.check_output(["createdb", project_name])
-#    print(output)
-#    print("Created new database {}!".format(project_name))
+    try:
+         subprocess.check_output(["createdb", project_name])
+    except subprocess.CalledProcessError as e:
+        pass
+    else:
+        print("Database '{}' was created.".format(project_name))
 
-# Creates venv and pip installs everything in the environment
+
+
 def create_venv(requirements_path):
+    """ Creates venv and pip installs everything in the environment """
 
-    print("*** Virtual env setup ***")
+    if os.path.exists(".venv"):
+        print(".venv folder already exists! Skipping.")
+        return
 
-    print("Making venv... please wait (may take some time)...")
-
+    print("Creating virtual environment... - please wait (may take some time)...")
     venv = EinhornEnvBuilder(requirements_path, with_pip=True)
     venv.create(os.path.join(os.getcwd(), '.venv'))
 
@@ -72,19 +75,16 @@ def create_venv(requirements_path):
 
 
 def create_env_file(project_name): 
-
+    """ Creates an .env file - if one is not existing already"""
     def generate_secret_key():
         return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
 
     env_file_name = ".env"
     env_path = os.path.join(os.getcwd(), env_file_name)
 
-    print("*** .env file setup ***")
-
     try: 
         with open(env_path, 'x') as env_file: 
             print("The .env file will be created at: {}".format(env_path))
-            print("Creating .env...", end=" ")
 
             env_file.write("DEBUG=True\n")
             env_file.write("STAGE=local\n")
@@ -92,8 +92,7 @@ def create_env_file(project_name):
             env_file.write("DATABASE_URL=postgres:///{}\n".format(project_name))
             env_file.write("SECRET_KEY='{}'\n".format(generate_secret_key()))
 
-            print("...Done!")
-    except FileExistsError: 
+    except FileExistsError:
         print(".env file already exists. Skipping .env creation")
 
 
@@ -108,10 +107,10 @@ def main(argv):
 
     # Maybe some project name validation checking here
 
-    requirements_path = os.path.join(os.getcwd(), 'requirements.txt')
+    requirements_path = os.path.join(os.getcwd(), 'requirements/local.txt')
 
     try: 
-#       create_database(project_name)
+        create_database(project_name)
         create_venv(requirements_path)
 #       setup_docker()
         create_env_file(project_name)
@@ -121,8 +120,15 @@ def main(argv):
                                                             e.output, 
                                                             e.stderr))
 
-    # It worked!
+    # Everything worked!
     print("Done!")
+    print("")
+    print("")
+    print("Please run:")
+    print("source .venv/bin/activate")
+    print("fab update")
+    print("python manage.py createsuperuser")
+    print("python manage.py runserver")
     return 0
 
 

@@ -141,6 +141,7 @@ SENDGRID_API_KEY=env("SENDGRID_API_KEY", default=None)
 
 # Heroku
 
+# heroku labs:enable runtime-dyno-metadata must have been run before + a new deploy
 ON_HEROKU = env('HEROKU_APP_ID', default=False)
 
 if ON_HEROKU:

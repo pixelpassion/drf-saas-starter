@@ -13,6 +13,8 @@ STAGE = env.str('STAGE')                        # Every environment needs to set
 SECRET_KEY = env('SECRET_KEY')                  # Raises ImproperlyConfigured exception if SECRET_KEY not set
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the site URL for production
 
+SITE_ID = 1
+
 # Heroku expects to receive error messages on STDERR, the following logging takes care of this
 
 LOGGING = {
@@ -39,9 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
 
-    'whitenoise.runserver_nostatic',             # use whitenoise for development , add above django.contrib.staticfiles
+    'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
+
+    'apps.users',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
 ]
 
 if DEBUG is True and STAGE == 'local':
@@ -105,6 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',            # Needed to login by username in Django admin, regardless of `allauth`
+    'allauth.account.auth_backends.AuthenticationBackend',  # for specific authentication methods, such as login by e-mail
+)
 
 # Internationalization
 
@@ -158,3 +174,24 @@ if ON_HEROKU:
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+
+# Allauth
+
+ACCOUNT_ALLOW_REGISTRATION = env.bool('ACCOUNT_ALLOW_REGISTRATION', True)
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+
+AUTH_USER_MODEL = 'users.User'
+
+
+#ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"

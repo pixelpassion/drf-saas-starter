@@ -1,6 +1,6 @@
-# Basics and boilerplate stuff
-Django==1.10.5
-django-environ==0.4.1
-psycopg2==2.6.2
+Django==1.10.5              # Basics and boilerplate stuff
+django-environ==0.4.1       # Configuration by environment variables according to 12Factor model
+psycopg2==2.6.2             # Database connector
 whitenoise==3.2.3
-sendgrid==3.6.3     # just for testing, we should use django-anymail to be more flexible
+sendgrid==3.6.3             # just for testing, we should use django-anymail to be more flexible
+django-allauth==0.30.0      # For user registration, either via email or Open ID Providers

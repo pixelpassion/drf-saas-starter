@@ -1,13 +1,15 @@
 from django.test import RequestFactory
-from test_plus.test import TestCase
+from django.test import TestCase
 
 from ..views import UserRedirectView, UserUpdateView
+from ..models import User
 
 
 class BaseUserTestCase(TestCase):
 
     def setUp(self):
-        self.user = self.make_user()
+        self.existing_user = User.objects.create_user(email="existing_user@test.com", username="existing_user")
+
         self.factory = RequestFactory()
 
 
@@ -19,14 +21,14 @@ class TestUserRedirectView(BaseUserTestCase):
         # Generate a fake request
         request = self.factory.get('/fake-url')
         # Attach the user to the request
-        request.user = self.user
+        request.user = self.existing_user
         # Attach the request to the view
         view.request = request
         # Expect: '/users/testuser/', as that is the default username for
         #   self.make_user()
         self.assertEqual(
             view.get_redirect_url(),
-            '/users/testuser/'
+            '/users/existing_user/'
         )
 
 
@@ -40,7 +42,7 @@ class TestUserUpdateView(BaseUserTestCase):
         # Generate a fake request
         request = self.factory.get('/fake-url')
         # Attach the user to the request
-        request.user = self.user
+        request.user = self.existing_user
         # Attach the request to the view
         self.view.request = request
 
@@ -49,12 +51,12 @@ class TestUserUpdateView(BaseUserTestCase):
         #   self.make_user()
         self.assertEqual(
             self.view.get_success_url(),
-            '/users/testuser/'
+            '/users/existing_user/'
         )
 
     def test_get_object(self):
         # Expect: self.user, as that is the request's user object
         self.assertEqual(
             self.view.get_object(),
-            self.user
+            self.existing_user
         )

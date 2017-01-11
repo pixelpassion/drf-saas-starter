@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', TemplateView.as_view(template_name='index.html')),
 
+    url(r'^users/', include('apps.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),

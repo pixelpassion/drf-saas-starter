@@ -1,13 +1,69 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
-                                        PermissionsMixin)
-from django.utils import timezone
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
 
 from django.core.urlresolvers import reverse
-from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from allauth.utils import get_user_model
+from django.db import models
+from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
+from django.utils import six, timezone
+
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def find_next_available_username(self, wanted_username):
+
+        counter = 1
+        checked_username = wanted_username
+
+        while True:
+
+            try:
+                self.model.objects.get(username=checked_username)
+            except self.model.DoesNotExist:
+                return checked_username
+
+            counter += 1
+
+            checked_username = "{}{}".format(wanted_username, counter)
+
+    def _create_user(self, email, password, username=None, **extra_fields):
+        """
+        Creates and saves a User with the given username, email and password.
+        """
+        if not email:
+            raise ValueError('The email must be set')
+
+        email = self.normalize_email(email)
+
+        if username is None or username == '':
+            username = self.find_next_available_username(email.split("@")[0])
+
+        username = self.model.normalize_username(username)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, username=None, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+
+        return self._create_user(email, password, username, **extra_fields)
+
+    def create_superuser(self, email, password, username=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, username, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -15,6 +71,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'),
                               help_text=_("A valid user email"),
                               null=False, blank=False, unique=True)
+
+    username_validator = UnicodeUsernameValidator() if six.PY3 else ASCIIUsernameValidator()
+
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        unique=True,
+        help_text=_('150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        validators=[username_validator],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        },
+    )
 
     first_name = models.CharField(_('first name'),
                                   help_text=_("The first Name of the user"),
@@ -49,17 +118,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
 
-    #objects = EmailUserManager()
+    objects = UserManager()
 
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-        permissions = (
-            ("can_read_swagger_docs", "Can read swagger docs"),
-        )
 
     def __str__(self):
-        return self.email
+        return self.username
+
 
     def get_absolute_url(self):
-        return reverse('users:detail', kwargs={'email': self.email})
+        return reverse('users:detail', kwargs={'username': self.username})

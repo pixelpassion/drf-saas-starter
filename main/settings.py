@@ -118,9 +118,12 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.admin_settings'
             ],
         },
     },
@@ -249,4 +252,10 @@ LOGIN_URL = 'account_login'
 #ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Admin
+
+SENTRY_URL = env.str('SENTRY_URL', default="#")
+MAILHOG_URL = env.str('MAILHOG_URL', default="#")
+RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 

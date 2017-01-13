@@ -1,0 +1,102 @@
+{% load staticfiles i18n %}
+{% spaceless %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title %}Untitled Project{% endblock title %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="Fineware AG">
+
+        <link rel="shortcut icon" href="{% static "favicon.ico" %}">
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+        {% block css %}
+            <link href="{% static 'css/project.min.css' %}" rel="stylesheet">
+            <link href="{% static 'css/extra.css' %}" rel="stylesheet">
+        {% endblock %}
+
+    </head>
+
+    <body>
+
+          {% if messages %}
+          {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+          {% endfor %}
+      {% endif %}
+
+
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            {% if APP_LOGO %}
+                <img src="{% url "media_file" APP_LOGO %}"/>
+            {% else %}
+                New Project
+            {% endif %}
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav float-xl-right">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">{% trans "About us" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="sign-up-link" class="nav-link"
+                           href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    {% block jumbotron %}
+    {% endblock jumbotron %}
+
+    <div class="container">
+
+        {% block content %}
+        {% endblock content %}
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">{% trans "© New Project 2017" %}</span>
+        </div>
+    </footer>
+
+    {% block modal %}{% endblock modal %}
+
+    {% block javascript %}
+        <script src="{% static 'js/project.min.js' %}"></script>
+    {% endblock javascript %}
+    </body>
+    </html>
+{% endspaceless %}

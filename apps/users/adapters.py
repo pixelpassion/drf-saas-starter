@@ -7,7 +7,7 @@ from allauth import app_settings
 
 from apps.users.models import User
 
-#from metronom.base.celery import send_anymail_mail
+#from ..base.celery import send_anymail_mail
 
 
 class AccountAdapter(DefaultAccountAdapter):

@@ -7,8 +7,9 @@ from django.core.urlresolvers import reverse_lazy
 
 urlpatterns = [
 
-    url(r'^$', RedirectView.as_view(url='/accounts/login/'), name='home'),
-
+    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
+    url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
+    url(r'^dashboard/$', TemplateView.as_view(template_name='pages/dashboard.html'), name='dashboard'),
 
     url(r'^admin/', admin.site.urls),
     url(r'^$', TemplateView.as_view(template_name='index.html')),
@@ -20,3 +21,8 @@ urlpatterns = [
 
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

@@ -1,0 +1,9 @@
+{% extends "emails/mail_base.html" %}
+
+{% block title %}Untitled Project - E-Mail-Verifizierung{% endblock %}
+{% block preview %}Untitled Project - E-Mail-Verifizierung{% endblock %}
+{% block header %}E-Mail verifizieren{% endblock %}
+{% block content %}Sie haben sich auf Untitled Project registriert - bitte bestätigen Sie Ihre E-Mail-Adresse. Vielen Dank!{% endblock %}
+{% block button_url %}{{ activate_url }}{% endblock %}
+{% block button_text %}E-Mail bestätigen{% endblock %}
+{% block content_bottom %}Falls Sie sich nicht selbst dort registriert haben, können Sie diese E-Mail ignorieren.{% endblock %}

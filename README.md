@@ -13,11 +13,20 @@ $ ./local_setup {{project_name}}        # Will create a database and an virtual 
 $ source .venv/bin/activate             # Start the virtual environment
 $ pip install fabric3                   # Installs fabric3
 $ fab update                            # Updates requirements and migrations etc.
+$ npm install                           # Installing frontend packages
 ```
 
 ## Administration
 
 * https://einhorn-starter.herokuapp.com/admin/ (admin / test1234)
+
+## Static files
+
+Install node.js, npm, gulp etc.:
+
+    $ npm install
+    $ npm run watch
+
 
 ## Heroku
 

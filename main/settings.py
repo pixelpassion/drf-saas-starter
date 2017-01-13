@@ -51,13 +51,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
+    'crispy_forms',
 ]
-
-if DEBUG is True and STAGE == 'local':
-        INSTALLED_APPS += [
-            'django_extensions'
-        ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,6 +64,21 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+if DEBUG is True and STAGE == 'local':
+
+        INSTALLED_APPS += [
+            'django_extensions',
+            'debug_toolbar',
+        ]
+
+        MIDDLEWARE = [
+            'debug_toolbar.middleware.DebugToolbarMiddleware',
+        ] + MIDDLEWARE
+
+        INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
+
 
 ROOT_URLCONF = 'main.urls'
 
@@ -124,7 +134,7 @@ AUTHENTICATION_BACKENDS = (
 
 # Internationalization
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-DE'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -195,3 +205,6 @@ LOGIN_REDIRECT_URL = 'users:redirect'
 LOGIN_URL = 'account_login'
 
 #ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+

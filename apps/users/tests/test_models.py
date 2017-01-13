@@ -55,3 +55,16 @@ class TestUser(TestCase):
         self.assertEqual(new_user.has_usable_password(), True)
         self.assertEqual(new_user.is_staff, True)
         self.assertEqual(new_user.is_superuser, True)
+
+    def test_find_next_available_username(self):
+        """A unused and ungiven username should be given"""
+        self.assertEqual(User.objects.find_next_available_username("not_used_yet"), "not_used_yet")
+
+        i = 2
+
+        # The next available existing_user should have a username with 2
+        while i < 12:
+            self.assertEqual(User.objects.find_next_available_username("existing_user"), "existing_user{}".format(i))
+            User.objects.create_user(email="existing_user@test{}.com".format(i), password="test")
+            i += 1
+

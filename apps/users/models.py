@@ -15,7 +15,6 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def find_next_available_username(self, wanted_username):
-
         counter = 1
         checked_username = wanted_username
 
@@ -57,6 +56,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, username=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -127,6 +127,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
+    def get_short_name(self):
+        return self.username
 
     def get_absolute_url(self):
         return reverse('users:detail', kwargs={'username': self.username})

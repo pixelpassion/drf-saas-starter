@@ -75,11 +75,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.users',
+    'apps.mails',
+    'main.celery.CeleryConfig',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -195,6 +198,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SENDGRID_API_KEY=env("SENDGRID_API_KEY", default=None)
 
+ANYMAIL = {
+    "SENDGRID_API_KEY": SENDGRID_API_KEY,
+}
 
 # Heroku
 
@@ -251,6 +257,16 @@ LOGIN_URL = 'account_login'
 
 #ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
 
+
+# Emails
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_PORT = env("EMAIL_PORT", default=1025)
+EMAIL_HOST = env("EMAIL_HOST", default='localhost')
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
+
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Admin
@@ -259,3 +275,9 @@ SENTRY_URL = env.str('SENTRY_URL', default="#")
 MAILHOG_URL = env.str('MAILHOG_URL', default="#")
 RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 
+# Celery
+
+# In development, all tasks will be executed locally by blocking until the task returns
+
+CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0.1')
+CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)

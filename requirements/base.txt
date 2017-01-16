@@ -5,3 +5,5 @@ whitenoise==3.2.3               # Static file serving
 sendgrid==3.6.3                 # just for testing, we should use django-anymail to be more flexible
 django-allauth==0.30.0          # For user registration, either via email or Open ID Providers
 django-crispy-forms==1.6.1      # Better form handling
+celery==4.0.2                   # Asynchronous tasks
+django-anymail==0.7             # Email handling

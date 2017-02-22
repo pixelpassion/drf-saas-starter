@@ -1,3 +1,6 @@
+# For explanations / licenses check the documentation (docs/django_packages.md)
+
+# Django related
 Django==1.10.5                  # Basics and boilerplate stuff
 django-environ==0.4.1           # Configuration by environment variables according to 12Factor model
 psycopg2==2.6.2                 # Database connector

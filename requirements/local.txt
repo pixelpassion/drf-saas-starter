@@ -1,7 +1,7 @@
 -r base.txt
 
 # Developer tools
-django-debug-toolbar==1.5
+django-debug-toolbar==1.6
 django-extensions==1.7.5
 Fabric3==1.12.post1
 ipython==5.1.0

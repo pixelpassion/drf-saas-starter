@@ -3,10 +3,20 @@ machine:
     version: 3.5.2
   environment:
     STAGE: circleci
-    SECRET_KEY: dx8hsu_#i%r4b##9q)-$1negl5@gw&^ddof@w!14%1y4=v6o-3
+    SECRET_KEY: 'dx8hsu_#i%r4b##9q)-$1negl5@gw&^ddof@w!14%1y4=v6o-3'
     ALLOWED_HOSTS: '*'
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
     CLOUDAMQP_URL: amqp://localhost:5672
+test:
+  dependencies:
+    pre:
+      - pip install coverage
+  override:
+    - coverage run manage.py test
+    - coverage html
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/scala-2.10
+    - mv home/ubuntu/einhorn-starter/htmlcov  $CIRCLE_ARTIFACTS/htmlcov
 deployment:
   staging:
     branch: master

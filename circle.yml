@@ -15,8 +15,8 @@ test:
     - coverage run manage.py test
     - coverage html
   post:
-    - mkdir -p $CIRCLE_ARTIFACTS/scala-2.10
-    - mv home/ubuntu/einhorn-starter/htmlcov  $CIRCLE_ARTIFACTS/htmlcov
+    - mkdir -p $CIRCLE_ARTIFACTS/htmlcov
+    - mv ./htmlcov $CIRCLE_ARTIFACTS/htmlcov
 deployment:
   staging:
     branch: master

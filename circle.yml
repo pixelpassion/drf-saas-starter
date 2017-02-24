@@ -1,3 +1,4 @@
 machine:
   environment:
     STAGE: circleci
+    SECRET_KEY: dx8hsu_#i%r4b##9q)-$1negl5@gw&^ddof@w!14%1y4=v6o-3

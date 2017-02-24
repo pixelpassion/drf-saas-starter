@@ -16,7 +16,7 @@ test:
     - coverage html
   post:
     - mkdir -p $CIRCLE_ARTIFACTS/htmlcov
-    - mv ./htmlcov $CIRCLE_ARTIFACTS/htmlcov
+    - mv ./htmlcov $CIRCLE_ARTIFACTS/
 deployment:
   staging:
     branch: master

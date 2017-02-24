@@ -20,7 +20,8 @@ var gulp = require('gulp'),
     exec = require('gulp-exec'),
     runSequence = require('run-sequence'),
     browserSync = require('browser-sync'),
-    pagespeed = require('psi');
+    pagespeed = require('psi'),
+    mocha = require('gulp-mocha');
 
 
 // Relative paths function
@@ -126,4 +127,15 @@ gulp.task('watch', ['default'], function() {
   gulp.watch(paths.images + '/*', ['imgCompression']);
   gulp.watch('templates/*.html');
 
+});
+
+////////////////////////////////
+		//Testing//
+////////////////////////////////
+
+gulp.task('test', function () {
+  var mocha = require("gulp-mocha");
+
+  gulp.src("test.js")
+    .pipe(mocha({ reporter: 'spec', growl: 'true' }));
 });

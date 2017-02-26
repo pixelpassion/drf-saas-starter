@@ -5,10 +5,10 @@ from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, Permi
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-from allauth.utils import get_user_model
 from django.db import models
 from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
 from django.utils import six, timezone
+from main.mixins import UUIDMixin
 
 
 class UserManager(BaseUserManager):
@@ -67,7 +67,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, username, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
 
     email = models.EmailField(_('email address'),
                               help_text=_("A valid user email"),

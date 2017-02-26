@@ -10,7 +10,7 @@
 
     <div class="list-group">
         {% for user in user_list %}
-          <a href="{% url 'users:detail' user.email %}" class="list-group-item">
+          <a href="{% if user.username %}{% url 'users:detail' user.username %}{% else %}#{% endif %}" class="list-group-item">
             <h4 class="list-group-item-heading">{{ user.email }} ({{ user.username }})</h4>
           </a>
         {% endfor %}

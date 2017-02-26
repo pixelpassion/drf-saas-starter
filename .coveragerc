@@ -4,3 +4,5 @@ source=
 omit=
     ./.venv/*
     */__init__.py
+    *migrations*
+

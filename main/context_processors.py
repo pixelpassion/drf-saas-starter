@@ -14,4 +14,5 @@ def admin_settings(request):
         'MAILHOG_URL': settings.MAILHOG_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
         'SENTRY_URL':  settings.SENTRY_URL,
+        'PROJECT_NAME': settings.PROJECT_NAME,
     }

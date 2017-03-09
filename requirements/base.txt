@@ -10,3 +10,5 @@ django-allauth==0.30.0          # For user registration, either via email or Ope
 django-crispy-forms==1.6.1      # Better form handling
 celery==4.0.2                   # Asynchronous tasks
 django-anymail==0.7             # Email handling
+djangorestframework==3.5.4      # RESTful API
+django-oauth-toolkit==0.11.0    # OAuth 2.0 support

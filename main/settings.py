@@ -1,4 +1,5 @@
 import environ
+import datetime
 
 env = environ.Env()                             # set default values and casting
 environ.Env.read_env('.env')                    # reading .env file
@@ -78,11 +79,23 @@ INSTALLED_APPS = [
     'apps.mails',
     'main.celery.CeleryConfig',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+
+
+    'oauth2_provider',
+    'rest_framework_docs',
+    'rest_framework_swagger',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
     'anymail',
+
+    'rest_auth.registration',
+
 ]
 
 MIDDLEWARE = [
@@ -281,3 +294,75 @@ RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 
 CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0.1')
 CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+
+# Rest framework
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups',
+        'metronom_admin': 'Access to all data ressources'
+    },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 60 * 12
+
+}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+#     ),
+#     # 'DEFAULT_PERMISSION_CLASSES': (
+#     #     'rest_framework.permissions.IsAuthenticated',
+#     # )
+# }
+
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'api.exceptions.basic_exception_handler',
+#
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'api.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PAGINATION_CLASS':
+#         'api.pagination.StandardResultsSetPagination'
+# }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+
+JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
+JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='einhorn-starter')
+
+JWT_AUTH = {
+    'JWT_PAYLOAD_HANDLER': 'apps.api.jwt.payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'apps.api.jwt.response_payload_handler',
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'apps.api.jwt.get_username_from_payload_handler',
+    'JWT_SECRET_KEY': JWT_SECRET,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60*60*72),
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=60*60*12),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ISSUER': 'einhorn-starter',
+}
+
+REST_USE_JWT = True
+
+PROJECT_NAME = 'Project'
+
+
+ALLOWED_EMAIL_DOMAINS = [
+    'jensneuhaus.de',
+]

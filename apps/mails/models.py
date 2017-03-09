@@ -7,6 +7,12 @@ from django.template import TemplateDoesNotExist
 from main.mixins import UUIDMixin
 from django.utils.translation import ugettext_lazy as _
 from django.conf import *
+import sendgrid
+
+if not settings.SENDGRID_API_KEY:
+    raise NotImplementedError("No SENDGRID_API_KEY set")
+
+sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
 
 class MailManager(models.Manager):
@@ -90,7 +96,7 @@ class Mail(UUIDMixin):
         mail = cls(subject=subject, context=context, from_address=from_address, to_address=to_address)
         return mail
 
-    def send(self):
+    def send(self,sendgrid_api=False):
         """
             Sends the mail using data from the Mail object
 
@@ -115,23 +121,56 @@ class Mail(UUIDMixin):
         except TemplateDoesNotExist:
             html_content = None
 
-        if html_content:
-            msg = EmailMultiAlternatives(
-                self.subject,
-                txt_content,
-                self.from_address,
-                [self.to_address]
-            )
-            msg.attach_alternative(html_content, "text/html")
+        if sendgrid_api:
+
+            data = {
+                "personalizations": [
+                    {
+                        "to": [
+                            {
+                                "email": self.to_address
+                            }
+                        ],
+                        "subject": self.subject
+                    }
+                ],
+                "from": {
+                    "email": self.from_address
+                },
+                "content": [
+                    {
+                        "type": "text/plain",
+                        "value": txt_content
+                    }
+                ]
+            }
+            response = sg.client.mail.send.post(request_body=data)
+            print("Email with UUID {} was sent with Sendgrid API.".format(self.id))
+
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
 
         else:
-            msg = EmailMessage(
-                self.subject,
-                txt_content,
-                self.from_address,
-                [self.to_address]
-            )
 
-        msg.send()
+            if html_content:
+                msg = EmailMultiAlternatives(
+                    self.subject,
+                    txt_content,
+                    self.from_address,
+                    [self.to_address]
+                )
+                msg.attach_alternative(html_content, "text/html")
 
-        print("Email with UUID {} was sent.".format(self.id))
+            else:
+                msg = EmailMessage(
+                    self.subject,
+                    txt_content,
+                    self.from_address,
+                    [self.to_address]
+                )
+
+            msg.send()
+
+            print("Email with UUID {} was sent.".format(self.id))
+

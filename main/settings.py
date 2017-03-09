@@ -281,3 +281,5 @@ RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 
 CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0.1')
 CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+
+DEFAULT_FROM_EMAIL="mail@example.org"

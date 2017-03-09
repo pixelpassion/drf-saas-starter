@@ -8,6 +8,25 @@ from main.mixins import UUIDMixin
 from django.utils.translation import ugettext_lazy as _
 from django.conf import *
 
+
+class MailManager(models.Manager):
+
+    def create_mail(self,  template, subject, context, to_address, from_address=None):
+        """
+            Create a Mail object with proper validation
+
+            e.g.
+
+            Mail.objects.create_mail("hello", "Hello world!",{'name': 'Jens'},"me@jensneuhaus.de")
+        """
+
+        if from_address is None:
+            from_address = settings.DEFAULT_FROM_EMAIL
+
+        mail = self.create(subject=subject, template=template, context=context, from_address=from_address, to_address=to_address)
+        return mail
+
+
 class Mail(UUIDMixin):
 
     from_address = models.EmailField()
@@ -40,9 +59,17 @@ class Mail(UUIDMixin):
     subject = models.CharField(max_length=500)
     context = models.TextField()
 
-    time_queued = models.DateTimeField()
-    time_sent = models.DateTimeField()
-    time_delivered = models.DateTimeField()
+    time_queued = models.DateTimeField(
+        null=True
+    )
+    time_sent = models.DateTimeField(
+        null=True
+    )
+    time_delivered = models.DateTimeField(
+        null=True
+    )
+
+    objects = MailManager()
 
     def __str__(self):
         return "%s to %s" % (self.template, self.to_address)
@@ -60,7 +87,7 @@ class Mail(UUIDMixin):
         if from_address is None:
             from_address = settings.DEFAULT_FROM_EMAIL
 
-        mail = cls(subject=subject, template=template, context=context, from_address=from_address, to_address=to_address)
+        mail = cls(subject=subject, context=context, from_address=from_address, to_address=to_address)
         return mail
 
     def send(self):

@@ -266,6 +266,8 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
 
+DEFAULT_FROM_EMAIL="mail@example.org"
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

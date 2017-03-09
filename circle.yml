@@ -7,6 +7,7 @@ machine:
     ALLOWED_HOSTS: '*'
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
     CLOUDAMQP_URL: amqp://localhost:5672
+    SENDGRID_API_KEY: 'NotNeededForTesting'
 dependencies:
   pre:
     - pip install coverage

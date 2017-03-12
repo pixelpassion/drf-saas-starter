@@ -14,10 +14,25 @@ if not settings.SENDGRID_API_KEY:
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
+MAIL_TEMPLATES = {
+    "action": {
+        "template": "transactional-email-templates/templates/action",
+        "subject": "Action email subject"
+    },
+    "alert": {
+        "template": "transactional-email-templates/templates/alert",
+        "subject": "Alert email subject"
+    },
+    
+    "billing": {
+        "template": "transactional-email-templates/templates/billing",
+        "subject": "Billing email subject"
+    }
+}
 
 class MailManager(models.Manager):
 
-    def create_mail(self,  template, subject, context, to_address, from_address=None):
+    def create_mail(self, template, subject, context, to_address, from_address=None):
         """
             Create a Mail object with proper validation
 
@@ -74,8 +89,8 @@ class Mail(UUIDMixin):
 
     subject = models.CharField(
         _("Email Subject line"),
-        help_text=_("Subject line, saved after generating from context")
-        max_length=500
+        help_text=_("Subject line, saved after generating from context"),
+        max_length=500,
         null=False,
         blank=False
     )

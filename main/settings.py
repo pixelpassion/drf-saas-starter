@@ -88,14 +88,12 @@ INSTALLED_APPS = [
     'rest_framework_docs',
     'rest_framework_swagger',
 
+    'django_extensions',        # This should be moved to only local, but it helps for testing
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
     'anymail',
-
-    'rest_auth.registration',
-
 ]
 
 MIDDLEWARE = [
@@ -113,7 +111,6 @@ MIDDLEWARE = [
 if DEBUG is True and STAGE == 'local':
 
         INSTALLED_APPS += [
-            'django_extensions',
             'debug_toolbar',
         ]
 
@@ -227,12 +224,15 @@ if ON_HEROKU:
     HEROKU_SLUG_DESCRIPTION = env('HEROKU_SLUG_DESCRIPTION', default=None)
     HEROKU_SLUG_COMMIT = GIT_BRANCH = env('HEROKU_SLUG_COMMIT', default=None)
 
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
 
     # In order to detect when a request is made via SSL in Django (for use in request.is_secure())
     # https://devcenter.heroku.com/articles/http-routing#heroku-headers
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True    # https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_SECURE
+    CSRF_COOKIE_HTTPONLY = True     # https://docs.djangoproject.com/en/1.10/ref/settings/#session-cookie-httponly
+    CSRF_COOKIE_SECURE= True        # https://docs.djangoproject.com/en/1.10/ref/settings/#csrf-cookie-secure
 
     INSTALLED_APPS += (
         'raven.contrib.django.raven_compat',
@@ -278,7 +278,7 @@ EMAIL_HOST = env("EMAIL_HOST", default='localhost')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
-
+DEFAULT_FROM_EMAIL="mail@example.org"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -293,7 +293,9 @@ RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 # In development, all tasks will be executed locally by blocking until the task returns
 
 CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0.1')
-CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+
+if STAGE == 'local':
+    CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
 
 # Rest framework
 

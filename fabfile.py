@@ -100,7 +100,6 @@ def update():
         print("$ ./local_setup.py {{ project_name }}")
         print("$ source .venv/bin/activate")
 
-    local('pip install --upgrade pip setuptools')
     local('pip install -r requirements/local.txt')
     local('python manage.py migrate')
 

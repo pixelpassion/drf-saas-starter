@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import permission_required, login_required
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 from apps.registration.views import UserRegistrationView
+from apps.letsencrypt.views import acme_challenge
 
 urlpatterns = [
 
@@ -35,6 +36,8 @@ urlpatterns = [
     #permission_required('users.can_read_swagger_docs', login_url='/admin/login/')
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
+
+    url(r'.well-known/acme-challenge/(?P<token>.+)', acme_challenge),
 
 ]
 

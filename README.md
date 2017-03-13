@@ -1,8 +1,7 @@
+[![einhornmanufaktur](https://img.shields.io/badge/made%20by-einhornmanufaktur-blue.svg)](https://www.einhornmanufaktur.de/)
 [![Build Status](https://circleci.com/gh/jensneuhaus/einhorn-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/jensneuhaus/einhorn-starter/)
 
-
-# Einhornmanufaktur Boilerplate
-
+# Template
 
 * Helps a project kickoff with ALWAYS needed services (asynchronous tasks, Websockets, mail sending, cache, error handling etc.)
 * The added apps are pretty modular and can be turned on / off or configured on the fly
@@ -114,4 +113,14 @@ This is used for asynchronous, but more directly tasks - like messages to the us
 
 ## SSL (letsencrypt)
 
-Checkout cookiecutter!
+```
+sudo certbot certonly --manual
+
+heroku config:set ACME_TOKEN=
+heroku config:set ACME_KEY=
+
+sudo heroku certs:add /etc/letsencrypt/live/starter.einhornmanufaktur.de/fullchain.pem /etc/letsencrypt/live/starter.einhornmanufaktur.de/privkey.pem --app einhorn-starter
+
+heroku config:set SECURE_SSL_REDIRECT=True
+
+```

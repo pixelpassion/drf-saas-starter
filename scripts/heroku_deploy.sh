@@ -9,7 +9,7 @@ echo "$MIGRATION_CHANGES db changes since last deploy."
 
 PREV_WORKERS=$(heroku ps --app $APP_NAME | grep "^worker." | wc -l | tr -d ' ')
 
-if test $MIGRATION_CHANGES -gt 0; then
+if test 1 -gt 0; then
 
   DEPLOY_START=`date +%s`
 

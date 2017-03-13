@@ -1,13 +1,17 @@
-from django.db import models
-
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.contrib.postgres.fields import JSONField
-from django.template.loader import render_to_string, get_template
-from django.template import Template, TemplateDoesNotExist, Context
-from main.mixins import UUIDMixin
-from django.utils.translation import ugettext_lazy as _
-from django.conf import *
+import json
 import sendgrid
+
+from django.conf import *
+from django.contrib.postgres.fields import JSONField
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.db import models
+from django.template import Template, TemplateDoesNotExist, Context
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
+
+from main.mixins import UUIDMixin
 
 if not settings.SENDGRID_API_KEY:
     raise NotImplementedError("No SENDGRID_API_KEY set")
@@ -38,21 +42,42 @@ MAIL_TEMPLATES = {
 
 class MailManager(models.Manager):
 
-    def create_mail(self, template, subject, context, to_address, from_address=None):
+    def create_mail(self, template, context, to_address, from_address=None, subject=None):
         """
             Create a Mail object with proper validation
 
             e.g.
 
-            mail = Mail.objects.create_mail("hello", "Hello world!",{'name': 'Jens'},"me@jensneuhaus.de")
+            mail = Mail.objects.create_mail("hello", {'name': 'Jens'},"me@jensneuhaus.de")
             mail.send()
 
         """
 
+        try:
+            MAIL_TEMPLATES[template]
+        except KeyError:
+            raise ValueError("{} is not a valid Template name".format(template))
+
+        try:
+            context_string = json.dumps(context)
+            context_json = json.loads(context_string)
+        except ValueError:
+            raise ValueError("The given context is not valid: {}".format(context))
+
         if from_address is None:
             from_address = settings.DEFAULT_FROM_EMAIL
 
-        mail = self.create(subject=subject, template=template, context=context, from_address=from_address, to_address=to_address)
+        try:
+            validate_email(from_address)
+        except ValidationError:
+            raise ValueError("The given email is not valid: {}".format(from_address))
+
+        try:
+            validate_email(to_address)
+        except ValidationError:
+            raise ValueError("The given email is not valid: {}".format(to_address))
+
+        mail = self.create(template=template, context=context_json, from_address=from_address, to_address=to_address, subject=subject)
         return mail
 
 
@@ -147,7 +172,8 @@ class Mail(UUIDMixin):
         try:
             template_name = MAIL_TEMPLATES[self.template]['template']
         except KeyError:
-            raise ImproperlyConfigured("No template {} found - is it in the folder {}?".format(self.template, MAIL_TEMPLATES_PREFIX))
+            raise ImproperlyConfigured("{} is not a valid Template name".format(self.template))
+
         try:
             txt_content = render_to_string(
                 "{}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name),

@@ -22,5 +22,4 @@ deployment:
   staging:
     branch: master
     commands:
-      - ./scripts/heroku_deploy.sh einhorn-starter:
-        timeout: 300
+      - ./scripts/heroku_deploy.sh einhorn-starter

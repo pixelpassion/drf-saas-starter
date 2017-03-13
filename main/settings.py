@@ -220,6 +220,9 @@ if ON_HEROKU:
     # https://devcenter.heroku.com/articles/http-routing#heroku-headers
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True    # https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_SECURE
+    CSRF_COOKIE_HTTPONLY = True     # https://docs.djangoproject.com/en/1.10/ref/settings/#session-cookie-httponly
+    CSRF_COOKIE_SECURE= True        # https://docs.djangoproject.com/en/1.10/ref/settings/#csrf-cookie-secure
 
     INSTALLED_APPS += (
         'raven.contrib.django.raven_compat',
@@ -285,3 +288,4 @@ CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0
 
 if STAGE == 'local':
     CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+

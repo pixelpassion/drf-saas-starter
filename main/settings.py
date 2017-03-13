@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
+    'django.contrib.humanize',
 
     'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',

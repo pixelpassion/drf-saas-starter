@@ -113,4 +113,14 @@ This is used for asynchronous, but more directly tasks - like messages to the us
 
 ## SSL (letsencrypt)
 
-Checkout cookiecutter!
+```
+sudo certbot certonly --manual
+
+heroku config:set ACME_TOKEN=
+heroku config:set ACME_KEY=
+
+sudo heroku certs:add /etc/letsencrypt/live/starter.einhornmanufaktur.de/fullchain.pem /etc/letsencrypt/live/starter.einhornmanufaktur.de/privkey.pem --app einhorn-starter
+
+heroku config:set SECURE_SSL_REDIRECT=True
+
+```

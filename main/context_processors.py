@@ -20,6 +20,7 @@ def admin_settings(request):
         'SENTRY_URL':  settings.SENTRY_URL,
         'django_version': django.get_version(),
         'python_version': python_version,
+        'ON_HEROKU': settings.ON_HEROKU,
     }
 
     if settings.ON_HEROKU:

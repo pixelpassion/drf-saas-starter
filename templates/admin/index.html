@@ -65,7 +65,7 @@
             <ul>
                 <li>Python Version: {{ python_version }}</li>
                 <li>Django Version: {{ django_version }}</li>
-                {% if settings.ON_HEROKU %}
+                {% if ON_HEROKU %}
                   <li>Version: {{ HEROKU_RELEASE_VERSION }} / {{ HEROKU_RELEASE_CREATED_AT }}</li>
                   <li>Commit: {{ HEROKU_SLUG_COMMIT }}</li>
                 {% endif %}

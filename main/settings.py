@@ -214,7 +214,7 @@ if ON_HEROKU:
     HEROKU_SLUG_DESCRIPTION = env('HEROKU_SLUG_DESCRIPTION', default=None)
     HEROKU_SLUG_COMMIT = GIT_BRANCH = env('HEROKU_SLUG_COMMIT', default=None)
 
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
 
     # In order to detect when a request is made via SSL in Django (for use in request.is_secure())
     # https://devcenter.heroku.com/articles/http-routing#heroku-headers

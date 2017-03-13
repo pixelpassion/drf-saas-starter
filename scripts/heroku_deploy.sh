@@ -1,15 +1,15 @@
 #!/bin/sh -e
 APP_NAME=$1
 
-git remote add heroku git@heroku.com:$APP_NAME.git
-git fetch heroku
+#git remote add heroku git@heroku.com:$APP_NAME.git
+#git fetch heroku
 
 PREV_WORKERS=$(heroku ps --app $APP_NAME | grep "^worker." | wc -l | tr -d ' ')
 
 # deploy code changes (and implicitly restart the app and any running workers)
 git push heroku master
 
-MIGRATION_CHANGES=$(heroku run manage.py showmigrations | grep '\[ \]' | wc -l | tr -d ' ')
+MIGRATION_CHANGES=$(heroku run python manage.py showmigrations | grep '\[ \]' | wc -l | tr -d ' ')
 echo "$MIGRATION_CHANGES db changes since last deploy."
 
 if test $MIGRATION_CHANGES -gt 0; then

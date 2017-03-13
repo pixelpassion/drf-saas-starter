@@ -1,9 +1,9 @@
 from django.db import models
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-
+from django.contrib.postgres.fields import JSONField
 from django.template.loader import render_to_string, get_template
-from django.template import TemplateDoesNotExist
+from django.template import Template, TemplateDoesNotExist, Context
 from main.mixins import UUIDMixin
 from django.utils.translation import ugettext_lazy as _
 from django.conf import *
@@ -13,6 +13,8 @@ if not settings.SENDGRID_API_KEY:
     raise NotImplementedError("No SENDGRID_API_KEY set")
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
+
+MAIL_TEMPLATES_PREFIX = "mails/"
 
 MAIL_TEMPLATES = {
     "action": {
@@ -29,9 +31,10 @@ MAIL_TEMPLATES = {
     },
     "hello": {
         "template": "hello",
-        "subject": "Hello World"
+        "subject": "Hello World, {{name}}"
     },
 }
+
 
 class MailManager(models.Manager):
 
@@ -41,7 +44,9 @@ class MailManager(models.Manager):
 
             e.g.
 
-            Mail.objects.create_mail("hello", "Hello world!",{'name': 'Jens'},"me@jensneuhaus.de")
+            mail = Mail.objects.create_mail("hello", "Hello world!",{'name': 'Jens'},"me@jensneuhaus.de")
+            mail.send()
+
         """
 
         if from_address is None:
@@ -92,12 +97,12 @@ class Mail(UUIDMixin):
 
     subject = models.CharField(
         _("Email Subject line"),
-        help_text=_("Subject line, saved after generating from context"),
+        help_text=_("Subject line for a mail"),
         max_length=500,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
-    context = models.TextField(
+    context = JSONField(
         _("Data of email context"),
         help_text=_("JSON dump of context dictionary used to fill in templates"),
         null=False,
@@ -128,38 +133,44 @@ class Mail(UUIDMixin):
     def __str__(self):
         return "%s to %s" % (self.template, self.to_address)
 
-    def send(self,sendgrid_api=False):
+    def send(self, sendgrid_api=False):
         """
             Sends the mail using data from the Mail object
 
             Checks for existing template. Text is needed, HTML is optional.
 
-            It can be called directly, but is usually called asynchronously.
+            It can be called directly, but is usually called asynchronously with tasks.send_asynchronous_mail.
+
+            sendgrid_api=True uses the sendgrid API directly (with bypassing django-anymail)
          """
 
-        template_name = MAIL_TEMPLATES[self.template]['template']
-        subject_template = MAIL_TEMPLATES[self.template]['subject']
-
+        try:
+            template_name = MAIL_TEMPLATES[self.template]['template']
+        except KeyError:
+            raise ImproperlyConfigured("No template {} found - is it in the folder {}?".format(self.template, MAIL_TEMPLATES_PREFIX))
         try:
             txt_content = render_to_string(
-                "mails/{}.txt".format(template_name),
+                "{}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name),
                 self.context
             )
         except TemplateDoesNotExist:
-            raise ImportError(
-                "Txt template not found: mails/{}.txt".format(template_name)
-            )
+            raise ImportError("Txt template not found: {}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name))
 
         try:
             html_content = render_to_string(
-                "mails/{}.html".format(template_name),
+                "{}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name),
                 self.context
             )
         except TemplateDoesNotExist:
-            print(
-                "HTML template not found: mails/{}.html".format(template_name)
-            )
+            print("HTML template not found: {}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name))
             html_content = None
+
+        if self.subject:
+            subject = self.subject
+        else:
+            subject = MAIL_TEMPLATES[self.template]['subject']
+
+        rendered_subject = Template(subject).render(Context(self.context))
 
         if sendgrid_api:
 
@@ -171,7 +182,7 @@ class Mail(UUIDMixin):
                                 "email": self.to_address
                             }
                         ],
-                        "subject": self.subject
+                        "subject": rendered_subject
                     }
                 ],
                 "from": {
@@ -195,7 +206,7 @@ class Mail(UUIDMixin):
 
             if html_content:
                 msg = EmailMultiAlternatives(
-                    self.subject,
+                    rendered_subject,
                     txt_content,
                     self.from_address,
                     [self.to_address]
@@ -204,7 +215,7 @@ class Mail(UUIDMixin):
 
             else:
                 msg = EmailMessage(
-                    self.subject,
+                    rendered_subject,
                     txt_content,
                     self.from_address,
                     [self.to_address]

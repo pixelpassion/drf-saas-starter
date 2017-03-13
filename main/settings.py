@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'apps.mails',
     'main.celery.CeleryConfig',
 
+    'django_extensions',        # This should be moved to only local, but it helps for testing
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -100,7 +101,6 @@ MIDDLEWARE = [
 if DEBUG is True and STAGE == 'local':
 
         INSTALLED_APPS += [
-            'django_extensions',
             'debug_toolbar',
         ]
 

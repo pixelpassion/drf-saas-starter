@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
-from django.conf.urls.static import static
-from django.conf import settings
-from django.core.urlresolvers import reverse_lazy
+
+from apps.letsencrypt.views import acme_challenge
 
 urlpatterns = [
 
@@ -18,6 +18,9 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
+
+    url(r'.well-known/acme-challenge/(?P<token>.+)', acme_challenge),
+
 
 ]
 

@@ -23,11 +23,14 @@ MAIL_TEMPLATES = {
         "template": "transactional-email-templates/templates/alert",
         "subject": "Alert email subject"
     },
-    
     "billing": {
         "template": "transactional-email-templates/templates/billing",
         "subject": "Billing email subject"
-    }
+    },
+    "hello": {
+        "template": "hello",
+        "subject": "Hello World"
+    },
 }
 
 class MailManager(models.Manager):
@@ -124,22 +127,6 @@ class Mail(UUIDMixin):
 
     def __str__(self):
         return "%s to %s" % (self.template, self.to_address)
-
-    @classmethod
-    def create(cls, template, subject, context, to_address, from_address=None):
-        """
-            Create a Mail object with proper validation
-
-            e.g.
-
-            Mail.create("hello", "Hello world!",{'name': 'Jens'},"me@jensneuhaus.de"])
-        """
-
-        if from_address is None:
-            from_address = settings.DEFAULT_FROM_EMAIL
-
-        mail = cls(subject=subject, context=context, from_address=from_address, to_address=to_address)
-        return mail
 
     def send(self,sendgrid_api=False):
         """

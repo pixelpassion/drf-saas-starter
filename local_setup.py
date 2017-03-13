@@ -116,7 +116,7 @@ def main(argv):
         create_env_file(project_name)
     except subprocess.CalledProcessError as e:
         print("Command: {}\nReturn code: {}\n{}\n{}".format(e.cmd, 
-                                                            e.return_code, 
+                                                            e.returncode, 
                                                             e.output, 
                                                             e.stderr))
 

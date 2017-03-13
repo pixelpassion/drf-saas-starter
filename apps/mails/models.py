@@ -150,20 +150,28 @@ class Mail(UUIDMixin):
             It can be called directly, but is usually called asynchronously.
          """
 
+        template_name = MAIL_TEMPLATES[self.template]['template']
+        subject_template = MAIL_TEMPLATES[self.template]['subject']
+
         try:
             txt_content = render_to_string(
-                "mails/{}.txt".format(self.template),
+                "mails/{}.txt".format(template_name),
                 self.context
             )
         except TemplateDoesNotExist:
-            raise ImportError("The txt-Template could not be found.")
+            raise ImportError(
+                "Txt template not found: mails/{}.txt".format(template_name)
+            )
 
         try:
             html_content = render_to_string(
-                "mails/{}.html".format(self.template),
+                "mails/{}.html".format(template_name),
                 self.context
             )
         except TemplateDoesNotExist:
+            print(
+                "HTML template not found: mails/{}.html".format(template_name)
+            )
             html_content = None
 
         if sendgrid_api:

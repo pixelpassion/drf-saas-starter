@@ -1,8 +1,7 @@
 #!/bin/sh -e
 APP_NAME=$1
 
-#git remote add heroku git@heroku.com:$APP_NAME.git
-#git fetch heroku
+git remote add heroku git@heroku.com:$APP_NAME.git
 
 PREV_WORKERS=$(heroku ps --app $APP_NAME | grep "^worker." | wc -l | tr -d ' ')
 

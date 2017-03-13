@@ -23,3 +23,6 @@ deployment:
     branch: master
     heroku:
       appname: einhorn-starter
+    commands:
+      - ./script/heroku_deploy.sh einhorn-starter:
+        timeout: 300

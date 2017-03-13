@@ -117,6 +117,9 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
+    unneeded_field_to_test_correct_migrations = models.BooleanField(
+        default=False
+    )
     USERNAME_FIELD = 'email'
 
     objects = UserManager()

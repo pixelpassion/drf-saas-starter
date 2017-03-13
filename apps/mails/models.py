@@ -14,10 +14,25 @@ if not settings.SENDGRID_API_KEY:
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
+MAIL_TEMPLATES = {
+    "action": {
+        "template": "transactional-email-templates/templates/action",
+        "subject": "Action email subject"
+    },
+    "alert": {
+        "template": "transactional-email-templates/templates/alert",
+        "subject": "Alert email subject"
+    },
+    
+    "billing": {
+        "template": "transactional-email-templates/templates/billing",
+        "subject": "Billing email subject"
+    }
+}
 
 class MailManager(models.Manager):
 
-    def create_mail(self,  template, subject, context, to_address, from_address=None):
+    def create_mail(self, template, subject, context, to_address, from_address=None):
         """
             Create a Mail object with proper validation
 
@@ -35,8 +50,18 @@ class MailManager(models.Manager):
 
 class Mail(UUIDMixin):
 
-    from_address = models.EmailField()
-    to_address = models.EmailField()
+    from_address = models.EmailField(
+        _("Sender email address"),
+        help_text=_("The 'from' field of the email"),
+        null=False,
+        blank=False
+    )
+    to_address = models.EmailField(
+        _("Recipient email address"),
+        help_text=_("The 'to' field of the email"),
+        null=False,
+        blank=False
+    )
 
     # delivery_service (Sendgrid etc. - should be a CharField with Options)
 
@@ -62,17 +87,37 @@ class Mail(UUIDMixin):
         null=False,
         blank=False)
 
-    subject = models.CharField(max_length=500)
-    context = models.TextField()
+    subject = models.CharField(
+        _("Email Subject line"),
+        help_text=_("Subject line, saved after generating from context"),
+        max_length=500,
+        null=False,
+        blank=False
+    )
+    context = models.TextField(
+        _("Data of email context"),
+        help_text=_("JSON dump of context dictionary used to fill in templates"),
+        null=False,
+        blank=False
+    )
 
     time_queued = models.DateTimeField(
-        null=True
+        _("Time mail was added to the send queue"),
+        help_text=_("This is when send_async.. is called"),
+        null=True,
+        blank=True
     )
     time_sent = models.DateTimeField(
-        null=True
+        _("Time mail was sent"),
+        help_text=_("This is when mail.send is called"),
+        null=True,
+        blank=True
     )
     time_delivered = models.DateTimeField(
-        null=True
+        _("Time mail was delivered"),
+        help_text=_("This is given by the Mail sender"),
+        null=True,
+        blank=True
     )
 
     objects = MailManager()
@@ -105,20 +150,28 @@ class Mail(UUIDMixin):
             It can be called directly, but is usually called asynchronously.
          """
 
+        template_name = MAIL_TEMPLATES[self.template]['template']
+        subject_template = MAIL_TEMPLATES[self.template]['subject']
+
         try:
             txt_content = render_to_string(
-                "mails/{}.txt".format(self.template),
+                "mails/{}.txt".format(template_name),
                 self.context
             )
         except TemplateDoesNotExist:
-            raise ImportError("The txt-Template could not be found.")
+            raise ImportError(
+                "Txt template not found: mails/{}.txt".format(template_name)
+            )
 
         try:
             html_content = render_to_string(
-                "mails/{}.html".format(self.template),
+                "mails/{}.html".format(template_name),
                 self.context
             )
         except TemplateDoesNotExist:
+            print(
+                "HTML template not found: mails/{}.html".format(template_name)
+            )
             html_content = None
 
         if sendgrid_api:

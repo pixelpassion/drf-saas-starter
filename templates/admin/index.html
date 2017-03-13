@@ -68,6 +68,8 @@
                 {% if ON_HEROKU %}
                   <li>Version: {{ HEROKU_RELEASE_VERSION }} ({{ HEROKU_RELEASE_CREATED_AT|naturaltime }})</li>
                   <li>Commit: {{ HEROKU_SLUG_COMMIT }}</li>
+                {% else %}
+                    <li><strong>Running locally!</strong></li>
                 {% endif %}
 
             </ul>

@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.mails',
     'main.celery.CeleryConfig',
+    'django_premailer', 
 
     'django_extensions',        # This should be moved to only local, but it helps for testing
     'allauth',

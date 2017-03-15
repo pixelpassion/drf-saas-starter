@@ -1,5 +1,6 @@
 import json
 import sendgrid
+from datetime import datetime
 
 from django.conf import *
 from django.contrib.postgres.fields import JSONField
@@ -251,3 +252,5 @@ class Mail(UUIDMixin):
 
             print("Email with UUID {} was sent.".format(self.id))
 
+        mail.time_sent = datetime.now()
+        mail.save()

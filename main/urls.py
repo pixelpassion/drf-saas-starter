@@ -2,7 +2,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
-from django.contrib.auth.decorators import permission_required, login_required
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 from apps.registration.views import UserRegistrationView
 from apps.letsencrypt.views import acme_challenge
@@ -17,7 +16,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^users/', include('apps.users.urls', namespace='users')),
-    url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts/', include('apps.authentication.urls')),
 
     # JSON Web Token handling
     url(r'^api/auth/', obtain_jwt_token),

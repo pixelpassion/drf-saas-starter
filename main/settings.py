@@ -1,5 +1,6 @@
 import environ
 import datetime
+import sys
 
 env = environ.Env()                             # set default values and casting
 environ.Env.read_env('.env')                    # reading .env file
@@ -10,6 +11,9 @@ MAIN_DIR = root.path('main')
 
 DEBUG = env.bool('DEBUG', False)                # don't run with debug turned on in production ==> Default=False
 STAGE = env.str('STAGE')                        # Every environment needs to set the stage
+
+if sys.argv[1:2] == ['test']:
+    STAGE = 'test'
 
 SECRET_KEY = env('SECRET_KEY')                  # Raises ImproperlyConfigured exception if SECRET_KEY not set
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the site URL for production
@@ -203,7 +207,8 @@ STATICFILES_DIRS = (
     str(root.path('static')),
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not STAGE == 'test':
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Mail handling

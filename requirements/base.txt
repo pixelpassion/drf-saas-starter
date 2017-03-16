@@ -14,3 +14,4 @@ raven==6.0.0			        # Error handling
 django-extensions==1.7.5        # Django extensions (should be in local.txt after done with testing)
 djangorestframework==3.5.4      # RESTful API
 django-oauth-toolkit==0.11.0    # OAuth 2.0 support
+django-rest-auth==0.9.0         

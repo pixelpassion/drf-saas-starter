@@ -17,7 +17,10 @@ from .utils import logout_user
 from rest_framework.permissions import IsAuthenticated
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+from apps.tenants.mixins import TenantAccessRequiredMixin
+
+
+class UserDetailView(LoginRequiredMixin, TenantAccessRequiredMixin, DetailView):
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
@@ -32,7 +35,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
                        kwargs={'username': self.request.user.username})
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UserUpdateView(LoginRequiredMixin, TenantAccessRequiredMixin, UpdateView):
 
     fields = ['first_name', 'last_name', ]
 
@@ -49,7 +52,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return User.objects.get(username=self.request.user.username)
 
 
-class UserListView(LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, TenantAccessRequiredMixin, ListView):
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
@@ -100,7 +103,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, TokenHasScope]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    required_scopes = ['metronom_admin', ]
+    required_scopes = ['special_admin', ]
 
 
 class UserView(generics.ListAPIView):
@@ -108,7 +111,7 @@ class UserView(generics.ListAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated, TokenHasScope]
     serializer_class = UserSerializer
-    required_scopes = ['metronom_admin', ]
+    required_scopes = ['special_admin', ]
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
@@ -123,7 +126,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (JSONWebTokenAuthentication, )
 
-    #required_scopes = ['metronom_admin', ]
+    #required_scopes = ['special_admin', ]
 
     def get_object(self):
         return self.request.user

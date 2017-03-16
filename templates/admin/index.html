@@ -63,6 +63,8 @@
             </ul>
         <h2>{% trans 'About' %}</h2>
             <ul>
+                <li>Current Site: {{ request.current_site.name }}, {{ request.site.name }}</li>
+
                 <li>Python Version: {{ python_version }}</li>
                 <li>Django Version: {{ django_version }}</li>
                 {% if ON_HEROKU %}

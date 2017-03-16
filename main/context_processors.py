@@ -8,6 +8,8 @@ from django.conf import settings
 import django
 import sys
 from datetime import datetime
+from django.contrib.sites.shortcuts import get_current_site
+
 
 def admin_settings(request):
     """Collects settings for the admin"""
@@ -22,6 +24,8 @@ def admin_settings(request):
         'django_version': django.get_version(),
         'python_version': python_version,
         'ON_HEROKU': settings.ON_HEROKU,
+        'SITE_URL': get_current_site(request),
+        'HOST_URL': request.get_host()
     }
 
     if settings.ON_HEROKU:

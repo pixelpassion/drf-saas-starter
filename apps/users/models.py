@@ -9,6 +9,7 @@ from django.db import models
 from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
 from django.utils import six, timezone
 from main.mixins import UUIDMixin
+from apps.tenants.models import Tenant
 
 
 class UserManager(BaseUserManager):
@@ -115,7 +116,11 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         help_text=_('Designates whether the user can log into this admin site.'),
     )
 
+    #is_instance_admin = models.BooleanField...
+
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
+
+    tenants = models.ManyToManyField(Tenant, help_text=_("Where is the user registered?"))
 
     USERNAME_FIELD = 'email'
 

@@ -69,13 +69,14 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.sites',
+    'django.contrib.messages',
     'django.contrib.humanize',
 
     'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
 
+    'apps.tenants',
     'apps.users',
     'apps.mails',
     'main.celery.CeleryConfig',
@@ -83,7 +84,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-
 
     'oauth2_provider',
     'rest_framework_docs',
@@ -99,6 +99,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'apps.tenants.middleware.TenantMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -306,7 +307,7 @@ OAUTH2_PROVIDER = {
         'read': 'Read scope',
         'write': 'Write scope',
         'groups': 'Access to your groups',
-        'metronom_admin': 'Access to all data ressources'
+        'special_admin': 'Access to all data ressources'
     },
     'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 60 * 12
 
@@ -369,3 +370,11 @@ PROJECT_NAME = 'Project'
 ALLOWED_EMAIL_DOMAINS = [
     'jensneuhaus.de',
 ]
+
+TENANT_DOMAIN = 'localhost:8000'
+
+DEFAULT_DOMAINS = [
+    'www.localhost:8000',
+    '127.0.0.1:8000',
+]
+

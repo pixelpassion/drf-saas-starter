@@ -12,12 +12,6 @@ from main.mixins import UUIDMixin
 from django.contrib.sites.models import Site, _simple_domain_name_validator
 
 
-if not hasattr(settings, 'TENANT_DOMAIN'):
-    raise ImproperlyConfigured("TENANT_DOMAIN is not set - its the root domain of all tenants basic domains")
-
-TENANT_DOMAIN_SITE_ID = Site.objects.get(domain=settings.TENANT_DOMAIN).id
-
-
 def validate_default_site_url(value):
     """ This validates the given Site - the default Site can not be used for a tenant
 
@@ -25,7 +19,12 @@ def validate_default_site_url(value):
 
     """
 
-    if value == TENANT_DOMAIN_SITE_ID:
+    if not hasattr(settings, 'TENANT_DOMAIN'):
+        raise ImproperlyConfigured("TENANT_DOMAIN is not set - its the root domain of all tenants basic domains")
+
+    tenant_domain_site_id = Site.objects.get(domain=settings.TENANT_DOMAIN).id
+
+    if value == tenant_domain_site_id:
         raise ValidationError(
             _('The root domain can not be used.').format(value)
         )

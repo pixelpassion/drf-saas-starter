@@ -65,6 +65,9 @@ class MailManager(models.Manager):
         except ValueError:
             raise ValueError("The given context is not valid: {}".format(context))
 
+        if not isinstance(context, dict):
+            raise ValueError("The given context is not a dictionary: {}".format(context))
+
         if from_address is None:
             from_address = settings.DEFAULT_FROM_EMAIL
 

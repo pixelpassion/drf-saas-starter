@@ -72,15 +72,11 @@ class CreateMailTest(TestCase):
 
     def test_create_mail_with_invalid_context(self):
         """Call Mail.objects.create_mail with invalid context should fail."""
-        pass
-    #        # Invalid context should raise ValueError
-    #        with self.assertRaises(ValueError):
-    #            Mail.objects.create_mail(
-    #                self.valid_args["template"],
-    #                ???,
-    #                self.valid_args["to_address"]
-    #            )
-
+        
+        # Invalid context should raise ValueError
+        with self.assertRaises(ValueError, msg="Invalid context should raise ValueError"):
+            self.create_mail(context="Not a dictionary")
+    
     def test_create_mail_with_invalid_to_address(self):
         """Call Mail.objects.create_mail with invalid to_address should fail"""
         

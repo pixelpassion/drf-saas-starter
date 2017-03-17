@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
+    'django.contrib.humanize',
 
     'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
@@ -215,12 +216,15 @@ if ON_HEROKU:
     HEROKU_SLUG_DESCRIPTION = env('HEROKU_SLUG_DESCRIPTION', default=None)
     HEROKU_SLUG_COMMIT = GIT_BRANCH = env('HEROKU_SLUG_COMMIT', default=None)
 
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=False)
 
     # In order to detect when a request is made via SSL in Django (for use in request.is_secure())
     # https://devcenter.heroku.com/articles/http-routing#heroku-headers
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True    # https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_SECURE
+    CSRF_COOKIE_HTTPONLY = True     # https://docs.djangoproject.com/en/1.10/ref/settings/#session-cookie-httponly
+    CSRF_COOKIE_SECURE= True        # https://docs.djangoproject.com/en/1.10/ref/settings/#csrf-cookie-secure
 
     INSTALLED_APPS += (
         'raven.contrib.django.raven_compat',
@@ -286,3 +290,4 @@ CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0
 
 if STAGE == 'local':
     CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+

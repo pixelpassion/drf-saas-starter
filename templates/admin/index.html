@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n static %}
+{% load i18n static humanize %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
 
@@ -60,6 +60,16 @@
                 <li><a href="{{ SENTRY_URL }}" target="_blank">Sentry (Error Monitoring)</a></li>
                 <li><a href="{{ MAILHOG_URL }}" target="_blank">Mailhog (E-Mail-Server)</a></li>
                 <li><a href="{{ RABBITMQ_MANAGEMENT_URL }}" target="_blank">RabbitMQ (Queue Manager)</a></li>
+            </ul>
+        <h2>{% trans 'About' %}</h2>
+            <ul>
+                <li>Python Version: {{ python_version }}</li>
+                <li>Django Version: {{ django_version }}</li>
+                {% if ON_HEROKU %}
+                  <li>Version: {{ HEROKU_RELEASE_VERSION }} ({{ HEROKU_RELEASE_CREATED_AT|naturaltime }})</li>
+                  <li>Commit: {{ HEROKU_SLUG_COMMIT }}</li>
+                {% endif %}
+
             </ul>
         <h2>{% trans 'Recent actions' %}</h2>
         <h3>{% trans 'My actions' %}</h3>

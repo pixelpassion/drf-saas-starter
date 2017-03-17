@@ -4,3 +4,6 @@
 django-debug-toolbar==1.6
 Fabric3==1.12.post1
 ipython==5.1.0
+
+# PIP handling
+yolk3k==0.9

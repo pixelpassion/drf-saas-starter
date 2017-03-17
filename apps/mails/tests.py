@@ -44,12 +44,9 @@ class CreateMailTest(TestCase):
         )
 
         # Make sure arguments were recorded correctly
-        self.assertEqual(mail_with_required_fields_only.template,
-                         self.valid_template)
-        self.assertEqual(mail_with_required_fields_only.context,
-                         self.valid_context)
-        self.assertEqual(mail_with_required_fields_only.to_address,
-                         self.valid_to_address)
+        self.assertEqual(mail_with_required_fields_only.template, self.valid_template)
+        self.assertEqual(mail_with_required_fields_only.context, self.valid_context)
+        self.assertEqual(mail_with_required_fields_only.to_address, self.valid_to_address)
 
         # From address should be the default
         self.assertEqual(mail_with_required_fields_only.from_address,
@@ -79,11 +76,8 @@ class CreateMailTest(TestCase):
     def test_create_mail_with_invalid_template(self):
         """Call Mail.objects.create_mail with invalid template should fail."""
         
-        err_msg = "Invalid template name should raise ValueError"
-        with self.assertRaises(ValueError, msg=err_msg):
-            self.create_mail(
-                template="really bad template name"
-            )
+        with self.assertRaises(ValueError, msg="Invalid template name should raise ValueError"):
+            self.create_mail(template="really bad template name")
 
         
     def test_create_mail_with_invalid_context(self):
@@ -100,20 +94,14 @@ class CreateMailTest(TestCase):
     def test_create_mail_with_invalid_to_address(self):
         """Call Mail.objects.create_mail with invalid to_address should fail"""
         
-        err_msg = "Invalid to address should raise ValueError"
-        with self.assertRaises(ValueError, msg=err_msg):
-            self.create_mail(
-                to_address="invalid email address"
-            )
+        with self.assertRaises(ValueError, msg="Invalid to address should raise ValueError"):
+            self.create_mail(to_address="invalid email address")
 
     def test_create_mail_with_invalid_from_address(self):
         """Call Mail.objects.create_mail with invalid from_address should fail"""
         
-        err_msg = "Invalid from address should raise ValueError"
-        with self.assertRaises(ValueError, msg=err_msg):
-            self.create_mail(
-                from_address="invalid email address"
-            )
+        with self.assertRaises(ValueError, msg="Invalid from address should raise ValueError"):
+            self.create_mail(from_address="invalid email address")
         
     def tearDown(self):
         self.valid_template = None

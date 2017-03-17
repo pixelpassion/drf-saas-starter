@@ -4,7 +4,6 @@ import random
 
 from fabric.api import env, lcd, local, task
 
-
 def _relative_to_fabfile(*path):
     return os.path.join(os.path.dirname(env.real_fabfile), *path)
 
@@ -32,12 +31,8 @@ def flake8():
             # flake8: noqa
         * Lines that end with a ``# NOQA`` comment will not issue a warning.
     """
-    local(
-        'flake8 '
-        '--exclude=".svn,CVS,.bzr,.hg,.git,migrations,__pycache__,._*" '
-        '--max-complexity=9 .'
-        '--ignore=E501'
-    )
+
+    local('flake8 --statistics --exit-zero')
 
 
 @task

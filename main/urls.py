@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
-from apps.registration.views import UserRegistrationView
+from apps.registration.views import TenantRegistrationView
 from apps.letsencrypt.views import acme_challenge
 
 urlpatterns = [
@@ -24,7 +24,7 @@ urlpatterns = [
 
     url(r'^api/authentication/', include('rest_auth.urls')),
     url(r'^api/registration/', include('apps.registration.urls')),
-    url(r'^api/registration2/', UserRegistrationView.as_view(), name="register"),
+    url(r'^api/sign_up/', TenantRegistrationView.as_view(), name="register"),
 
     #url(r'^api/registration/', include('rest_auth.registration.urls')),
     url(r'^api/users/', include('apps.users.api_urls', namespace='api_users')),

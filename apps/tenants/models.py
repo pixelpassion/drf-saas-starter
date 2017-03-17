@@ -30,6 +30,19 @@ def validate_default_site_url(value):
         )
 
 
+class TenantManager(models.Manager):
+    use_in_migrations = True
+
+    def create_tenant(self, user, name, domain):
+
+        domain = "{}.{}".format(domain, settings.TENANT_DOMAIN)
+        site = Site.objects.create(name=domain, domain=domain)
+        tenant = Tenant.objects.create(name=name, site=site)
+        user.tenants.add(tenant)
+
+        return tenant
+
+
 class Tenant(UUIDMixin):
     """
         The Tenant is the client on the platform.
@@ -46,6 +59,8 @@ class Tenant(UUIDMixin):
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
     site = models.OneToOneField(Site, null=False, blank=False, validators=[validate_default_site_url])
+
+    objects = TenantManager()
 
     class Meta:
         verbose_name = _('tenant')

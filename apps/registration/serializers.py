@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from apps.users.models import User
+from apps.tenants.models import Tenant
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -31,14 +32,70 @@ class CreateUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('is_active', 'activation_token')
 
         extra_kwargs = {
-            'password': {'write_only': True},
+            'password': {'write_only': True, 'help_text': 'The password of the user'},
         }
 
     def create(self, validated_data):
         """call create_user on user object. Without this the password will be stored in plain text."""
 
+
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class TenantSerializer(serializers.ModelSerializer):
+    """Serialize data from the User """
+
+    domain = serializers.CharField(label=_(u"Domain"), help_text="The domain name of the tenant")
+    user = CreateUserSerializer(write_only=True)
+
+    class Meta:
+        """ """
+        model = Tenant
+        fields = ('id', 'name', 'domain', 'is_active', 'user')
+        read_only_fields = ('is_active', )
+
+    def create(self, validated_data):
+        """call create_tenant on the Tenant model."""
+
+        print(validated_data)
+        print(validated_data["user"]["email"])
+
+        import json
+
+        user = User.objects.create_user(json.dumps(validated_data["user"]))
+
+        del(validated_data['user'])
+        tenant = Tenant.objects.create_tenant(user=user, **validated_data)
+        return tenant
+
+
+class CreateTenantSerializer(CreateUserSerializer):
+    """Serialize data from the User """
+
+    name = serializers.CharField(label=_(u"Company Name"), help_text="The name of the company")
+    domain = serializers.CharField(label=_(u"Domain"), help_text="The domain name of the company")
+
+    class Meta:
+        """ """
+        model = User
+        fields = ('id', 'name', 'domain', 'first_name', 'last_name', 'email', 'is_active', 'password')
+        read_only_fields = ('is_active', 'activation_token')
+
+    def create(self, validated_data):
+        """call create_user on user object. Without this the password will be stored in plain text."""
+
+        name = validated_data['name']
+        domain = validated_data['domain']
+
+        del(validated_data['name'])
+        del(validated_data['domain'])
+        print(validated_data)
+        print(type(validated_data))
+
+        user = super(CreateTenantSerializer, self).create(validated_data)
+        tenant = Tenant.objects.create_tenant(user=user, name=name, domain=domain)
+        return tenant
 
 
 class RegisterSerializer(serializers.Serializer):

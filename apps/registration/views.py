@@ -89,12 +89,12 @@ class VerifyEmailView(APIView, ConfirmEmailView):
 
 from rest_framework import parsers, renderers, generics, status, viewsets
 from apps.users.models import User
-from .serializers import CreateUserSerializer
+from .serializers import CreateTenantSerializer, TenantSerializer
 from apps.api.permissions import IsAuthenticatedOrCreate
 
 
-class UserRegistrationView(generics.CreateAPIView):
+class TenantRegistrationView(generics.CreateAPIView):
 
     queryset = User.objects.all()
-    serializer_class = CreateUserSerializer
+    serializer_class = CreateTenantSerializer
     permission_classes = (IsAuthenticatedOrCreate,)

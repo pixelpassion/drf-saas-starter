@@ -3,16 +3,17 @@ from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
 from django.core.exceptions import ValidationError, ImproperlyConfigured
-from django.db import models
+from django.db import models, IntegrityError
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from main.mixins import UUIDMixin
 
 from django.contrib.sites.models import Site, _simple_domain_name_validator
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
-
-def validate_default_site_url(value):
+def validate_default_site(value):
     """ This validates the given Site - the default Site can not be used for a tenant
 
         TODO: Check, if the site URL is part of TENANT_DOMAIN root
@@ -58,7 +59,7 @@ class Tenant(UUIDMixin):
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
-    site = models.OneToOneField(Site, null=False, blank=False, validators=[validate_default_site_url])
+    site = models.OneToOneField(Site, null=False, blank=False, validators=[validate_default_site, ])
 
     objects = TenantManager()
 
@@ -68,6 +69,12 @@ class Tenant(UUIDMixin):
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_delete, sender=Tenant)
+def auto_delete_site_with_tenant(sender, instance, **kwargs):
+    """ The site will can be deleted, when the tenant is deleted """
+    instance.site.delete()
 
 
 class Domain(models.Model):
@@ -82,7 +89,7 @@ class Domain(models.Model):
     )
     name = models.CharField(_('display name'), max_length=50)
 
-    tenant = models.OneToOneField(Tenant, null=False, blank=False)
+    tenant = models.ForeignKey(Tenant, null=False, blank=False, related_name="domains", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('domain')

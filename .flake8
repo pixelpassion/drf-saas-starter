@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 120
+exclude = .venv,.git,docs,node_modules,migrations,__pycache__
+ignore =
+    # Line too makes no sense with big monitors
+    E501

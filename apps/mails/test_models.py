@@ -2,6 +2,7 @@ from django.conf import settings
 from django.test import TestCase
 from .models import Mail
 
+
 class CreateMailTest(TestCase):
 
     def setUp(self):
@@ -21,7 +22,6 @@ class CreateMailTest(TestCase):
             ]
         }
 
-
     def create_mail(self, template=None, context=None, to_address=None,
                     from_address="Default", subject="Default"):
         """Creates and returns Mail object with default valid fields"""
@@ -33,15 +33,12 @@ class CreateMailTest(TestCase):
             from_address if from_address is not "Default" else self.valid_from_address,
             subject if subject is not "Default" else self.valid_subject
         )
-                    
     
     def test_create_mail_with_required_fields_only(self):
         """Call Mail.objects.create_mail with valid required arguments should succeed
         """
         
-        mail_with_required_fields_only = self.create_mail(
-            from_address=None, subject=None
-        )
+        mail_with_required_fields_only = self.create_mail(from_address=None, subject=None)
 
         # Make sure arguments were recorded correctly
         self.assertEqual(mail_with_required_fields_only.template, self.valid_template)
@@ -49,12 +46,11 @@ class CreateMailTest(TestCase):
         self.assertEqual(mail_with_required_fields_only.to_address, self.valid_to_address)
 
         # From address should be the default
-        self.assertEqual(mail_with_required_fields_only.from_address,
-                         settings.DEFAULT_FROM_EMAIL)
+        self.assertEqual(mail_with_required_fields_only.from_address, settings.DEFAULT_FROM_EMAIL)
 
         # Subject should be set to None
         self.assertIsNone(mail_with_required_fields_only.subject)
-
+        
     def test_create_mail_with_optional_fields(self):
         """Call Mail.objects.create_mail with optional arguments should succeed
         """
@@ -62,16 +58,11 @@ class CreateMailTest(TestCase):
         mail_with_optional_fields = self.create_mail()
         
         # Make sure arguments were recorded correctly
-        self.assertEqual(mail_with_optional_fields.template,
-                         self.valid_template)
-        self.assertEqual(mail_with_optional_fields.context,
-                         self.valid_context)
-        self.assertEqual(mail_with_optional_fields.to_address,
-                         self.valid_to_address)
-        self.assertEqual(mail_with_optional_fields.from_address,
-                         self.valid_from_address)
-        self.assertEqual(mail_with_optional_fields.subject,
-                         self.valid_subject)
+        self.assertEqual(mail_with_optional_fields.template, self.valid_template)
+        self.assertEqual(mail_with_optional_fields.context, self.valid_context)
+        self.assertEqual(mail_with_optional_fields.to_address, self.valid_to_address)
+        self.assertEqual(mail_with_optional_fields.from_address, self.valid_from_address)
+        self.assertEqual(mail_with_optional_fields.subject, self.valid_subject)
 
     def test_create_mail_with_invalid_template(self):
         """Call Mail.objects.create_mail with invalid template should fail."""
@@ -79,7 +70,6 @@ class CreateMailTest(TestCase):
         with self.assertRaises(ValueError, msg="Invalid template name should raise ValueError"):
             self.create_mail(template="really bad template name")
 
-        
     def test_create_mail_with_invalid_context(self):
         """Call Mail.objects.create_mail with invalid context should fail."""
         pass
@@ -109,7 +99,6 @@ class CreateMailTest(TestCase):
         self.valid_from_address = None
         self.valid_subject = None
         self.valid_context = None
-
 
         
 class SendMailTest(TestCase):

@@ -5,8 +5,14 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.sites.models import Site
 
 from .models import User
+
+
+class TenantInline(admin.TabularInline):
+    model = User.tenants.through
+    extra = 0
 
 
 class MyUserChangeForm(UserChangeForm):
@@ -39,3 +45,4 @@ class MyUserAdmin(AuthUserAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser')
     list_editable = ('username', 'first_name', 'last_name', 'email', 'is_active',)
     search_fields = ['first_name', 'last_name', 'username', 'email', ]
+    inlines = (TenantInline,)

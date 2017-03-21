@@ -1,4 +1,6 @@
 import environ
+import datetime
+import sys
 
 env = environ.Env()                             # set default values and casting
 environ.Env.read_env('.env')                    # reading .env file
@@ -9,6 +11,9 @@ MAIN_DIR = root.path('main')
 
 DEBUG = env.bool('DEBUG', False)                # don't run with debug turned on in production ==> Default=False
 STAGE = env.str('STAGE')                        # Every environment needs to set the stage
+
+if sys.argv[1:2] == ['test']:
+    STAGE = 'test'
 
 SECRET_KEY = env('SECRET_KEY')                  # Raises ImproperlyConfigured exception if SECRET_KEY not set
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the site URL for production
@@ -68,17 +73,26 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.sites',
+    'django.contrib.messages',
     'django.contrib.humanize',
 
     'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
 
+    'apps.tenants',
     'apps.users',
     'apps.mails',
     'main.celery.CeleryConfig',
     'django_premailer', 
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+
+    'oauth2_provider',
+    'rest_framework_docs',
+    'rest_framework_swagger',
 
     'django_extensions',        # This should be moved to only local, but it helps for testing
     'allauth',
@@ -90,7 +104,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'apps.tenants.middleware.TenantMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -170,7 +186,8 @@ AUTHENTICATION_BACKENDS = (
 
 # Internationalization
 
-LANGUAGE_CODE = 'de-DE'
+LANGUAGE_CODE = 'de_DE'
+
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -193,7 +210,8 @@ STATICFILES_DIRS = (
     str(root.path('static')),
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not STAGE == 'test':
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Mail handling
@@ -270,9 +288,7 @@ EMAIL_HOST = env("EMAIL_HOST", default='localhost')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
-
 DEFAULT_FROM_EMAIL="mail@example.org"
-
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -290,4 +306,120 @@ CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0
 
 if STAGE == 'local':
     CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+
+# Rest framework
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups',
+        'special_admin': 'Access to all data ressources'
+    },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 60 * 12
+
+}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+#     ),
+#     # 'DEFAULT_PERMISSION_CLASSES': (
+#     #     'rest_framework.permissions.IsAuthenticated',
+#     # )
+# }
+
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'api.exceptions.basic_exception_handler',
+#
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'api.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PAGINATION_CLASS':
+#         'api.pagination.StandardResultsSetPagination'
+# }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+
+JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
+JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='einhorn-starter')
+
+JWT_AUTH = {
+    'JWT_PAYLOAD_HANDLER': 'apps.api.jwt.payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'apps.api.jwt.response_payload_handler',
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'apps.api.jwt.get_username_from_payload_handler',
+    'JWT_SECRET_KEY': JWT_SECRET,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60*60*72),
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=60*60*12),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ISSUER': 'einhorn-starter',
+}
+
+REST_USE_JWT = True
+
+PROJECT_NAME = 'Project'
+
+
+ALLOWED_EMAIL_DOMAINS = [
+    'jensneuhaus.de',
+]
+
+TENANT_DOMAIN = 'localhost:8000'
+
+DEFAULT_DOMAINS = [
+    'www.localhost:8000',
+    '127.0.0.1:8000',
+]
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
+
+# Password validation
+# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'users.User'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'OPTIONS': {
+            'max_similarity': 0.7,
+            'user_attributes': ('username', 'first_name', 'last_name', 'email')
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        # optional path for password black list (default path: django/contrib/auth/common-passwords.txt.gz)
+        'OPTIONS': {
+            #'password_list_path': '/path/to/passwordBlackList.txt.gz',
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    }
+]
 

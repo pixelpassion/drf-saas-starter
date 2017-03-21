@@ -58,6 +58,7 @@ def test():
 
 @task
 def commit(message):
+    """ Git Commit with a message """
     build()
     local('git add .')
     local('git commit -m "%s"' % message)
@@ -65,11 +66,13 @@ def commit(message):
 
 @task
 def push():
+    """ Push to Git """
     local('git push')
 
 
 @task
 def commit_and_push(message):
+    """ Commit and push in once """
     build()
     commit(message)
     push()
@@ -77,11 +80,13 @@ def commit_and_push(message):
 
 @task
 def test():
+    """ Run tests"""
     local('python manage.py test')
 
 
 @task
 def coverage():
+    """ Run coverage """
     local('coverage run manage.py test')
     local('coverage html')
 
@@ -157,4 +162,20 @@ def create_heroku_app(app_name):
 
     #
     # local('heroku run python manage.py createsuperuser --app %s' % app_name)
+
+
+@task
+def licenses():
+    """Updates the licenses of all installed pip packages"""
+    local("echo '# Licenses' > docs/licenses.md")
+    local("echo '' >> docs/licenses.md")
+    local("echo 'A list of the used packages and their licenses (can be updated with the command 'fab licenses') > docs/licenses.md' >> docs/licenses.md")
+    local("echo '' >> docs/licenses.md")
+    local("yolk -l -f license >> docs/licenses.md")
+
+
+@task
+def pip_updates():
+    """Print the pip apps, which have a new updated version available"""
+    local("yolk -U")
 

@@ -35,11 +35,8 @@ class TenantSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """call create_tenant on the Tenant model."""
 
-        #with transaction.atomic():
-
         user_serializer = CreateUserSerializer()
         user = user_serializer.create(validated_data=validated_data["user"])
-
         del(validated_data['user'])
 
         tenant = Tenant.objects.create_tenant(user=user, **validated_data)

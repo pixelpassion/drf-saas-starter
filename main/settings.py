@@ -379,12 +379,12 @@ ALLOWED_EMAIL_DOMAINS = [
     'jensneuhaus.de',
 ]
 
-TENANT_DOMAIN = 'localhost:8000'
+TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
-DEFAULT_DOMAINS = [
+DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS',default=[
     'www.localhost:8000',
     '127.0.0.1:8000',
-]
+])
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',

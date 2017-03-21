@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.test import TestCase
 from .models import Mail
@@ -96,48 +98,50 @@ class CreateMailTest(TestCase):
         self.valid_subject = None
         self.valid_context = None
 
-        
+
+
 class SendMailTest(TestCase):
 
-    def setUp(self):
-        valid_args = {
-            "template": "alert",
-            "context": {
-                "business_name": "Business Name", 
-                "alert_warning": "Alert message from CompanyName", 
-                "recipient_name": "John Doe",
-                "content": [
-                    {"text": "Lorem ipsum dolor sit amet. This is a sentence."}, 
-                    {"text": "Example Button", 
-                     "link": "https://www.example.com/"},
-                    {"text": "Lorem ipsum dolor sit amet."}
-                ]
-            }, 
-            "to_address": "serious.insomnia@gmail.com",
-            "from_address": "mail-test@mailtest.com",
-            "subject": "Hello there"
-        }
-        
+    def setUp(self): 
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail(
-            valid_args["template"],
-            valid_args["context"],
-            valid_args["to_address"]
-        )
-
-        # Save UUID for later
-        self.mail_uuid = self.mail.id
+        self.mail = Mail.objects.create_mail("alert", {}, "serious.insomnia@gmail.com", "mail-test@mailtest.com")
     
-    def test_send_mail_directly(self):
-        pass
+    def test_send_mail_anymail(self):
+        """Call mail.send() 
+        Make sure mail is actually sent.
+        """
+        self.mail.send()
 
-    def test_send_mail_asynchronous(self):
-        pass
+    def test_send_mail_sendgrid(self):
+        """Call mail.send() using sendgrid API
+        Make sure mail is actually sent.
+        """
+        self.mail.send(sendgrid_api=True)
+    
+    def tearDown(self):
+        self.mail = None
 
-    def test_send_mail_with_db_errors(self):
-        # Test: Pass nonexistent UUID, should raise AttributeError
-        pass
+        
+class SendMailInfoTest(TestCase):
 
-    def test_send_mail_with_template_errors(self):
-        # Missing required template field
-        pass
+    def setUp(self): 
+        # Create valid Mail object
+        self.mail = Mail.objects.create_mail("alert", {}, "serious.insomnia@gmail.com", "mail-test@mailtest.com", subject="Custom subject")
+
+        # Send the mail and record time sent
+        self.mail.send()
+        self.mail_time_sent = datetime.now()
+
+    def test_send_mail_subject(self):
+        """Check that correct subject is recorded.
+        """
+        self.assertEqual(self.mail.subject, "Custom subject", msg="Mail subject recorded incorrectly")
+
+    def test_send_mail_date(self):
+        """Check that correct sent datetime is recorded.
+        """
+        self.assertTrue((self.mail.time_sent - self.mail_time_sent) < timedelta(seconds=2), msg="Mail time_sent recorded inaccurately")
+        
+    def tearDown(self):
+        self.mail = None
+        self.mail_time_sent = None

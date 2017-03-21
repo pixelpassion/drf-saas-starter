@@ -255,5 +255,5 @@ class Mail(UUIDMixin):
 
             print("Email with UUID {} was sent.".format(self.id))
 
-        mail.time_sent = datetime.now()
-        mail.save()
+        self.time_sent = datetime.now()
+        self.save()

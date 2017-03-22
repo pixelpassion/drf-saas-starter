@@ -216,7 +216,7 @@ if not STAGE == 'test':
 
 # Mail handling
 
-SENDGRID_API_KEY=env("SENDGRID_API_KEY", default=None)
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 
 ANYMAIL = {
     "SENDGRID_API_KEY": SENDGRID_API_KEY,

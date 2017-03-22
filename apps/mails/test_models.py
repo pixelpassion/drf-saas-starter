@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from .models import Mail
 from urllib.error import HTTPError
 
@@ -100,6 +100,7 @@ class CreateMailTest(TestCase):
         self.valid_context = None
 
 
+@override_settings(SENDGRID_API_KEY='test-api-key')
 class SendMailTest(TestCase):
 
     def setUp(self):
@@ -122,7 +123,6 @@ class SendMailTest(TestCase):
 
             urllib.error.HTTPError: HTTP Error 401: Unauthorized
         """
-
         with self.assertRaises(HTTPError):
             self.mail.send(sendgrid_api=True)
 

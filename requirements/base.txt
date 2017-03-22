@@ -20,3 +20,4 @@ djangorestframework-jwt==1.9.0
 drfdocs==0.0.11
 django-rest-swagger==2.1.1
 argon2-cffi==16.3.0             # password hashing
+WeasyPrint==0.36		# HTML to PDF conversion

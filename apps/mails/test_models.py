@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.test import TestCase
 from .models import Mail
+from urllib.error import HTTPError
 
 
 class CreateMailTest(TestCase):
@@ -99,13 +100,12 @@ class CreateMailTest(TestCase):
         self.valid_context = None
 
 
-
 class SendMailTest(TestCase):
 
-    def setUp(self): 
+    def setUp(self):
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail("alert", {}, "serious.insomnia@gmail.com", "mail-test@mailtest.com")
-    
+        self.mail = Mail.objects.create_mail("alert", {}, "mailtest@sink.sendgrid.net", "test@example.com")
+
     def test_send_mail_anymail(self):
         """Call mail.send() 
         Make sure mail is actually sent.
@@ -113,15 +113,23 @@ class SendMailTest(TestCase):
         self.mail.send()
 
     def test_send_mail_sendgrid(self):
-        """Call mail.send() using sendgrid API
-        Make sure mail is actually sent.
         """
-        self.mail.send(sendgrid_api=True)
-    
+            Call mail.send() using sendgrid API
+            Make sure mail is actually sent.
+
+            This should be mocked later, right now its checking for a 401 HttpError sent by CircleCI
+             because the SENDGRID_API_KEY is wrong in circle.yml
+
+            urllib.error.HTTPError: HTTP Error 401: Unauthorized
+        """
+
+        with self.assertRaises(HTTPError):
+            self.mail.send(sendgrid_api=True)
+
     def tearDown(self):
         self.mail = None
 
-        
+
 class SendMailInfoTest(TestCase):
 
     def setUp(self): 

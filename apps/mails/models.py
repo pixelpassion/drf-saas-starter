@@ -12,6 +12,7 @@ from django.template import Template, TemplateDoesNotExist, Context
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
+from apps.tenants.models import TenantMixin
 from main.mixins import UUIDMixin
 
 if not settings.SENDGRID_API_KEY:

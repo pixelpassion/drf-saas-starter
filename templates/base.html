@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>{% block title %}Untitled Project{% endblock title %}</title>
+        <title>{% block title %}{{ PROJECT_NAME }}{% endblock title %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="Fineware AG">
@@ -43,7 +43,7 @@
             {% if APP_LOGO %}
                 <img src="{% url "media_file" APP_LOGO %}"/>
             {% else %}
-                New Project
+                {{ PROJECT_NAME }}
             {% endif %}
         </a>
 
@@ -88,7 +88,7 @@
 
     <footer class="footer">
         <div class="container">
-            <span class="text-muted">{% trans "© New Project 2017" %}</span>
+            <span class="text-muted">{% blocktrans %}© {{ PROJECT_NAME }} 2017 - {{ HOST_URL }}{% endblocktrans %}</span>
         </div>
     </footer>
 

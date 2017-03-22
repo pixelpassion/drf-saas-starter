@@ -53,7 +53,7 @@ class CustomPDF(models.Model):
         pdf_output = buf.read()
         buf.close()
 
-        response = HttpResponse(pdf_output. content_type='application/pdf')
+        response = HttpResponse(pdf_output, content_type='application/pdf')
         response['Content-Disposition'] = 'filename="{}"'.format(self.output_filename)
 
         return response

@@ -16,7 +16,7 @@ def send_asynchronous_mail(self, mail_uuid, sendgrid_api=False):
     except Mail.DoesNotExist:
         raise AttributeError("There is no mail with that UUID")
     
-    send_asynchronous_mail_queud(self, mail_uuid, sendgrid_api)
+    send_asynchronous_mail_queued(self, mail_uuid, sendgrid_api)
 
     
 @app.task(bind=True)

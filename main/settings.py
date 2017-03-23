@@ -66,6 +66,12 @@ LOGGING = {
     },
 }
 
+# Disable CSSutils warnings (django_premailer)
+
+import logging
+import cssutils
+cssutils.log.setLevel(logging.ERROR)
+
 # Application definition
 
 INSTALLED_APPS = [

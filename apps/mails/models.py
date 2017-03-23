@@ -1,6 +1,5 @@
 import json
 import sendgrid
-from datetime import datetime
 
 from django.conf import *
 from django.contrib.postgres.fields import JSONField
@@ -10,6 +9,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db import models
 from django.template import Template, TemplateDoesNotExist, Context
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from apps.tenants.models import TenantMixin
@@ -256,5 +256,5 @@ class Mail(UUIDMixin):
 
             print("Email with UUID {} was sent.".format(self.id))
 
-        self.time_sent = datetime.now()
+        self.time_sent = timezone.now()
         self.save()

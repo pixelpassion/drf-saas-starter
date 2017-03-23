@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.test import TestCase, override_settings
+from django.utils import timezone
 from .models import Mail
 from urllib.error import HTTPError
 
@@ -138,7 +139,7 @@ class SendMailInfoTest(TestCase):
 
         # Send the mail and record time sent
         self.mail.send()
-        self.mail_time_sent = datetime.now()
+        self.mail_time_sent = timezone.now()
 
     def test_send_mail_subject(self):
         """Check that correct subject is recorded.

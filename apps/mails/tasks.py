@@ -1,7 +1,7 @@
-from datetime import datetime
-
 from main.celery import app
 from sendgrid.helpers.mail import *
+
+from django.utils import timezone
 
 from .models import Mail
 
@@ -11,7 +11,7 @@ def send_asynchronous_mail(self, mail_uuid, sendgrid_api=False):
     """ Sends an asynchronous mail by the given ID"""
     try:
         mail = Mail.objects.get(id=mail_uuid)
-        mail.time_queued = datetime.now()
+        mail.time_queued = timezone.now()
         mail.save()
     except Mail.DoesNotExist:
         raise AttributeError("There is no mail with that UUID")

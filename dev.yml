@@ -13,6 +13,28 @@ services:
     environment:
       - POSTGRES_USER=postgres
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+      - "8080:8080"
+
 #  django:
 #    build:
 #      context: .
@@ -33,37 +55,13 @@ services:
 #      - mailhog
 #      - rabbitmq
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-      - "1025:1025"
-
-  pgadmin4:
-    image: fenglc/pgadmin4
-    ports:
-      - "5050:5050"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "4369:4369"
-      - "5671:5671"
-      - "5672:5672"
-      - "15671:15671"
-      - "15672:15672"
-      - "25672:25672"
-      - "8080:8080"
-
 #  jenkins:
 #    image: library/jenkins
 #    ports:
 #      - "50000:50000"
 #      - "8090:8080"
 
-#  redis:
-#    image: redis:latest
-#
+
 #  celeryworker:
 #    build:
 #      context: .

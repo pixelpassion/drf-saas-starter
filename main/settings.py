@@ -29,8 +29,8 @@ root = environ.Path(__file__) - 2
 ROOT_DIR = root()
 MAIN_DIR = root.path('main')
 
-DEBUG = env.bool('DEBUG', False)                # don't run with debug turned on in production ==> Default=False
-STAGE = env.str('STAGE')                        # Every environment needs to set the stage
+DEBUG = env.bool('DEBUG', False)                            # debug should never be turned on in production
+STAGE = env.str('STAGE')                                    # Every environment needs to set the stage
 
 if sys.argv[1:2] == ['test']:
     STAGE = 'test'
@@ -102,6 +102,22 @@ DATABASES = {
 }
 
 
+# Lets cache some things
+
+REDIS_URL = env.str('REDIS_URL', default=None)
+CACHING = env.bool('CACHING', default=True)
+
+if REDIS_URL and CACHING:
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': '{}/0'.format(REDIS_URL),
+            'TIMEOUT': env.int('CACHE_TIMEOUT', default=86400),
+        }
+    }
+
+
 ########################################################################################################################
 #                                            2 - Installed apps + Middleware                                           #
 ########################################################################################################################
@@ -146,7 +162,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -216,6 +234,7 @@ ON_HEROKU = env('HEROKU_APP_ID', default=False)
 
 if ON_HEROKU:
 
+    HEROKU_APP_NAME = env.str('HEROKU_APP_NAME')
     HEROKU_RELEASE_CREATED_AT = env('HEROKU_RELEASE_CREATED_AT', default=None)
     HEROKU_RELEASE_VERSION = env('HEROKU_RELEASE_VERSION', default=None)
     HEROKU_SLUG_DESCRIPTION = env('HEROKU_SLUG_DESCRIPTION', default=None)
@@ -244,6 +263,9 @@ if ON_HEROKU:
         'dsn': 'https://d8149058f0924193aa9af8a87e8dca83:fec43582f54b4c448882b44a7ce308a3@sentry.io/122593',
         'release': GIT_BRANCH
     }
+
+    if CACHES:
+        CACHES['default']['KEY_PREFIX'] = "{}-{}".format(HEROKU_APP_NAME, HEROKU_RELEASE_VERSION)
 
 
 ########################################################################################################################
@@ -332,7 +354,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #                                                 7 - Celery                                                           #
 ########################################################################################################################
 
-# In development, all tasks will be executed locally by blocking until the task returns
+# Settings should be moved to the new lowercase format
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#new-lowercase-settings
 
 CELERY_BROKER_URL = env.str('CLOUDAMQP_URL', default='amqp://guest:guest@127.0.0.1')
 BROKER_POOL_LIMIT = 1                   # Will decrease connection usage
@@ -421,7 +444,7 @@ REST_USE_JWT = True
 #                                             9 - Context (Admin, etc.)                                                #
 ########################################################################################################################
 
-PROJECT_NAME = 'Project'
+PROJECT_NAME = env.str('PROJECT_NAME', default='Untitled Project')
 
 SENTRY_URL = env.str('SENTRY_URL', default="#")
 MAILHOG_URL = env.str('MAILHOG_URL', default="#")

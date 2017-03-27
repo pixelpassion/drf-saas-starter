@@ -92,8 +92,9 @@ $ docker-compose -f dev.yml up
 It will start different services locally.
 
 * RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling)
-* Redis: http://localhost:6379/ (used for caching and django-channels)
-* Mailhog: http://localhost:8025 (used as a local mailserver)
+* Redis: rediscache://127.0.0.1:6379 (used for caching and django-channels)
+* Redis Browser: http://localhost:8019/ (a simple Key/Value browser to debug Redis)
+* Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
 * PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
 
 ## Asynchronous tasks

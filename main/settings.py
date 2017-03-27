@@ -40,50 +40,6 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])   # Should have '*' for local, the
 
 SITE_ID = 1
 
-# Heroku expects to receive error messages on STDERR, the following logging takes care of this
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
-    },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
-        },
-    },
-    'handlers': {
-        'sentry': {
-            'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'tags': {'custom-tag': 'x'},
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    },
-}
 
 ROOT_URLCONF = 'main.urls'
 
@@ -101,6 +57,7 @@ DATABASES = {
     'default': env.db(),
 }
 
+DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Lets cache some things
 
@@ -117,6 +74,47 @@ if REDIS_URL and CACHING:
         }
     }
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s %(funcName)s()] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'django.db': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'WARNING',
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'main': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
+}
 
 ########################################################################################################################
 #                                            2 - Installed apps + Middleware                                           #
@@ -267,6 +265,51 @@ if ON_HEROKU:
     if CACHES:
         CACHES['default']['KEY_PREFIX'] = "{}-{}".format(HEROKU_APP_NAME, HEROKU_RELEASE_VERSION)
 
+    # Heroku expects to receive error messages on STDERR, the following logging takes care of this
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'root': {
+            'level': 'WARNING',
+            'handlers': ['sentry',],
+        },
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s '
+                          '%(process)d %(thread)d %(message)s'
+            },
+        },
+        'handlers': {
+            'sentry': {
+                'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
+                'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+                'tags': {'custom-tag': 'x'},
+            },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            }
+        },
+        'loggers': {
+            'django.db.backends': {
+                'level': 'ERROR',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+            'raven': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+            'sentry.errors': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+        },
+    }
+
 
 ########################################################################################################################
 #                                                5 - Authentication                                                    #
@@ -333,18 +376,25 @@ AUTH_PASSWORD_VALIDATORS = [
 #                                                6 - Mail handling                                                     #
 ########################################################################################################################
 
-SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+SENDGRID_API_KEY = env("SENDGRID_API_KEY", default=None)
 
-ANYMAIL = {
-    "SENDGRID_API_KEY": SENDGRID_API_KEY,
-}
+if ON_HEROKU:
 
-EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-EMAIL_PORT = env("EMAIL_PORT", default=1025)
-EMAIL_HOST = env("EMAIL_HOST", default='localhost')
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
-EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
+    ANYMAIL = {
+        "SENDGRID_API_KEY": SENDGRID_API_KEY,
+    }
+
+    EMAIL_BACKEND = env('EMAIL_BACKEND', default='anymail.backends.sendgrid.SendGridBackend')
+
+else:
+
+    EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+    EMAIL_PORT = env("EMAIL_PORT", default=1025)
+    EMAIL_HOST = env("EMAIL_HOST", default='localhost')
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
+    EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
+
 DEFAULT_FROM_EMAIL="mail@example.org"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

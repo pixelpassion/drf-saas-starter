@@ -2,21 +2,18 @@ import json
 import sendgrid
 from datetime import datetime
 
-from django.conf import *
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db import models
 from django.template import Template, TemplateDoesNotExist, Context
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-from apps.tenants.models import TenantMixin
 from main.mixins import UUIDMixin
-
-if not settings.SENDGRID_API_KEY:
-    raise NotImplementedError("No SENDGRID_API_KEY set")
+from main.logging import logger
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
@@ -39,6 +36,11 @@ MAIL_TEMPLATES = {
         "template": "hello",
         "subject": "Hello World, {{name}}"
     },
+    "tenants/invite": {
+        "template": "tenants/invite",
+        "subject": "You are invited, {{name}}"
+    },
+
 }
 
 
@@ -83,6 +85,7 @@ class MailManager(models.Manager):
             raise ValueError("The given email is not valid: {}".format(to_address))
 
         mail = self.create(template=template, context=context_json, from_address=from_address, to_address=to_address, subject=subject)
+
         return mail
 
 
@@ -193,7 +196,7 @@ class Mail(UUIDMixin):
                 self.context
             )
         except TemplateDoesNotExist:
-            print("HTML template not found: {}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name))
+            logger.warning("HTML template not found: {}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name))
             html_content = None
 
         if self.subject:
@@ -204,6 +207,9 @@ class Mail(UUIDMixin):
         rendered_subject = Template(subject).render(Context(self.context))
 
         if sendgrid_api:
+
+            if not settings.SENDGRID_API_KEY:
+                raise ImproperlyConfigured("No SENDGRID_API_KEY set.")
 
             data = {
                 "personalizations": [
@@ -227,11 +233,8 @@ class Mail(UUIDMixin):
                 ]
             }
             response = sg.client.mail.send.post(request_body=data)
-            print("Email with UUID {} was sent with Sendgrid API.".format(self.id))
-
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+            logger.debug("Email with UUID {} was sent with Sendgrid API.".format(self.id))
+            logger.debug("Response Status Code: {}, Body: {}, Headers: {}".format(response.status_code, response.body, response.headers))
 
         else:
 
@@ -254,7 +257,7 @@ class Mail(UUIDMixin):
 
             msg.send()
 
-            print("Email with UUID {} was sent.".format(self.id))
+            logger.debug("Email with UUID {} was sent.".format(self.id))
 
         self.time_sent = datetime.now()
         self.save()

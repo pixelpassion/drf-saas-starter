@@ -24,7 +24,8 @@ class MailAdmin(admin.ModelAdmin):
 
     send_mail_now.short_description = "Send mail now"
 
-    list_display = ('id', 'from_address', 'to_address', 'template', 'subject', 'context', )
+    list_display = ('id', 'time_created', 'time_sent', 'time_delivered', 'from_address', 'to_address', 'template', 'subject', 'context', 'used_backend' )
     search_fields = ['from_address', 'to_address', 'template', ]
+    ordering = ('-time_created', )
 
     actions = [send_mail_now, ]

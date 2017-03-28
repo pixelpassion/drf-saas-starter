@@ -1,13 +1,16 @@
 machine:
   python:
     version: 3.5.2
+  services:
+    - rabbitmq-server
+    - redis
   environment:
     STAGE: circleci
     SECRET_KEY: 'dx8hsu_#i%r4b##9q)-$1negl5@gw&^ddof@w!14%1y4=v6o-3'
     ALLOWED_HOSTS: '*'
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
     CLOUDAMQP_URL: amqp://localhost:5672
-    SENDGRID_API_KEY: 'NotNeededForTesting'
+    EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 dependencies:
   pre:
     - pip install coverage

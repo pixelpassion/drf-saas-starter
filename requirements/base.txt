@@ -10,14 +10,17 @@ django-allauth==0.30.0          # For user registration, either via email or Ope
 django-crispy-forms==1.6.1      # Better form handling
 celery==4.0.2                   # Asynchronous tasks
 django-anymail==0.7             # Email handling
-raven==6.0.0			# Error handling
-django-premailer==0.2.0		# Inline CSS in HTML email templates	
+raven==6.0.0			              # Error handling
+django-premailer==0.2.0		      # Inline CSS in HTML email templates	
 django-extensions==1.7.5        # Django extensions (should be in local.txt after done with testing)
 djangorestframework==3.5.4      # RESTful API
 django-oauth-toolkit==0.11.0    # OAuth 2.0 support
+argon2-cffi==16.3.0             # password hashing
+WeasyPrint==0.36		            # HTML to PDF conversion
+django-redis==4.7.0             # Redis handling
+
+# Still for testing
 django-rest-auth==0.9.0
 djangorestframework-jwt==1.9.0
 drfdocs==0.0.11
 django-rest-swagger==2.1.1
-argon2-cffi==16.3.0             # password hashing
-WeasyPrint==0.36		# HTML to PDF conversion

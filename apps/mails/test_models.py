@@ -4,6 +4,7 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 from .models import Mail
 from urllib.error import HTTPError
+from django.utils import timezone
 
 
 class CreateMailTest(TestCase):
@@ -138,7 +139,6 @@ class SendMailInfoTest(TestCase):
 
         # Send the mail and record time sent
         self.mail.send()
-        self.mail_time_sent = datetime.now()
 
     def test_send_mail_subject(self):
         """Check that correct subject is recorded.
@@ -148,7 +148,7 @@ class SendMailInfoTest(TestCase):
     def test_send_mail_date(self):
         """Check that correct sent datetime is recorded.
         """
-        self.assertTrue((self.mail.time_sent - self.mail_time_sent) < timedelta(seconds=2), msg="Mail time_sent recorded inaccurately")
+        self.assertTrue((self.mail.time_sent - timezone.now()) < timedelta(seconds=2), msg="Mail time_sent recorded inaccurately")
         
     def tearDown(self):
         self.mail = None

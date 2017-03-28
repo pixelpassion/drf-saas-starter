@@ -6,6 +6,7 @@ from allauth.account.utils import user_field
 from allauth import app_settings
 
 from apps.users.models import User
+from apps.mails.utils import create_and_send_mail
 
 #from ..base.celery import send_anymail_mail
 
@@ -29,14 +30,10 @@ class AccountAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix, email, context):
 
         context_dict = {
-            'template_prefix': template_prefix,
             'email': email,
             'current_site': context["current_site"].id,
             'activate_url':  context["activate_url"],
             'key':  context["key"],
-            'user':  context["user"].id
         }
 
-        print("mail was send with {}".format(context_dict))
-
-        #send_anymail_mail.delay(context_dict)
+        create_and_send_mail(template=template_prefix, context=context_dict, to_address=email)

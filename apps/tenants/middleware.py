@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from apps.tenants.models import Domain
 from django.http import Http404
-
+from main.logging import logger
 
 class TenantMiddleware(object):
     """
@@ -49,7 +49,7 @@ class TenantMiddleware(object):
                     if hasattr(site, 'tenant'):
                         request.tenant = site.tenant
                     else:
-                        print("TenantMiddleware: Host: {}, Site_ID: {} has no tenant!".format(host, site_id))
+                        logger.debug("TenantMiddleware: Host: {}, Site_ID: {} has no tenant!".format(host, site_id))
                         raise Http404
 
                 except Site.DoesNotExist:
@@ -64,10 +64,10 @@ class TenantMiddleware(object):
                     pass
 
         if not site_id:
-            print("TenantMiddleware: Host: {}, no Site found!".format(host))
+            logger.warning("TenantMiddleware: Host: {}, no Site found!".format(host))
             raise Http404
 
-        print("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host, site_id, request.tenant))
+        logger.debug("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host, site_id, request.tenant))
 
         settings.SITE_ID = site_id
 

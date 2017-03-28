@@ -10,6 +10,7 @@ import sys
 # 2     Installed apps + middleware
 # 3     Templates + static files (CSS, JavaScript, Images)
 # 4     Deployments (Heroku)
+# *     Logging
 # 5     Authentication
 # 6     Mail handling
 # 7     Celery
@@ -74,47 +75,6 @@ if REDIS_URL and CACHING:
         }
     }
 
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format' : "[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s %(funcName)s()] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'DEBUG',
-        },
-        'django.db': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'WARNING',
-        },
-        'root': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'main': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    }
-}
 
 ########################################################################################################################
 #                                            2 - Installed apps + Middleware                                           #
@@ -265,6 +225,14 @@ if ON_HEROKU:
     if CACHES:
         CACHES['default']['KEY_PREFIX'] = "{}-{}".format(HEROKU_APP_NAME, HEROKU_RELEASE_VERSION)
 
+
+
+########################################################################################################################
+#                                                Logging                                                               #
+########################################################################################################################
+
+if ON_HEROKU or STAGE == 'testing':
+
     # Heroku expects to receive error messages on STDERR, the following logging takes care of this
     LOGGING = {
         'version': 1,
@@ -308,6 +276,49 @@ if ON_HEROKU:
                 'propagate': False,
             },
         },
+    }
+
+else:
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format' : "[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s %(funcName)s()] %(message)s",
+                'datefmt' : "%d/%b/%Y %H:%M:%S"
+            },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'propagate': True,
+                'level': 'DEBUG',
+            },
+            'django.db': {
+                'handlers': ['console'],
+                'propagate': True,
+                'level': 'WARNING',
+            },
+            'root': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+            'main': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        }
     }
 
 

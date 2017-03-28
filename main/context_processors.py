@@ -32,6 +32,7 @@ def admin_settings(request):
         ctx.update({
             'TENANT_NAME': request.tenant.name,
         })
+
     if settings.ON_HEROKU:
         ctx.update({
             'HEROKU_RELEASE_CREATED_AT':  datetime.strptime(settings.HEROKU_RELEASE_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"),

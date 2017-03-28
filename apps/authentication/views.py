@@ -1,12 +1,30 @@
-from django.views.generic.edit import FormView
-from allauth.account.views import RedirectAuthenticatedUserMixin, AjaxCapableProcessFormViewMixin, sensitive_post_parameters_m
 from allauth import app_settings
+from allauth.account import app_settings
 from allauth.account.forms import LoginForm
+from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
+from allauth.account.utils import passthrough_next_redirect_url, get_next_redirect_url
+from allauth.account.views import ConfirmEmailView as AllAuthConfirmEmailView
+from allauth.account.views import RedirectAuthenticatedUserMixin, AjaxCapableProcessFormViewMixin, \
+    sensitive_post_parameters_m
+from allauth.compat import reverse
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.utils import get_form_class, get_request_param, get_current_site
-from allauth.account.utils import passthrough_next_redirect_url, get_next_redirect_url
-from allauth.compat import reverse
-from allauth.account import app_settings
+from django.contrib import messages
+from django.http import Http404
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic.edit import FormView
+from rest_auth.registration.serializers import VerifyEmailSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+
+from main.logging import logger
+from .serializers import VerifyEmailSerializer
+
+sensitive_post_parameters_m = method_decorator(
+    sensitive_post_parameters('password')
+)
 
 
 class LoginView(RedirectAuthenticatedUserMixin,
@@ -62,3 +80,60 @@ class LoginView(RedirectAuthenticatedUserMixin,
 
 
 login = LoginView.as_view()
+
+
+class ConfirmEmailView(APIView, AllAuthConfirmEmailView):
+    permission_classes = (AllowAny,)
+    allowed_methods = ('GET', 'OPTIONS', 'HEAD')
+
+    def get_serializer(self, *args, **kwargs):
+        return VerifyEmailSerializer(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+
+        logger.warning("GET")
+
+        self.object = confirmation = self.get_object()
+
+        if confirmation.email_address.user != self.request.user and self.request.user.is_authenticated():
+            messages.add_message(self.request._request, messages.ERROR, 'You can not verify this email address, you must logout first!')
+            return redirect("/")
+
+        confirmation.confirm(self.request)
+
+        # User gets activated
+        user = confirmation.email_address.user
+        user.is_active = True
+        user.save()
+
+        messages.add_message(self.request._request, messages.SUCCESS, 'Thanks for verifiying your email address, you can login now')
+
+        tenant = user.tenants.all()[0]
+
+        # TODO: Invalidate the key
+
+        # Get the redirect URL
+        redirect_url = self.get_redirect_url()
+
+        if not redirect_url:
+            ctx = self.get_context_data()
+            return self.render_to_response(ctx)
+
+        tenant_redirect_url = "{}{}".format(tenant.domain, redirect_url)
+        print(tenant_redirect_url)
+        return redirect(tenant_redirect_url)
+
+    def get_object(self, queryset=None):
+        key = self.kwargs['key']
+        emailconfirmation = EmailConfirmationHMAC.from_key(key)
+        if not emailconfirmation:
+            if queryset is None:
+                queryset = self.get_queryset()
+            try:
+                emailconfirmation = queryset.get(key=key.lower())
+            except EmailConfirmation.DoesNotExist:
+                raise Http404()
+        return emailconfirmation
+
+
+

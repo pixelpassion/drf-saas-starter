@@ -6,6 +6,7 @@ EXAMPLE_TEMPLATE = "example"
 EXAMPLE_CONTEXT = {'name': 'cheryl'}
 EXAMPLE_OUTPUT_NAME = "example_output.pdf"
 
+
 class ExamplePDF(View):
 
     def get(self, request):

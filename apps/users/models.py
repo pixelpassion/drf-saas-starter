@@ -71,7 +71,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
 
     email = models.EmailField(_('email address'),
-                              help_text=_("A valid user email"),
+                              help_text=_("Email of the user"),
                               null=False, blank=False, unique=True)
 
     username_validator = UnicodeUsernameValidator() if six.PY3 else ASCIIUsernameValidator()
@@ -88,14 +88,14 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
     )
 
     first_name = models.CharField(_('first name'),
-                                  help_text=_("The first Name of the user"),
+                                  help_text=_("First Name of the user"),
                                   max_length=30,
                                   blank=True
                                   )
     last_name = models.CharField(_('last name'),
                                  max_length=30,
                                  blank=True,
-                                 help_text=_("The last Name of the user")
+                                 help_text=_("Last Name of the user")
                                  )
     activation_token = models.CharField(_('activation_token'),
                                         help_text=_("The activation token of the user"),

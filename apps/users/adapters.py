@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 from allauth.account.adapter import DefaultAccountAdapter
 from django.conf import settings
-from allauth.utils import get_user_model
-from allauth.account.utils import user_field
-from allauth import app_settings
 
 from apps.users.models import User
 from apps.mails.utils import create_and_send_mail
-
-#from ..base.celery import send_anymail_mail
 
 
 class AccountAdapter(DefaultAccountAdapter):
@@ -31,9 +26,15 @@ class AccountAdapter(DefaultAccountAdapter):
 
         context_dict = {
             'email': email,
-            'current_site': context["current_site"].id,
+            'site_domain': context["current_site"].domain,
+            'site_name': context["current_site"].name,
             'activate_url':  context["activate_url"],
             'key':  context["key"],
         }
 
         create_and_send_mail(template=template_prefix, context=context_dict, to_address=email)
+
+    def get_email_confirmation_redirect_url(self, request):
+        """ The URL to return to after successful e-mail confirmation. """
+
+        return settings.EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL

@@ -292,11 +292,11 @@ else:
         'disable_existing_loggers': False,
         'formatters': {
             'verbose': {
-                'format' : "[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s %(funcName)s()] %(message)s",
+                'format' : "%(asctime)s %(levelname)s - %(filename)s:%(lineno)s %(funcName)s() - %(message)s",
                 'datefmt' : "%d/%b/%Y %H:%M:%S"
             },
             'simple': {
-                'format': '%(levelname)s %(message)s'
+                'format': '%(asctime)s %(levelname)s - %(message)s'
             },
         },
         'handlers': {
@@ -305,15 +305,20 @@ else:
                 'class': 'logging.StreamHandler',
                 'formatter': 'verbose'
             },
+            'simple_console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
         },
         'loggers': {
             'django': {
-                'handlers': ['console'],
+                'handlers': ['simple_console'],
                 'propagate': True,
-                'level': 'DEBUG',
+                'level': 'WARNING',
             },
             'django.db': {
-                'handlers': ['console'],
+                'handlers': ['simple_console'],
                 'propagate': True,
                 'level': 'WARNING',
             },
@@ -323,7 +328,7 @@ else:
             },
             'main': {
                 'handlers': ['console'],
-                'level': 'DEBUG',
+                'level': 'INFO',
             },
         }
     }
@@ -471,11 +476,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     # 'rest_framework.authentication.SessionAuthentication',
+    #     # 'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    # ),
 }
 
 JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
@@ -527,9 +532,12 @@ ALLOWED_EMAIL_DOMAINS = [
     'jensneuhaus.de',
 ]
 
+DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
 DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS',default=[
     'www.localhost:8000',
     '127.0.0.1:8000',
 ])
+
+EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up

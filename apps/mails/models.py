@@ -41,7 +41,7 @@ MAIL_TEMPLATES = {
     },
     "account/email/email_confirmation_signup": {
         "template": "tenants/signup_email_confirmation",
-        "subject": "Please verify your address, {{name}}"
+        "subject": "Your registration at {{PROJECT_NAME}}"
     }
 
 }
@@ -177,6 +177,13 @@ class Mail(UUIDMixin):
     def __str__(self):
         return "%s to %s" % (self.template, self.to_address)
 
+    @classmethod
+    def get_extra_context(cls):
+
+        return {
+            'PROJECT_NAME': settings.PROJECT_NAME
+        }
+
     def send(self, sendgrid_api=False):
         """
             Sends the mail using data from the Mail object
@@ -188,6 +195,13 @@ class Mail(UUIDMixin):
             sendgrid_api=True uses the sendgrid API directly (with bypassing django-anymail)
          """
 
+        context = {
+            **self.context,
+            **Mail.get_extra_context()
+        }
+
+        logger.warning(context)
+
         try:
             template_name = MAIL_TEMPLATES[self.template]['template']
         except KeyError:
@@ -196,7 +210,7 @@ class Mail(UUIDMixin):
         try:
             txt_content = render_to_string(
                 "{}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name),
-                self.context
+                context
             )
         except TemplateDoesNotExist:
             raise ImportError("Txt template not found: {}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name))
@@ -204,7 +218,7 @@ class Mail(UUIDMixin):
         try:
             html_content = render_to_string(
                 "{}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name),
-                self.context
+                context
             )
         except TemplateDoesNotExist:
             logger.warning("HTML template not found: {}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name))
@@ -215,7 +229,7 @@ class Mail(UUIDMixin):
         else:
             subject = MAIL_TEMPLATES[self.template]['subject']
 
-        rendered_subject = Template(subject).render(Context(self.context))
+        rendered_subject = Template(subject).render(Context(context))
 
         if sendgrid_api:
 
@@ -270,7 +284,7 @@ class Mail(UUIDMixin):
 
             msg.send()
 
-            logger.debug("Email with UUID {} was sent.".format(self.id))
+            logger.info("Email with UUID {} was sent.".format(self.id))
 
             self.used_backend = settings.EMAIL_BACKEND
 

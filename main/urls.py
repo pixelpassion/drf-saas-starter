@@ -3,8 +3,9 @@ from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 from django.conf import settings
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
-from apps.registration.views import TenantSignUpView
 from apps.letsencrypt.views import acme_challenge
+from apps.tenants.views import TenantSignUpView
+from apps.authentication.views import ConfirmEmailView
 
 urlpatterns = [
 
@@ -13,7 +14,6 @@ urlpatterns = [
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
     url(r'^dashboard/$', TemplateView.as_view(template_name='pages/dashboard.html'), name='dashboard'),
 
-    url(r'^admin/', admin.site.urls),
 
     url(r'^users/', include('apps.users.urls', namespace='users')),
     url(r'^accounts/', include('apps.authentication.urls')),
@@ -24,15 +24,16 @@ urlpatterns = [
     url(r'^api/auth/', obtain_jwt_token),
     url(r'^api/verify/', verify_jwt_token),
 
-    url(r'^api/authentication/', include('rest_auth.urls')),
-    url(r'^api/registration/', include('apps.registration.urls')),
+    # Only on the main page
+    url(r'^admin/', admin.site.urls),
     url(r'^api/sign_up/', TenantSignUpView.as_view(), name="register"),
+    url(r"^confirm-email/(?P<key>[-:\w]+)/$", ConfirmEmailView.as_view(), name="account_confirm_email"),
 
-    #url(r'^api/registration/', include('rest_auth.registration.urls')),
+    url(r'^api/authentication/', include('rest_auth.urls')),
+
     url(r'^api/users/', include('apps.users.api_urls', namespace='api_users')),
 
     url(r'^api/docs/', include('rest_framework_docs.urls')),
-
 
     #permission_required('users.can_read_swagger_docs', login_url='/admin/login/')
 

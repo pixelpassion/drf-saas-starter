@@ -16,7 +16,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         read_only_fields = ('is_active', 'activation_token')
 
         extra_kwargs = {
-            'password': {'write_only': True, 'help_text': 'The password of the user'},
+            'password': {'write_only': True, 'help_text': 'Password of the user'},
         }
 
     def validate(self, data):

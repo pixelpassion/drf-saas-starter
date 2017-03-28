@@ -14,6 +14,7 @@ machine:
 dependencies:
   pre:
     # Only install packages listed on https://devcenter.heroku.com/articles/stack-packages
+    # Dependencies seem to be installed anyway
     - sudo apt-get update; sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 shared-mime-info
     - pip install coverage
 test:

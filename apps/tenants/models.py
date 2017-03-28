@@ -52,7 +52,7 @@ class Tenant(UUIDMixin):
         The Tenant is the client on the platform.
     """
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, help_text=_(u"Name of the tenant (the agency or company)"), unique=True)
 
     is_active = models.BooleanField(
         _('active'),
@@ -75,6 +75,10 @@ class Tenant(UUIDMixin):
 
     def add_user(self, user):
         user.tenants.add(self)
+
+    @property
+    def domain(self):
+        return "{}://{}".format(settings.DEFAULT_PROTOCOL, self.site.domain)
 
 
 @receiver(post_delete, sender=Tenant)

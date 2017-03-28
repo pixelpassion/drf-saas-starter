@@ -7,7 +7,9 @@ machine:
     ALLOWED_HOSTS: '*'
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
     CLOUDAMQP_URL: amqp://localhost:5672
-    SENDGRID_API_KEY: 'NotNeededForTesting'
+    #SENDGRID_API_KEY: 'NotNeededForTesting'
+    EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+    CELERY_TASK_ALWAYS_EAGER: True
 dependencies:
   pre:
     - pip install coverage

@@ -1,7 +1,7 @@
 import json
 import sendgrid
 from datetime import datetime
-
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import validate_email
@@ -40,6 +40,10 @@ MAIL_TEMPLATES = {
         "template": "tenants/invite",
         "subject": "You are invited, {{name}}"
     },
+    "account/email/email_confirmation_signup": {
+        "template": "account/email/email_confirmation_signup",
+        "subject": "Please verify your address, {{name}}"
+    }
 
 }
 
@@ -142,23 +146,31 @@ class Mail(UUIDMixin):
         blank=False
     )
 
-    time_queued = models.DateTimeField(
-        _("Time mail was added to the send queue"),
-        help_text=_("This is when send_async.. is called"),
-        null=True,
-        blank=True
+    time_created = models.DateTimeField(
+        _("Creation time"),
+        help_text=_("When was the mail created?"),
+        default=timezone.now
     )
+
     time_sent = models.DateTimeField(
-        _("Time mail was sent"),
-        help_text=_("This is when mail.send is called"),
+        _("Sent time"),
+        help_text=_("When was the mail send via the backend?"),
         null=True,
         blank=True
     )
     time_delivered = models.DateTimeField(
-        _("Time mail was delivered"),
-        help_text=_("This is given by the Mail sender"),
+        _("Delivery time"),
+        help_text=_("Actual delivery time by the email backend"),
         null=True,
         blank=True
+    )
+
+    used_backend = models.CharField(
+        _("E-Mail Backend"),
+        help_text=_("Which email backend was used for sending?"),
+        null=True,
+        blank=True,
+        max_length=128
     )
 
     objects = MailManager()
@@ -236,6 +248,8 @@ class Mail(UUIDMixin):
             logger.debug("Email with UUID {} was sent with Sendgrid API.".format(self.id))
             logger.debug("Response Status Code: {}, Body: {}, Headers: {}".format(response.status_code, response.body, response.headers))
 
+            self.used_backend = "Sendgrid ({})".format(response.status_code)
+
         else:
 
             if html_content:
@@ -259,5 +273,7 @@ class Mail(UUIDMixin):
 
             logger.debug("Email with UUID {} was sent.".format(self.id))
 
-        self.time_sent = datetime.now()
+            self.used_backend = settings.EMAIL_BACKEND
+
+        self.time_sent = timezone.now()
         self.save()

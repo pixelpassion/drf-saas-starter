@@ -46,6 +46,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         """call create_user on user object. Without this the password will be stored in plain text."""
 
         user = User.objects.create_user(**validated_data)
+
         return user
 
 
@@ -121,7 +122,6 @@ class CurrentPasswordSerializer(serializers.Serializer):
 
     def __init__(self, *args, **kwargs):
         super(CurrentPasswordSerializer, self).__init__(*args, **kwargs)
-
 
     def validate_old_password(self, value):
         user = self.initial_data

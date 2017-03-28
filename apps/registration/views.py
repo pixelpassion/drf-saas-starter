@@ -18,7 +18,7 @@ from rest_auth.models import TokenModel
 from rest_auth.registration.serializers import VerifyEmailSerializer
 from rest_auth.utils import jwt_encode
 from .serializers import RegisterSerializer
-
+from main.logging import logger
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password')
@@ -35,8 +35,7 @@ class RegisterView(CreateAPIView):
         return super(RegisterView, self).dispatch(*args, **kwargs)
 
     def get_response_data(self, user):
-        if allauth_settings.EMAIL_VERIFICATION == \
-                allauth_settings.EmailVerificationMethod.MANDATORY:
+        if allauth_settings.EMAIL_VERIFICATION == allauth_settings.EmailVerificationMethod.MANDATORY:
             return {"detail": _("Verification e-mail sent.")}
 
         if getattr(settings, 'REST_USE_JWT', False):
@@ -89,12 +88,55 @@ class VerifyEmailView(APIView, ConfirmEmailView):
 
 from rest_framework import parsers, renderers, generics, status, viewsets
 from apps.tenants.models import Tenant
-from apps.tenants.serializers import TenantSerializer
+from apps.tenants.serializers import TenantSerializer, TenantSignUpSerializer
 from apps.api.permissions import IsAuthenticatedOrCreate
+from apps.users.utils import send_email_verification
+from rest_auth.models import TokenModel
 
 
-class TenantRegistrationView(generics.CreateAPIView):
+class TenantSignUpView(generics.CreateAPIView):
 
     queryset = Tenant.objects.all()
-    serializer_class = TenantSerializer
+    serializer_class = TenantSignUpSerializer
     permission_classes = (IsAuthenticatedOrCreate,)
+    token_model = TokenModel
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super(TenantSignUpView, self).dispatch(*args, **kwargs)
+
+    def get_response_data(self, user):
+
+        data = {
+            'user': user
+        }
+
+        if getattr(settings, 'REST_USE_JWT', False):
+            data.update({
+                'token': self.token
+            })
+            return JWTSerializer(data).data
+        else:
+            return TokenSerializer(user.auth_token).data
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        response_data = self.get_response_data(user)
+
+        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+
+        user = serializer.save()
+
+        if getattr(settings, 'REST_USE_JWT', False):
+            self.token = jwt_encode(user)
+        else:
+            create_token(self.token_model, user, serializer)
+
+        send_email_verification(self.request._request, user, allauth_settings.EMAIL_VERIFICATION)
+
+        return user

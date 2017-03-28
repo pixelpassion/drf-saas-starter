@@ -10,7 +10,7 @@ from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUserna
 from django.utils import six, timezone
 from main.mixins import UUIDMixin
 from apps.tenants.models import Tenant
-
+from main.logging import logger
 
 class UserManager(BaseUserManager):
     use_in_migrations = True

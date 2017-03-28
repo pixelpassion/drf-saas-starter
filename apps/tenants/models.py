@@ -13,6 +13,9 @@ from django.contrib.sites.models import Site, _simple_domain_name_validator
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from apps.mails.utils import create_and_send_mail
+
+
 def validate_default_site(value):
     """ This validates the given Site - the default Site can not be used for a tenant
 
@@ -70,6 +73,9 @@ class Tenant(UUIDMixin):
     def __str__(self):
         return self.name
 
+    def add_user(self, user):
+        user.tenants.add(self)
+
 
 @receiver(post_delete, sender=Tenant)
 def auto_delete_site_with_tenant(sender, instance, **kwargs):
@@ -109,3 +115,19 @@ class TenantMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Invite(TenantMixin):
+
+    email = models.EmailField(null=False, blank=False)
+
+    class Meta:
+        verbose_name = _('invite')
+        verbose_name_plural = _('invites')
+
+    def __str__(self):
+        return self.email
+
+    def send_invite(self):
+
+        create_and_send_mail(template="tenants/invite", context={'name': 'Jens'}, to_address=self.email)

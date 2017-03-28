@@ -29,6 +29,8 @@ if test $MIGRATION_CHANGES -gt 0; then
     heroku scale worker=$PREV_WORKERS --app $APP_NAME
   fi
 
+  heroku run python manage.py clear_cache
+
   heroku restart --app $APP_NAME
 
   heroku maintenance:off --app $APP_NAME

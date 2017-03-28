@@ -5,6 +5,8 @@ volumes:
   postgres_backup_dev: {}
 
 services:
+
+  # Database
   postgres:
     build: ./compose/postgres
     volumes:
@@ -12,6 +14,40 @@ services:
       - postgres_backup_dev:/backups
     environment:
       - POSTGRES_USER=postgres
+
+  # In-memory data structure store
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  # The Redis Browser (https://github.com/humante/redis-browser) is a simple Key/Value browser
+  redis-browser:
+    image: birkof/redis-browser:latest
+    command: "-B 0.0.0.0 -P 8019 --url redis://redis:6379"
+    depends_on:
+      - redis
+    ports:
+      - "8019:8019"
+
+  # Mailhog is a local mail server with an inbox view
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  # Message broker RabbitMQ with an HTTP-based API for management and monitoring
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+      - "8080:8080"
 
 #  django:
 #    build:
@@ -33,37 +69,13 @@ services:
 #      - mailhog
 #      - rabbitmq
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - "8025:8025"
-      - "1025:1025"
-
-  pgadmin4:
-    image: fenglc/pgadmin4
-    ports:
-      - "5050:5050"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "4369:4369"
-      - "5671:5671"
-      - "5672:5672"
-      - "15671:15671"
-      - "15672:15672"
-      - "25672:25672"
-      - "8080:8080"
-
 #  jenkins:
 #    image: library/jenkins
 #    ports:
 #      - "50000:50000"
 #      - "8090:8080"
 
-#  redis:
-#    image: redis:latest
-#
+
 #  celeryworker:
 #    build:
 #      context: .

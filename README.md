@@ -79,27 +79,23 @@ Start ./local_setup.py to generate an .env and edit missing configs to get every
 
 ## Docker
 
-Install Docker and make it accessible in the Terminal:
+Download & install Docker Community Edition
 
-* https://docs.docker.com/docker-for-mac/ OR https://kitematic.com
+* https://www.docker.com/community-edition
 
-```
-$ eval $(docker-machine env)
-```
-
-Start Docker
+Start all the services (they will be built once)
 
 ```
-$ fab docker
+$ docker-compose -f dev.yml up
 ```
 
 It will start different services locally.
 
-* RabbitMQ Management: http://192.168.99.100:15672/
-* Mailhog Mailserver: http://192.168.99.100:8025
-* PostgreSQL: To use it, set DATABASE_URL=postgres://postgres@192.168.99.100/einhorn_starter
-* PGAdmin: http://192.168.99.100:5050/
-* Local Jenkins: http://192.168.99.100:8090/
+* RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling)
+* Redis: rediscache://127.0.0.1:6379 (used for caching and django-channels)
+* Redis Browser: http://localhost:8019/ (a simple Key/Value browser to debug Redis)
+* Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
+* PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
 
 ## Asynchronous tasks
 

@@ -231,7 +231,7 @@ if ON_HEROKU:
 #                                                Logging                                                               #
 ########################################################################################################################
 
-if ON_HEROKU or STAGE == 'testing':
+if ON_HEROKU or STAGE in ['test', 'circleci']:
 
     # Heroku expects to receive error messages on STDERR, the following logging takes care of this
     LOGGING = {
@@ -239,7 +239,7 @@ if ON_HEROKU or STAGE == 'testing':
         'disable_existing_loggers': True,
         'root': {
             'level': 'WARNING',
-            'handlers': ['sentry',],
+            'handlers': ['sentry', ],
         },
         'formatters': {
             'verbose': {

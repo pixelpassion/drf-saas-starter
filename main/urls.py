@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^users/', include('apps.users.urls', namespace='users')),
     url(r'^accounts/', include('apps.authentication.urls')),
 
+    url(r'^htmltopdf/', include('apps.htmltopdf.urls')), 
+    
     # JSON Web Token handling
     url(r'^api/auth/', obtain_jwt_token),
     url(r'^api/verify/', verify_jwt_token),

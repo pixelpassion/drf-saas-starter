@@ -1,0 +1,105 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html>
+  <head>
+    <link href="{% static 'htmltopdf/css/print.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+
+    <section class="header">
+      <img src="{% static 'htmltopdf/imgs/logo_example.svg' %}" class="logo" />
+      <span class="header-text">Muster Agentur</span>
+    </section>
+
+    <section class="info-small">
+      Fineware AG &#183; Rudolfstrasse 37 &#183; CH 8400 Winterthur
+    </section>
+    
+    <section class="info">
+      Fineware AG<br />
+      Herr Kaspar Hinterm&uuml;ller<br />
+      Rudolfstrasse 37<br />
+      CH-8400 Winterthur
+    </section>
+
+    <div class="spacing"></div>
+    
+    <table class="info-table">
+      <tr>
+	<td>Rechnungsdatum</td>
+	<td>27.05.2015</td>
+      </tr>
+      <tr>
+	<td>zahlbar bis</td>
+	<td>26.06.2015</td>
+      </tr>
+      <tr>
+	<td>Kundennummer</td>
+	<td>00002</td>
+      </tr>
+      <tr>
+	<td>Unsere Referenz</td>
+	<td>Kaspar Hinterm&uuml;ller</td>
+      </tr>
+      <tr>
+	<td>MwSt-Nr.</td>
+	<td>733 359</td>
+      </tr>
+      <tr>
+	<td>Offerte</td>
+	<td>O-00001-001 / 27.05.2015</td>
+      </tr>
+    </table>
+
+    <section class="info">
+      Rechnung 2015-00001-00001 zu Job 2015-0001
+    </section>
+
+    <section class="info-header">
+      <b>TEST - Musterauftrag</b>
+    </section>
+
+
+    <table class="wide-table">
+      <thead>
+	<tr>
+	  <td>Erbrachte Leistungen</td>
+	  <td>3'560.00</td>
+	</tr>
+      </thead>
+
+      <tbody>
+	<tr>
+	 <td>zuz&uuml;glich MwSt. 8.0%</td>
+	 <td>284.80</td>
+	</tr>
+      </tbody>
+      
+      <tfoot>
+	<tr>
+	  <td>Rechnungstotal CHF</td>
+	  <td>3'844.80</td>
+	</tr>
+      </tfoot>
+      
+    </table>
+
+    <div class="forced-page-break"></div>
+
+    <section class="info-header">
+      <b>TEST - Musterauftrag</b>
+    </section>
+    
+    <section class="info">
+      <p>Lorem ipsum dolor sit amet, <b>oonsectetuer</b> adipiscing elit. <i>Aenean</i> commodo ligula eget dolor. <b><i>Aenean</i></b> massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p>
+      <ul>
+	<li>Nulla consequat massa quis enim</li>
+	<li>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu</li>
+	<li>In enim justo rhoncus ut, imperdiet a, venenatis vitae, justo</li>
+      </ul>
+    </section>
+    
+    
+  </body>
+</html>

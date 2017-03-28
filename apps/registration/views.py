@@ -88,30 +88,28 @@ class VerifyEmailView(APIView, ConfirmEmailView):
 
 from rest_framework import parsers, renderers, generics, status, viewsets
 from apps.tenants.models import Tenant
-from apps.tenants.serializers import TenantSerializer, SignUpSerializer
+from apps.tenants.serializers import TenantSerializer, TenantSignUpSerializer
 from apps.api.permissions import IsAuthenticatedOrCreate
+from apps.users.utils import send_email_verification
+from rest_auth.models import TokenModel
 
 
-class TenantRegistrationView(generics.CreateAPIView):
+class TenantSignUpView(generics.CreateAPIView):
 
     queryset = Tenant.objects.all()
-    serializer_class = SignUpSerializer
+    serializer_class = TenantSignUpSerializer
     permission_classes = (IsAuthenticatedOrCreate,)
+    token_model = TokenModel
 
     @sensitive_post_parameters_m
     def dispatch(self, *args, **kwargs):
-        return super(TenantRegistrationView, self).dispatch(*args, **kwargs)
+        return super(TenantSignUpView, self).dispatch(*args, **kwargs)
 
     def get_response_data(self, user):
 
         data = {
             'user': user
         }
-
-        if allauth_settings.EMAIL_VERIFICATION is True:
-            data.update({
-                'email_verification_sent': True
-            })
 
         if getattr(settings, 'REST_USE_JWT', False):
             data.update({
@@ -126,7 +124,6 @@ class TenantRegistrationView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-
         response_data = self.get_response_data(user)
 
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
@@ -140,6 +137,6 @@ class TenantRegistrationView(generics.CreateAPIView):
         else:
             create_token(self.token_model, user, serializer)
 
-        complete_signup(self.request._request, user, allauth_settings.EMAIL_VERIFICATION, None)
+        send_email_verification(self.request._request, user, allauth_settings.EMAIL_VERIFICATION)
 
         return user

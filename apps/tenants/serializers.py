@@ -45,20 +45,26 @@ class TenantSerializer(serializers.ModelSerializer):
     #     return tenant
 
 
-class SignUpSerializer(serializers.Serializer):
+class TenantSignUpSerializer(serializers.ModelSerializer):
     """Serialize data from the User """
 
-    tenant = TenantSerializer(write_only=True)
+    domain = serializers.CharField(label=_(u"Domain"), help_text="Domain of the tenant", write_only=True, validators=[unique_site_domain])
+
     user = CreateUserSerializer(write_only=True)
+
+    class Meta:
+        """ """
+        model = Tenant
+        fields = ('id', 'name', 'domain', 'user')
+        extra_kwargs = {'name': {'write_only': True}}
 
     def create(self, validated_data):
         """call create_tenant on the Tenant model."""
 
         user_serializer = CreateUserSerializer()
-        user = user_serializer.create(validated_data=validated_data["user"])
-        del(validated_data['user'])
+        user = user_serializer.create(validated_data=validated_data.pop('user'))
 
-        Tenant.objects.create_tenant(user=user, **validated_data["tenant"])
+        Tenant.objects.create_tenant(user=user, **validated_data)
 
         return user
 

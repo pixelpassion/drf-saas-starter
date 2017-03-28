@@ -1,6 +1,5 @@
 import json
 import sendgrid
-from datetime import datetime
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -41,7 +40,7 @@ MAIL_TEMPLATES = {
         "subject": "You are invited, {{name}}"
     },
     "account/email/email_confirmation_signup": {
-        "template": "account/email/email_confirmation_signup",
+        "template": "tenants/signup_email_confirmation",
         "subject": "Please verify your address, {{name}}"
     }
 

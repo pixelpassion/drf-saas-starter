@@ -61,7 +61,6 @@ DATABASES = {
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Lets cache some things
-
 REDIS_URL = env.str('REDIS_URL', default=None)
 CACHING = env.bool('CACHING', default=True)
 
@@ -232,6 +231,12 @@ if ON_HEROKU:
 ########################################################################################################################
 #                                                Logging                                                               #
 ########################################################################################################################
+
+# Disable CSSutils warnings (django_premailer)
+
+import logging
+import cssutils
+cssutils.log.setLevel(logging.ERROR)
 
 if ON_HEROKU or STAGE in ['test', 'circleci']:
 

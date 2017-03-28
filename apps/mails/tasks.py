@@ -1,7 +1,7 @@
-from datetime import datetime
-
 from main.celery import app
 from sendgrid.helpers.mail import *
+
+from django.utils import timezone
 
 from .models import Mail
 

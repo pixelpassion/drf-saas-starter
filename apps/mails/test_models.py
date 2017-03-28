@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.test import TestCase, override_settings
+from django.utils import timezone
 from .models import Mail
 from urllib.error import HTTPError
 from django.utils import timezone
@@ -152,4 +153,3 @@ class SendMailInfoTest(TestCase):
         
     def tearDown(self):
         self.mail = None
-        self.mail_time_sent = None

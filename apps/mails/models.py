@@ -1,5 +1,7 @@
 import json
 import sendgrid
+import html2text
+
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import validate_email
@@ -335,7 +337,7 @@ class MailTemplate(models.Model):
         if(self.text_template):
             text_output = Template(self.text_template).render(context)
         else:
-            text_output = html_to_text(html_output)
+            text_output = self.html_to_text(html_output)
 
         return {
             'html': html_output,
@@ -347,5 +349,5 @@ class MailTemplate(models.Model):
             Usage: After filling in html template with context, pass it to this method to create the text-only version.
         """
         
-        #TO-DO- implement this method.
-        return "html_to_text() was called."
+        h = html2text.HTML2Text()
+        return h.handle(html_string)

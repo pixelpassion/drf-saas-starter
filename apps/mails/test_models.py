@@ -181,12 +181,24 @@ class MailTemplateTest(TestCase):
         self.assertEqual(self.mail_template.make_output(self.context)['html'], "<p><b>Hello</b>, Cheryl!</p>", msg="Mail template (with both template fields provided) generated incorrect HTML output")
         self.assertEqual(self.mail_template.make_output(self.context)['text'], "Hello, Cheryl!", msg="Mail template (with both template fields provided) generated incorrect text output")
 
+    def test_html_to_text(self):
+        """Check that html_to_text() produces correct output.
+        """
+
+        test_html = "<p><strong>Bold test</strong> and <em>Italics test</p>\n<p>And finally a <a href='https://www.example.com/'>Link test</a>"
+        test_expected_output = "**Bold test** and _Italics test\n\nAnd finally a [Link test](https://www.example.com/)\n\n"
+
+        self.assertEqual(self.mail_template.html_to_text(test_html), test_expected_output, msg="MailTemplate.html_to_test() generated incorrect output")
+        
+        
     def test_make_output_html_only(self):
         """
-        Check that html_to_text() produces correct output.
         Check that the correct html and text output is produced when only html template is provided.
         """
-        pass #@TO-DO
+        
+        self.assertEqual(self.mail_template.make_output(self.context)['html'], "<p><b>Hello</b>, Cheryl!</p>", msg="MailTemplate generated incorrect HTML output")
+        self.assertEqual(self.mail_template.make_output(self.context)['text'], "**Hello**, Cheryl!\n\n", msg="MailTemplate dynamically-generated text output is incorrect")
+        
 
     def tearDown(self):
         self.mail_template = None

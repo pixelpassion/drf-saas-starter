@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from .models import Mail
+from .models import Mail, MailTemplate
 from django.utils.translation import ugettext_lazy as _
 from .tasks import send_asynchronous_mail
 
+@admin.register(MailTemplate)
+class MailTemplateAdmin(admin.ModelAdmin):
+    
+    list_display = ('name', 'subject_template')
+    search_fields = []
+    ordering = ('name', )
+
+    actions = []
 
 @admin.register(Mail)
 class MailAdmin(admin.ModelAdmin):

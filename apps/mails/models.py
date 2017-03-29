@@ -11,6 +11,8 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from tinymce import models as tinymce_models
+
 from main.mixins import UUIDMixin
 from main.logging import logger
 
@@ -290,3 +292,60 @@ class Mail(UUIDMixin):
 
         self.time_sent = timezone.now()
         self.save()
+
+
+class MailTemplate(models.Model):
+
+    name = models.CharField(
+        _("Template name"),
+        help_text=_("Should be a small string"),
+        max_length=100
+    )
+    
+    subject_template = models.CharField(
+        _("Email subject line template"),
+        help_text=_("A python template string for email subject"), 
+        max_length=200
+    )
+    
+    # HTML field for the html
+    html_template = tinymce_models.HTMLField(
+        _("HTML template (required)"),
+        help_text=_("Use django template syntax")
+    )
+    text_template = models.TextField(
+        _("Text template (optional)"),
+        help_text=_("If not provided, it is generated dynamically from the HTML template."),
+        default=""
+    )
+
+    def make_subject(self, inputs):
+        """ Given a list of values, fill in subject template with values and return result.
+        """
+        return self.subject_template.format(*inputs)
+
+    def make_output(self, context):
+        """ Fills in HTML and TXT template with context, and returns a dictionary containing the results as strings.
+        If there is no TXT template stored, then a dynamically generated text-only version will be returned instead. 
+        """
+        context = Context(context)
+        
+        html_output = Template(self.html_template).render(context)
+
+        if(self.text_template):
+            text_output = Template(self.text_template).render(context)
+        else:
+            text_output = html_to_text(html_output)
+
+        return {
+            'html': html_output,
+            'text': text_output
+        }
+
+    def html_to_text(self, html_string):
+        """ Returns text generated from given HTML string. For internal use only. 
+            Usage: After filling in html template with context, pass it to this method to create the text-only version.
+        """
+        
+        #TO-DO- implement this method.
+        return "html_to_text() was called."

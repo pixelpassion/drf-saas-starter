@@ -97,7 +97,8 @@ INSTALLED_APPS = [
     'apps.htmltopdf',
     
     'main.celery.CeleryConfig',
-    'django_premailer', 
+    'django_premailer',
+    'tinymce',
 
     'rest_framework',
     'rest_framework.authtoken',

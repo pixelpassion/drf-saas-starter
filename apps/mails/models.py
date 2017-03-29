@@ -302,7 +302,7 @@ class MailTemplate(models.Model):
         max_length=100
     )
     
-    subject_template = models.CharField(
+    subject = models.CharField(
         _("Email subject line template"),
         help_text=_("A python template string for email subject"), 
         max_length=200
@@ -322,7 +322,7 @@ class MailTemplate(models.Model):
     def make_subject(self, inputs):
         """ Given a list of values, fill in subject template with values and return result.
         """
-        return self.subject_template.format(*inputs)
+        return self.subject.format(*inputs)
 
     def make_output(self, context):
         """ Fills in HTML and TXT template with context, and returns a dictionary containing the results as strings.

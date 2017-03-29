@@ -7,7 +7,7 @@ from .tasks import send_asynchronous_mail
 @admin.register(MailTemplate)
 class MailTemplateAdmin(admin.ModelAdmin):
     
-    list_display = ('name', 'subject_template')
+    list_display = ('name', 'subject')
     search_fields = []
     ordering = ('name', )
 

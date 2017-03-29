@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.test import TestCase, override_settings
 from django.utils import timezone
-from .models import Mail
+from .models import Mail, MailTemplate
 from urllib.error import HTTPError
 from django.utils import timezone
 
@@ -153,3 +153,40 @@ class SendMailInfoTest(TestCase):
         
     def tearDown(self):
         self.mail = None
+
+
+class MailTemplateTest(TestCase):
+
+    def setUp(self):
+        # Create valid MailTemplate object
+        self.mail_template = MailTemplate(
+            name="name",
+            subject="{} from {}", 
+            html_template="<p><b>Hello</b>, {{ name }}!</p>",
+        )
+        self.subject_context = ["Greetings", "Company Name"]
+        self.context = {'name': 'Cheryl'}
+
+    def test_make_subject(self):
+        """Check that the correct subject line is generated.
+        """
+        self.assertEqual(self.mail_template.make_subject(self.subject_context), "Greetings from Company Name", msg="Mail template generated incorrect subject")
+
+    def test_make_output(self):
+        """Check that the correct html and text output is produced when both templates are provided.
+        """
+        self.mail_template.text_template = "Hello, {{ name }}!"
+        self.mail_template.save()
+        
+        self.assertEqual(self.mail_template.make_output(self.context)['html'], "<p><b>Hello</b>, Cheryl!</p>", msg="Mail template (with both template fields provided) generated incorrect HTML output")
+        self.assertEqual(self.mail_template.make_output(self.context)['text'], "Hello, Cheryl!", msg="Mail template (with both template fields provided) generated incorrect text output")
+
+    def test_make_output_html_only(self):
+        """
+        Check that html_to_text() produces correct output.
+        Check that the correct html and text output is produced when only html template is provided.
+        """
+        pass #@TO-DO
+
+    def tearDown(self):
+        self.mail_template = None

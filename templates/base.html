@@ -96,6 +96,21 @@
 
     {% block javascript %}
         <script src="{% static 'js/project.min.js' %}"></script>
+        <script>
+            var socket = new WebSocket('ws://' + window.location.host + '?room=' + window.location.pathname);
+            console.log(socket)
+
+            socket.onopen = function open() {
+              console.log('WebSockets connection created.');
+            };
+
+            if (socket.readyState == WebSocket.OPEN) {
+              socket.onopen();
+            }
+        </script>
+
+        {% block extra_javascript %}
+        {% endblock extra_javascript %}
     {% endblock javascript %}
     </body>
     </html>

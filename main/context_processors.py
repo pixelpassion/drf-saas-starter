@@ -9,12 +9,22 @@ import django
 import sys
 from datetime import datetime
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 def admin_settings(request):
     """Collects settings for the admin"""
 
     python_version = "%s.%s.%s" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
+
+    users = User.objects.select_related('logged_in_user')
+
+    for user in users:
+        user.status = 'online' if hasattr(user, 'logged_in_user') else 'offline'
+        user.full_name = user.get_full_name()
 
     ctx = {
         'MAILHOG_URL': settings.MAILHOG_URL,
@@ -26,6 +36,7 @@ def admin_settings(request):
         'ON_HEROKU': settings.ON_HEROKU,
         'SITE_URL': get_current_site(request),
         'HOST_URL': request.get_host(),
+        'users': users
     }
 
     if request.tenant:

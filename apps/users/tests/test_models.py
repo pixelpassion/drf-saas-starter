@@ -6,12 +6,28 @@ from ..models import User
 class TestUser(TestCase):
 
     def setUp(self):
-        self.existing_user = User.objects.create_user(email="existing_user@test.com", username="existing_user")
+        self.existing_user = User.objects.create_user(
+            email="existing_user@test.com",
+            first_name="Existing",
+            last_name="User",
+            username="existing_user")
 
     def test__str__(self):
         self.assertEqual(
             self.existing_user.__str__(),
+            'Existing User'
+        )
+
+    def test__short_name(self):
+        self.assertEqual(
+            self.existing_user.get_short_name(),
             'existing_user'
+        )
+
+    def test__full_name(self):
+        self.assertEqual(
+            self.existing_user.get_full_name(),
+            'Existing User'
         )
 
     def test_get_absolute_url(self):

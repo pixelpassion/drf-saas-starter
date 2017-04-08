@@ -42,7 +42,7 @@ class TenantManager(models.Manager):
         domain = "{}.{}".format(domain, settings.TENANT_DOMAIN)
         site = Site.objects.create(name=domain, domain=domain)
         tenant = Tenant.objects.create(name=name, site=site)
-        user.tenants.add(tenant)
+        tenant.add_user(user)
 
         return tenant
 
@@ -74,7 +74,8 @@ class Tenant(UUIDMixin):
         return self.name
 
     def add_user(self, user):
-        user.tenants.add(self)
+        from apps.users.models import UserTenantRelationship
+        UserTenantRelationship.objects.create(user=user, tenant=self)
 
     @property
     def domain(self):

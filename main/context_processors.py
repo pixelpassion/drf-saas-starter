@@ -39,7 +39,7 @@ def admin_settings(request):
         'users': users
     }
 
-    if request.tenant:
+    if hasattr(request, "tenant") and request.tenant:
         ctx.update({
             'TENANT_NAME': request.tenant.name,
         })

@@ -135,7 +135,7 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def __str__(self):
-        return self.username
+        return self.get_full_name()
 
     def get_short_name(self):
         return self.username

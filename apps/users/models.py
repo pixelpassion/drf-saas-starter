@@ -11,6 +11,10 @@ from django.utils import six, timezone
 from main.mixins import UUIDMixin
 from apps.tenants.models import Tenant
 from main.logging import logger
+from django.conf import settings
+from django.contrib.auth import user_logged_in, user_logged_out
+from django.dispatch import receiver
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -120,7 +124,7 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
-    tenants = models.ManyToManyField(Tenant, help_text=_("Where is the user registered?"))
+    tenants = models.ManyToManyField(Tenant, help_text=_("Where is the user registered?"), through='UserTenantRelationship')
 
     USERNAME_FIELD = 'email'
 
@@ -136,5 +140,36 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
+    def get_full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
     def get_absolute_url(self):
         return reverse('users:detail', kwargs={'username': self.username})
+
+
+class UserTenantRelationship(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}".format(self.tenant)
+
+    class Meta:
+        verbose_name = _('employment')
+        verbose_name_plural = _('employments')
+
+
+class LoggedInUser(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='logged_in_user')
+
+
+@receiver(user_logged_in)
+def on_user_login(sender, **kwargs):
+    LoggedInUser.objects.get_or_create(user=kwargs.get('user'))
+
+
+@receiver(user_logged_out)
+def on_user_logout(sender, **kwargs):
+    LoggedInUser.objects.filter(user=kwargs.get('user')).delete()
+
+

@@ -5,13 +5,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.contrib.sites.models import Site
 
-from .models import User
+from .models import User, UserTenantRelationship
 
 
 class TenantInline(admin.TabularInline):
-    model = User.tenants.through
+    model = UserTenantRelationship
     extra = 0
 
 

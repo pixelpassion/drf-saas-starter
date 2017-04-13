@@ -20,36 +20,6 @@ from main.logging import logger
 
 sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
-MAIL_TEMPLATES_PREFIX = "mails/"
-
-MAIL_TEMPLATES = {
-    "action": {
-        "template": "transactional-email-templates/templates/action",
-        "subject": "Action email subject"
-    },
-    "alert": {
-        "template": "transactional-email-templates/templates/alert",
-        "subject": "Alert email subject"
-    },
-    "billing": {
-        "template": "transactional-email-templates/templates/billing",
-        "subject": "Billing email subject"
-    },
-    "hello": {
-        "template": "hello",
-        "subject": "Hello World, {{name}}"
-    },
-    "tenants/invite": {
-        "template": "tenants/invite",
-        "subject": "You are invited, {{name}}"
-    },
-    "account/email/email_confirmation_signup": {
-        "template": "tenants/signup_email_confirmation",
-        "subject": "Your registration at {{PROJECT_NAME}}"
-    }
-
-}
-
 
 class MailManager(models.Manager):
 
@@ -65,8 +35,8 @@ class MailManager(models.Manager):
         """
 
         try:
-            MAIL_TEMPLATES[template]
-        except KeyError:
+            MailTemplate.objects.get(name=template)
+        except DoesNotExist:
             raise ValueError("{} is not a valid Template name".format(template))
 
         try:
@@ -112,7 +82,6 @@ class Mail(UUIDMixin):
     )
 
     # delivery_service (Sendgrid etc. - should be a CharField with Options)
-
     delivery_mail_id = models.IntegerField(
         _("Unique mail sender ID"),
         help_text=_("The ID is saved after correct sending"),
@@ -188,52 +157,51 @@ class Mail(UUIDMixin):
             'PROJECT_NAME': settings.PROJECT_NAME
         }
 
+    def render_mail(self):
+        """
+            Checks for existing MailTemplate. Text is needed, HTML is optional.
+
+            Returns a dictionary containing subject, text output, and html output.
+        """
+
+        context = {
+            **self.context,
+            **Mail.get_extra_context()
+        }
+        
+        try:
+            # Look for MailTemplate object
+            mail_template = MailTemplate.objects.get(name=self.template)
+        except DoesNotExist:
+            raise ImproperlyConfigured("No mail template found with name: {}".format(self.template))
+
+        
+        if self.subject:
+            rendered_subject = Template(self.subject).render(Context(context))
+        else:
+            rendered_subject = mail_template.make_subject(context)
+
+        output_dict = mail_template.make_output(context)
+        output_dict['subject'] = rendered_subject
+
+        return output_dict
+        
+    
     def send(self, sendgrid_api=False):
         """
             Sends the mail using data from the Mail object
-
-            Checks for existing template. Text is needed, HTML is optional.
 
             It can be called directly, but is usually called asynchronously with tasks.send_asynchronous_mail.
 
             sendgrid_api=True uses the sendgrid API directly (with bypassing django-anymail)
          """
 
-        context = {
-            **self.context,
-            **Mail.get_extra_context()
-        }
+        rendered_output = self.render_mail()
 
-        logger.warning(context)
+        html_content = rendered_output['html']
+        txt_content = rendered_output['text']
+        rendered_subject = rendered_output['subject']
 
-        try:
-            template_name = MAIL_TEMPLATES[self.template]['template']
-        except KeyError:
-            raise ImproperlyConfigured("{} is not a valid Template name".format(self.template))
-
-        try:
-            txt_content = render_to_string(
-                "{}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name),
-                context
-            )
-        except TemplateDoesNotExist:
-            raise ImportError("Txt template not found: {}{}.txt".format(MAIL_TEMPLATES_PREFIX, template_name))
-
-        try:
-            html_content = render_to_string(
-                "{}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name),
-                context
-            )
-        except TemplateDoesNotExist:
-            logger.warning("HTML template not found: {}{}.html".format(MAIL_TEMPLATES_PREFIX, template_name))
-            html_content = None
-
-        if self.subject:
-            subject = self.subject
-        else:
-            subject = MAIL_TEMPLATES[self.template]['subject']
-
-        rendered_subject = Template(subject).render(Context(context))
 
         if sendgrid_api:
 
@@ -321,10 +289,10 @@ class MailTemplate(models.Model):
         default=""
     )
 
-    def make_subject(self, inputs):
+    def make_subject(self, context):
         """ Takes a list of values (inputs) and formats the subject template, returning the subject.
         """
-        return self.subject.format(*inputs)
+        return Template(self.subject).render(Context(context))
 
     def make_output(self, context):
         """ Returns a dictionary containing two strings, the HTML and plaintext output. This output is generated by filling in the templates using the provided context. If the text_template field is empty, it will dynamically generate the text version from the HTML output.

@@ -178,19 +178,18 @@ class MailTemplateTest(TestCase):
 
     def setUp(self):
         # Create valid MailTemplate
-        template = MailTemplate(
+        self.mail_template = MailTemplate(
             name="test_template",
-            subject="test_subject_template",
-            html_template="<p><b>Hello</b>, {{ name }}!</p>",
-            text_template="Hello, {{ name }}!"
+            subject="Message for {{ name }}",
+            html_template="<p><b>Hello</b>, {{ name }}!</p>"
         )
-        template.save()
+        self.mail_template.save()
         self.context = {'name': 'Cheryl'}
 
     def test_make_subject(self):
         """Check that the correct subject line is generated.
         """
-        self.assertEqual(self.mail_template.make_subject(self.subject_context), "Message for Cheryl", msg="Mail template generated incorrect subject")
+        self.assertEqual(self.mail_template.make_subject(self.context), "Message for Cheryl", msg="Mail template generated incorrect subject")
 
     def test_make_output(self):
         """Check that the correct html and text output is produced when both templates are provided.

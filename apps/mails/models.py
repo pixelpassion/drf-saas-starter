@@ -36,7 +36,7 @@ class MailManager(models.Manager):
 
         try:
             MailTemplate.objects.get(name=template)
-        except DoesNotExist:
+        except MailTemplate.DoesNotExist:
             raise ValueError("{} is not a valid Template name".format(template))
 
         try:
@@ -172,7 +172,7 @@ class Mail(UUIDMixin):
         try:
             # Look for MailTemplate object
             mail_template = MailTemplate.objects.get(name=self.template)
-        except DoesNotExist:
+        except MailTemplate.DoesNotExist:
             raise ImproperlyConfigured("No mail template found with name: {}".format(self.template))
 
         

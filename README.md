@@ -107,6 +107,26 @@ We are using RabbitMQ / CloudAMQP as a message broker and Nameko for prodiving t
 
 This is used for asynchronous, but more directly tasks - like messages to the user or an activity stream. 
 
+## Subdomains
+
+To try subdomains, you can locally change your /etc/hosts file:
+```
+$ sudo nano /etc/hosts
+```
+
+Add the following line:
+```
+127.0.0.1       a a.localhost b.localhost c.localhost d.localhost
+```
+
+Restart domain services (OSX 10.9 and above)
+
+```
+$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+```
+
+Now `a` and `a.localhost` etc. can be pinged or reached within any Browser.
+
 ## SSL (letsencrypt)
 
 ```

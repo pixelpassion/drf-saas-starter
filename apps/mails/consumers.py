@@ -24,14 +24,16 @@ def ws_connect(message):
     message.channel_session['room'] = room
     Group("chat-%s" % room).add(message.reply_channel)
 
-    Group('users').add(message.reply_channel)
-    Group('users').send({
-        'text': json.dumps({
-            'username': message.user.username,
-            'full_name': message.user.get_full_name(),
-            'is_logged_in': True
+    if not message.user.is_anonymous():
+
+        Group('users').add(message.reply_channel)
+        Group('users').send({
+            'text': json.dumps({
+                'username': message.user.username,
+                'full_name': message.user.get_full_name(),
+                'is_logged_in': True
+            })
         })
-    })
 
 
 @channel_session
@@ -47,11 +49,13 @@ def ws_message(message):
 def ws_disconnect(message):
     Group("chat-%s" % message.channel_session['room']).discard(message.reply_channel)
 
-    Group('users').send({
-        'text': json.dumps({
-            'username': message.user.username,
-            'full_name': message.user.get_full_name(),
-            'is_logged_in': False
+    if not message.user.is_anonymous():
+
+        Group('users').send({
+            'text': json.dumps({
+                'username': message.user.username,
+                'full_name': message.user.get_full_name(),
+                'is_logged_in': False
+            })
         })
-    })
-    Group('users').discard(message.reply_channel)
+        Group('users').discard(message.reply_channel)

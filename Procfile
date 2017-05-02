@@ -1,2 +1,3 @@
 web: gunicorn main.wsgi:application
-worker: celery worker --app=main.celery --loglevel=info
+celery: celery worker --app=main.celery --loglevel=info
+daphne: python manage.py runworker -v2

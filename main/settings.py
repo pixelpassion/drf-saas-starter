@@ -174,8 +174,10 @@ TEMPLATES = [
 
 MEDIA_ROOT = str(root.path('media'))
 MEDIA_URL = '/media/'
+
 STATIC_ROOT = str(root.path('staticfiles'))
-STATIC_URL = '/static/'
+STATIC_URL = env.str('STATIC_URL', default='/static/')
+
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

@@ -11,20 +11,22 @@ from django.utils import timezone
 class CreateMailTest(TestCase):
 
     def setUp(self):
-        self.valid_template = "alert"
-        self.valid_to_address = "serious.insomnia@gmail.com"
+        # Create a MailTemplate for the test email to use
+        template = MailTemplate(
+            name="test_template",
+            subject="test_subject_template",
+            html_template="<p>This is an HTML template {{ name }}</p>",
+            text_template="Text template {{ name }}"
+        )
+        template.save()
+
+        # Valid mail fields
+        self.valid_template = "test_template"
+        self.valid_to_address = "mail-test@mailtest.com"
         self.valid_from_address = "mail-test@mailtest.com"
-        self.valid_subject = "Hello there"
+        self.valid_subject = "Hello there {{ name }}"
         self.valid_context = {
-            "business_name": "Business Name", 
-            "alert_warning": "Alert message from CompanyName", 
-            "recipient_name": "John Doe",
-            "content": [
-                {"text": "Lorem ipsum dolor sit amet. This is a sentence."}, 
-                {"text": "Example Button", 
-                 "link": "https://www.example.com/"},
-                {"text": "Lorem ipsum dolor sit amet."}
-            ]
+            'name' : 'Cheryl'
         }
 
     def create_mail(self, template=None, context=None, to_address=None,
@@ -106,8 +108,17 @@ class CreateMailTest(TestCase):
 class SendMailTest(TestCase):
 
     def setUp(self):
+        # Create a MailTemplate for the test email to use
+        template = MailTemplate(
+            name="test_template",
+            subject="test_subject_template",
+            html_template="<p>This is an HTML template {{ name }}</p>",
+            text_template="Text template {{ name }}"
+        )
+        template.save()
+
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail("alert", {}, "mailtest@sink.sendgrid.net", "test@example.com")
+        self.mail = Mail.objects.create_mail("action", {'name':'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com')
 
     def test_send_mail_anymail(self):
         """Call mail.send() 
@@ -134,9 +145,18 @@ class SendMailTest(TestCase):
 
 class SendMailInfoTest(TestCase):
 
-    def setUp(self): 
+    def setUp(self):
+        # Create a MailTemplate for the test email to use
+        template = MailTemplate(
+            name="test_template",
+            subject="test_subject_template",
+            html_template="<p>This is an HTML template {{ name }}</p>",
+            text_template="Text template {{ name }}"
+        )
+        template.save()
+
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail("alert", {}, "serious.insomnia@gmail.com", "mail-test@mailtest.com", subject="Custom subject")
+        self.mail = Mail.objects.create_mail("test_template", {'name':'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
 
         # Send the mail and record time sent
         self.mail.send()
@@ -158,19 +178,19 @@ class SendMailInfoTest(TestCase):
 class MailTemplateTest(TestCase):
 
     def setUp(self):
-        # Create valid MailTemplate object
+        # Create valid MailTemplate
         self.mail_template = MailTemplate(
-            name="name",
-            subject="{} from {}", 
-            html_template="<p><b>Hello</b>, {{ name }}!</p>",
+            name="test_template",
+            subject="Message for {{ name }}",
+            html_template="<p><b>Hello</b>, {{ name }}!</p>"
         )
-        self.subject_context = ["Greetings", "Company Name"]
+        self.mail_template.save()
         self.context = {'name': 'Cheryl'}
 
     def test_make_subject(self):
         """Check that the correct subject line is generated.
         """
-        self.assertEqual(self.mail_template.make_subject(self.subject_context), "Greetings from Company Name", msg="Mail template generated incorrect subject")
+        self.assertEqual(self.mail_template.make_subject(self.context), "Message for Cheryl", msg="Mail template generated incorrect subject")
 
     def test_make_output(self):
         """Check that the correct html and text output is produced when both templates are provided.
@@ -187,7 +207,6 @@ class MailTemplateTest(TestCase):
 
         test_html = "<p><strong>Bold test</strong> and <em>Italics test</p>\n<p>And finally a <a href='https://www.example.com/'>Link test</a>"
         test_expected_output = "**Bold test** and _Italics test\n\nAnd finally a [Link test](https://www.example.com/)\n\n"
-
         self.assertEqual(self.mail_template.html_to_text(test_html), test_expected_output, msg="MailTemplate.html_to_test() generated incorrect output")
         
         
@@ -195,7 +214,6 @@ class MailTemplateTest(TestCase):
         """
         Check that the correct html and text output is produced when only html template is provided.
         """
-        
         self.assertEqual(self.mail_template.make_output(self.context)['html'], "<p><b>Hello</b>, Cheryl!</p>", msg="MailTemplate generated incorrect HTML output")
         self.assertEqual(self.mail_template.make_output(self.context)['text'], "**Hello**, Cheryl!\n\n", msg="MailTemplate dynamically-generated text output is incorrect")
         

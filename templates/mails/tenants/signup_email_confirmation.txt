@@ -1,9 +1,0 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with site_name=site_name %}Hello from {{ site_name }}!
-
-You have registered this e-mail address at {{ site_name }}.
-
-To confirm this is correct, go to:
-{{ activate_url }}
-
-Thank you!
-{% endblocktrans %}{% endautoescape %}

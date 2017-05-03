@@ -1,10 +1,10 @@
 # For explanations / licenses check the documentation (docs/django_packages.md)
 
 # Django related
-Django==1.10.6                  # Basics and boilerplate stuff
+Django==1.10.5                  # Basics and boilerplate stuff
 django-environ==0.4.1           # Configuration by environment variables according to 12Factor model
 psycopg2==2.6.2                 # Database connector
-whitenoise==3.3.0               # Static file serving
+whitenoise==3.2.3               # Static file serving
 sendgrid==3.6.3                 # just for testing, we should use django-anymail to be more flexible
 django-allauth==0.30.0          # For user registration, either via email or Open ID Providers
 django-crispy-forms==1.6.1      # Better form handling
@@ -16,11 +16,10 @@ django-extensions==1.7.5        # Django extensions (should be in local.txt afte
 djangorestframework==3.5.4      # RESTful API
 django-oauth-toolkit==0.11.0    # OAuth 2.0 support
 argon2-cffi==16.3.0             # password hashing
-WeasyPrint==0.36		        # HTML to PDF conversion
+WeasyPrint==0.36                # HTML to PDF conversion
 django-redis==4.7.0             # Redis handling
-django-tinymce==2.4.0		    # HTMLField for models
-html2text==2016.9.19		    # Convert HTML to Markdown
-django-suit==0.2.25
+django-tinymce==2.4.0			# HTMLField for models
+html2text==2016.9.19            # Convert HTML to Markdown
 
 # Still for testing
 django-rest-auth==0.9.0

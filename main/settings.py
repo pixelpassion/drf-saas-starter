@@ -584,3 +584,13 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'Project Admin',
     'HEADER_DATE_FORMAT': 'l, m.F Y',
 }
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'width': '70%',
+    'height': '500px'
+}
+

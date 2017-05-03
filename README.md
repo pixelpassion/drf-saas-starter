@@ -1,6 +1,26 @@
 [![einhornmanufaktur](https://img.shields.io/badge/made%20by-einhornmanufaktur-blue.svg)](https://www.einhornmanufaktur.de/)
 [![Build Status](https://circleci.com/gh/jensneuhaus/einhorn-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/jensneuhaus/einhorn-starter/)
 
+## Features
+
+* Optimized for Python 3.5+ and Django 1.10
+* [12-Factor](12factor.net) based settings via [django-environ](12factor.net)
+* SSL Support with [letsencrypt](#)
+* HTML Generator build in with [weasyprint](#)
+* Based on an API build with the awesome [django-rest-framework](#)
+* API documentation build with [Swagger](#)
+* Fabric for faster deployments
+* Send emails via [Anymail](#) (using [Sendgrid](#) as default)
+* HTML Templates with Tinymce
+* Dockerfile for development
+* Support for Channels with [django-channels](#)
+* Optimized for speed
+* Script for developer onboarding
+* Build in support for [Sentry](#)
+* Deployment for Heroku with [Procfile](#) and [Whitenoise](#)
+* --Tested with coverage of 100%--
+* Custom user, Multitenancy and Feature-Handling
+
 # Template
 
 * Helps a project kickoff with ALWAYS needed services (asynchronous tasks, Websockets, mail sending, cache, error handling etc.)

@@ -32,7 +32,7 @@ class AccountAdapter(DefaultAccountAdapter):
             'key':  context["key"],
         }
 
-        create_and_send_mail(template=template_prefix, context=context_dict, to_address=email)
+        create_and_send_mail(template_name=template_prefix, context=context_dict, to_address=email)
 
     def get_email_confirmation_redirect_url(self, request):
         """ The URL to return to after successful e-mail confirmation. """

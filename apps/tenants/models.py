@@ -135,4 +135,4 @@ class Invite(TenantMixin):
 
     def send_invite(self):
 
-        create_and_send_mail(template="tenants/invite", context={'name': 'Jens'}, to_address=self.email)
+        create_and_send_mail(template_name="invite", context={'name': 'Jens'}, to_address=self.email)

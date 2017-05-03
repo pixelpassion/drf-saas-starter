@@ -22,7 +22,7 @@ sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
 
 class MailManager(models.Manager):
-    def create_mail(self, template, context, to_address, from_address=None, subject=None):
+    def create_mail(self, template_name, context, to_address, from_address=None, subject=None):
         """
             Create a Mail object with proper validation
 
@@ -33,11 +33,13 @@ class MailManager(models.Manager):
 
         """
 
-        try:
-            MailTemplate.objects.get(name=template)
-        except MailTemplate.DoesNotExist:
-            raise ValueError("{} is not a valid Template name".format(template))
-
+        if not isinstance(template_name, MailTemplate):
+            try:
+                template = MailTemplate.objects.get(name=template_name)
+            except MailTemplate.DoesNotExist:
+                raise ValueError("{} is not a valid Template name".format(template_name))
+        else:
+            template = template_name
         try:
             context_string = json.dumps(context)
             context_json = json.loads(context_string)
@@ -155,7 +157,8 @@ class Mail(UUIDMixin):
         _("Unique mail sender ID"),
         help_text=_("The ID is saved after correct sending"),
         null=True,
-        blank=True
+        blank=True,
+        editable=False
     )
 
     # The following should maybe be a Charfield - depending on the anymail output
@@ -163,7 +166,8 @@ class Mail(UUIDMixin):
         _("Status of Mail sender"),
         help_text=_("The Mail sender status"),
         null=True,
-        blank=True
+        blank=True,
+        editable=False
     )
 
     template = models.ForeignKey(

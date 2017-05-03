@@ -9,14 +9,14 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mails', '0010_remove_mail_template'),
+        ('mails', '0011_add_mails'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='mail',
             name='template',
-            field=models.ForeignKey(default=2, help_text='The used text/HTML template - exists as a file', on_delete=django.db.models.deletion.CASCADE, to='mails.MailTemplate', verbose_name='Used Mail template'),
+            field=models.ForeignKey(default=1, help_text='The used text/HTML template - exists as a file', on_delete=django.db.models.deletion.CASCADE, to='mails.MailTemplate', verbose_name='Used Mail template'),
             preserve_default=False,
         ),
     ]

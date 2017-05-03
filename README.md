@@ -20,6 +20,7 @@
 * Deployment for Heroku with [Procfile](#) and [Whitenoise](#)
 * --Tested with coverage of 100%--
 * Custom user, Multitenancy and Feature-Handling
+* Continuous integration with [CircleCI](#)
 
 # Template
 

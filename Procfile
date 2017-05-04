@@ -1,4 +1,3 @@
-web: gunicorn main.wsgi:application
+web: daphne main.asgi:channel_layer --port $PORT --bind 0.0.0.0 -v2
+worker: python manage.py runworker -v2
 celery: celery worker --app=main.celery --loglevel=info
-daphne: daphne main.asgi:channel_layer
-runworker: python manage.py runworker -v2

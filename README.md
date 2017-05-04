@@ -13,7 +13,7 @@
 * Send emails via [Anymail](#) (using [Sendgrid](#) as default)
 * HTML Templates with Tinymce
 * Dockerfile for development
-* Support for Channels with [django-channels](#)
+* Support for Channels with [django-channels](#), optimized for [Heroku](https://blog.heroku.com/in_deep_with_django_channels_the_future_of_real_time_apps_in_django)
 * Optimized for speed
 * Script for developer onboarding
 * Build in support for [Sentry](#)

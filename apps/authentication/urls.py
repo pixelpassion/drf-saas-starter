@@ -1,6 +1,7 @@
+from allauth.account import views
+
 from django.conf.urls import url
 
-from allauth.account import views
 from .views import login
 
 urlpatterns = [

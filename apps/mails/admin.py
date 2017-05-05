@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from .models import Mail, MailTemplate
 from django.utils.translation import ugettext_lazy as _
+
+from .models import Mail, MailTemplate
 from .tasks import send_asynchronous_mail
+
 
 @admin.register(MailTemplate)
 class MailTemplateAdmin(admin.ModelAdmin):

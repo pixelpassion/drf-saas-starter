@@ -1,9 +1,9 @@
-import django.contrib.auth.password_validation as validators
 from rest_framework import serializers
 
-from .models import User
-from django.core import exceptions
 import django.contrib.auth.password_validation as validators
+from django.core import exceptions
+
+from .models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

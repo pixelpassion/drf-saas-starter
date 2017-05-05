@@ -1,6 +1,7 @@
-from django.contrib.auth import user_logged_in, user_logged_out
 from allauth.account.models import EmailAddress
 from allauth.account.utils import send_email_confirmation
+
+from django.contrib.auth import user_logged_in, user_logged_out
 
 
 def logout_user(request):

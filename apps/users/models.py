@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
-
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-from django.db import models
-from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
-from django.utils import six, timezone
-from main.mixins import UUIDMixin
-from apps.tenants.models import Tenant
 from main.logging import logger
+from main.mixins import UUIDMixin
+
 from django.conf import settings
 from django.contrib.auth import user_logged_in, user_logged_out
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
+from django.core.urlresolvers import reverse
+from django.db import models
 from django.dispatch import receiver
+from django.utils import six, timezone
+from django.utils.translation import ugettext_lazy as _
+
+from apps.tenants.models import Tenant
 
 
 class UserManager(BaseUserManager):
@@ -171,5 +172,3 @@ def on_user_login(sender, **kwargs):
 @receiver(user_logged_out)
 def on_user_logout(sender, **kwargs):
     LoggedInUser.objects.filter(user=kwargs.get('user')).delete()
-
-

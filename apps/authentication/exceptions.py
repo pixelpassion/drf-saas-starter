@@ -1,6 +1,8 @@
-from django.utils.translation import ugettext as _
-from apps.api.exceptions import APIBaseException
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+
+from django.utils.translation import ugettext as _
+
+from apps.api.exceptions import APIBaseException
 
 
 class UserException(APIBaseException):

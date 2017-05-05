@@ -1,11 +1,13 @@
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
+
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import TemplateView, RedirectView
-from django.conf import settings
-from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
+from django.views.generic import RedirectView, TemplateView
+
+from apps.authentication.views import ConfirmEmailView
 from apps.letsencrypt.views import acme_challenge
 from apps.tenants.views import TenantSignUpView
-from apps.authentication.views import ConfirmEmailView
 
 urlpatterns = [
 

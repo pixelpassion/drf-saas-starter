@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Tenant, Domain, Invite
 from django.contrib.sites.models import Site
+
+from .models import Domain, Invite, Tenant
 
 
 class DomainInline(admin.TabularInline):
@@ -43,6 +44,3 @@ class InviteAdmin(admin.ModelAdmin):
     list_display = ('tenant', 'email', )
     search_fields = ('tenant', 'email', '')
     actions = [send_invite, ]
-
-
-

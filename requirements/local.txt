@@ -7,3 +7,6 @@ ipython==5.1.0
 
 # PIP handling
 yolk3k==0.9
+
+# Import sorting
+isort==4.2.5

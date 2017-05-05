@@ -9,4 +9,3 @@ if os.environ.get('SENTRY_DSN', None):
     application = Sentry(get_wsgi_application())
 else:
     application = get_wsgi_application()
-

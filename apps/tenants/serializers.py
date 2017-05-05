@@ -1,10 +1,12 @@
-from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from apps.users.serializers import CreateUserSerializer
-from .models import Tenant
-from django.contrib.sites.models import Site
 from django.conf import settings
+from django.contrib.sites.models import Site
+from django.utils.translation import ugettext_lazy as _
+
+from apps.users.serializers import CreateUserSerializer
+
+from .models import Tenant
 
 
 def unique_site_domain(value):
@@ -40,4 +42,3 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
         Tenant.objects.create_tenant(user=user, **validated_data)
 
         return user
-

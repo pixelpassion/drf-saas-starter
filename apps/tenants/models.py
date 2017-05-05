@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django.conf import settings
-from django.core.exceptions import ValidationError, ImproperlyConfigured
-from django.db import models, IntegrityError
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-
 from main.mixins import UUIDMixin
 
+from django.conf import settings
 from django.contrib.sites.models import Site, _simple_domain_name_validator
+from django.core.exceptions import ImproperlyConfigured, ValidationError
+from django.db import IntegrityError, models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from apps.mails.utils import create_and_send_mail
 

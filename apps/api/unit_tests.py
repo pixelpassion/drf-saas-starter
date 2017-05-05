@@ -1,11 +1,12 @@
+import logging
+
 from rest_framework_jwt.test import APIJWTClient
 
-from apps.users.models import User
 from django.core import mail
 from django.test import TestCase
 
+from apps.users.models import User
 
-import logging
 logger = logging.getLogger(name=__name__)
 
 
@@ -29,4 +30,3 @@ class APITestCase(TestCase):
 
         # Clean the mail outbox, it would count to the tests if not
         mail.outbox = []
-

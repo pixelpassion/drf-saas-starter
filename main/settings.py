@@ -542,10 +542,15 @@ ALLOWED_EMAIL_DOMAINS = [
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
-DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS',default=[
+DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS', default=[
     'www.localhost:8000',
     '127.0.0.1:8000',
 ])
+
+
+MIGRATION_MODULES = {
+    'sites': 'apps.contrib.sites.migrations'
+}
 
 EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up
 

@@ -68,10 +68,12 @@ class MailManager(models.Manager):
 
 
 class MailTemplate(models.Model):
+
     name = models.CharField(
         _("Template name"),
         help_text=_("Template name; a short all-lowercase string"),
-        max_length=100
+        max_length=100,
+        unique=True
     )
 
     subject = models.CharField(

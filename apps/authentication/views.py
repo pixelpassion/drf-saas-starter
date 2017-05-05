@@ -2,24 +2,25 @@ from allauth import app_settings
 from allauth.account import app_settings
 from allauth.account.forms import LoginForm
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
-from allauth.account.utils import passthrough_next_redirect_url, get_next_redirect_url
+from allauth.account.utils import get_next_redirect_url, passthrough_next_redirect_url
 from allauth.account.views import ConfirmEmailView as AllAuthConfirmEmailView
-from allauth.account.views import RedirectAuthenticatedUserMixin, AjaxCapableProcessFormViewMixin, \
-    sensitive_post_parameters_m
+from allauth.account.views import AjaxCapableProcessFormViewMixin, \
+    RedirectAuthenticatedUserMixin, sensitive_post_parameters_m
 from allauth.compat import reverse
 from allauth.exceptions import ImmediateHttpResponse
-from allauth.utils import get_form_class, get_request_param, get_current_site
+from allauth.utils import get_current_site, get_form_class, get_request_param
+from main.logging import logger
+from rest_auth.registration.serializers import VerifyEmailSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.edit import FormView
-from rest_auth.registration.serializers import VerifyEmailSerializer
-from rest_framework.permissions import AllowAny
-from rest_framework.views import APIView
 
-from main.logging import logger
 from .serializers import VerifyEmailSerializer
 
 sensitive_post_parameters_m = method_decorator(
@@ -134,6 +135,3 @@ class ConfirmEmailView(APIView, AllAuthConfirmEmailView):
             except EmailConfirmation.DoesNotExist:
                 raise Http404()
         return emailconfirmation
-
-
-

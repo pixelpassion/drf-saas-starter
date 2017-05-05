@@ -21,4 +21,3 @@ class TenantAccessRequiredMixin(AccessMixin):
 
     def handle_no_permission(self):
         raise PermissionDenied(self.get_permission_denied_message())
-

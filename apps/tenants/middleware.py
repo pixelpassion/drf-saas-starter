@@ -1,8 +1,11 @@
+from main.logging import logger
+
 from django.conf import settings
 from django.contrib.sites.models import Site
-from apps.tenants.models import Domain
 from django.http import Http404
-from main.logging import logger
+
+from apps.tenants.models import Domain
+
 
 class TenantMiddleware(object):
     """
@@ -74,4 +77,3 @@ class TenantMiddleware(object):
         response = self.get_response(request)
 
         return response
-

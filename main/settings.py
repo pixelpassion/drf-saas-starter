@@ -1,6 +1,10 @@
-import environ
 import datetime
+import logging
+import os
 import sys
+
+import cssutils
+import environ
 
 ########################################################################################################################
 #                                                            Index
@@ -239,8 +243,6 @@ if ON_HEROKU:
 
 # Disable CSSutils warnings (django_premailer)
 
-import logging
-import cssutils
 cssutils.log.setLevel(logging.ERROR)
 
 if ON_HEROKU or STAGE in ['test', 'circleci']:
@@ -549,7 +551,6 @@ DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS',default=[
 
 EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up
 
-import os
 
 CHANNEL_LAYERS = {
     "default": {
@@ -592,4 +593,3 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '70%',
     'height': '500px'
 }
-

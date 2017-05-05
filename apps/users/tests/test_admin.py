@@ -1,7 +1,8 @@
 from django.test import TestCase, override_settings
 
-from..models import User
 from ..admin import MyUserCreationForm
+
+from..models import User
 
 
 class TestMyUserCreationForm(TestCase):

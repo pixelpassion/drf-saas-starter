@@ -9,8 +9,14 @@ Provides various authentication policies.
 
 from __future__ import unicode_literals
 
+import jwt
 from rest_framework import exceptions
-from rest_framework.authentication import BaseAuthentication, CSRFCheck
+from rest_framework.authentication import BaseAuthentication, CSRFCheck, get_authorization_header
+from rest_framework_jwt.settings import api_settings
+
+from django.contrib.auth import get_user_model
+from django.utils.encoding import smart_text
+from django.utils.translation import ugettext as _
 
 
 class AdminSessionAuthentication(BaseAuthentication):
@@ -58,17 +64,8 @@ class AdminSessionAuthentication(BaseAuthentication):
 
 
 
-import jwt
 
-from django.contrib.auth import get_user_model
-from django.utils.encoding import smart_text
-from django.utils.translation import ugettext as _
-from rest_framework import exceptions
-from rest_framework.authentication import (
-    BaseAuthentication, get_authorization_header
-)
 
-from rest_framework_jwt.settings import api_settings
 
 
 jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
@@ -161,5 +158,3 @@ class JSONWebTokenAuthentication(BaseJSONWebTokenAuthentication):
         authentication scheme should return `403 Permission Denied` responses.
         """
         return '{0} realm="{1}"'.format(api_settings.JWT_AUTH_HEADER_PREFIX, self.www_authenticate_realm)
-
-

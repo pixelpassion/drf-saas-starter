@@ -2,13 +2,8 @@ from allauth.account import app_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from allauth.account.views import ConfirmEmailView as AllAuthConfirmEmailView
-from django.conf import settings
-from django.contrib import messages
-from django.http import Http404
-from django.shortcuts import redirect
-from django.utils.decorators import method_decorator
-from django.views.decorators.debug import sensitive_post_parameters
-from rest_auth.app_settings import TokenSerializer, JWTSerializer, create_token
+from main.logging import logger
+from rest_auth.app_settings import JWTSerializer, TokenSerializer, create_token
 from rest_auth.models import TokenModel
 from rest_auth.utils import jwt_encode
 from rest_framework import generics, status
@@ -16,11 +11,17 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.conf import settings
+from django.contrib import messages
+from django.http import Http404
+from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+
 from apps.api.permissions import IsAuthenticatedOrCreate
 from apps.tenants.models import Tenant
 from apps.tenants.serializers import TenantSignUpSerializer
 from apps.users.utils import send_email_verification
-from main.logging import logger
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password')

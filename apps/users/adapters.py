@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from allauth.account.adapter import DefaultAccountAdapter
+
 from django.conf import settings
 
-from apps.users.models import User
 from apps.mails.utils import create_and_send_mail
+from apps.users.models import User
 
 
 class AccountAdapter(DefaultAccountAdapter):

@@ -17,4 +17,3 @@ urlpatterns = [
     url(r'^current/$', views.UserProfileView.as_view(), name="profile"),
 
 ]
-

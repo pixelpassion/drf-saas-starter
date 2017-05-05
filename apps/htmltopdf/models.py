@@ -1,14 +1,14 @@
 import json
 from io import BytesIO
 
-from django.db import models
-from django.contrib.postgres.fields import JSONField
-from django.template.loader import render_to_string
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.utils.translation import ugettext_lazy as _
+from weasyprint import CSS, HTML
 
-from weasyprint import HTML, CSS
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 TEMPLATES_PREFIX = "htmltopdf/"
 

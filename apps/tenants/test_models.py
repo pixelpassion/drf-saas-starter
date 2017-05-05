@@ -1,8 +1,9 @@
-from django.test import TestCase, override_settings
-
-from .models import Tenant, Domain
 from django.contrib.sites.models import Site
 from django.db.utils import IntegrityError
+from django.test import TestCase, override_settings
+
+from .models import Domain, Tenant
+
 
 @override_settings(TENANT_DOMAIN="example.com")
 class TenantDomainTests(TestCase):
@@ -40,4 +41,3 @@ class TenantDomainTests(TestCase):
     def test_create_site_with_invalid_tenant_domain(self):
         """ Check that sites can only be created for the TENANT_DOMAIN (example.com) """
         pass
-

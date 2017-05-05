@@ -4,6 +4,7 @@ import random
 
 from fabric.api import env, lcd, local, task
 
+
 def _relative_to_fabfile(*path):
     return os.path.join(os.path.dirname(env.real_fabfile), *path)
 
@@ -172,4 +173,3 @@ def licenses():
 def pip_updates():
     """Print the pip apps, which have a new updated version available"""
     local("yolk -U")
-

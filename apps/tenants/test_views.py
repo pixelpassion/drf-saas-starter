@@ -1,8 +1,8 @@
-from django.test import TestCase, override_settings
-
-from .models import Tenant, Domain
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.test import TestCase, override_settings
+
+from .models import Domain, Tenant
 
 
 @override_settings(TENANT_DOMAIN="example.com", DEFAULT_DOMAINS=['landingpage.com',])
@@ -113,4 +113,3 @@ class TenantDomainTests(TestCase):
 
         response = self.client.get(self.secret_url, HTTP_HOST=self.site_not_linked.domain)
         self.assertEquals(response.status_code, 404)
-

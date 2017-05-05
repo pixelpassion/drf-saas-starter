@@ -49,4 +49,3 @@ class UUIDMixin(models.Model):
     class Meta:
         """ """
         abstract = True
-

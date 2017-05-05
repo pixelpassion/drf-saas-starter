@@ -1,5 +1,6 @@
 from django.db.utils import IntegrityError
 from django.test import TestCase
+
 from ..models import User
 
 
@@ -83,4 +84,3 @@ class TestUser(TestCase):
             self.assertEqual(User.objects.find_next_available_username("existing_user"), "existing_user{}".format(i))
             User.objects.create_user(email="existing_user@test{}.com".format(i), password="test")
             i += 1
-

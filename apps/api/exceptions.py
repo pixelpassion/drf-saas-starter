@@ -1,4 +1,5 @@
 from rest_framework.status import HTTP_422_UNPROCESSABLE_ENTITY, HTTP_500_INTERNAL_SERVER_ERROR
+
 from django.utils.translation import ugettext as _
 
 
@@ -28,5 +29,3 @@ class APIUseException(APIBaseException):
     status_code = HTTP_422_UNPROCESSABLE_ENTITY
     error_code = 300
     developer_message = _(u"There is an unspecified error with this API call - please check the documentation")
-
-

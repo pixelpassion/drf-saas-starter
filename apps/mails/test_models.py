@@ -1,11 +1,11 @@
 from datetime import timedelta
+from urllib.error import HTTPError
 
 from django.conf import settings
 from django.test import TestCase, override_settings
 from django.utils import timezone
+
 from .models import Mail, MailTemplate
-from urllib.error import HTTPError
-from django.utils import timezone
 
 
 class CreateMailTest(TestCase):

@@ -84,7 +84,7 @@ if REDIS_URL and CACHING:
 ########################################################################################################################
 
 INSTALLED_APPS = [
-    'suit',
+    #'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

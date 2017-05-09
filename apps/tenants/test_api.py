@@ -10,12 +10,26 @@ from apps.tenants.models import Tenant
 from apps.users.models import User
 
 
+class SingleTest(TestCase):
+    """ Testing the Site creation
+    
+    """
+
+    def test_django_site_setup(self):
+
+        Site.objects.create(name="foo", domain="foo.com")
+
+
 @override_settings(TENANT_DOMAIN="example.com", LANGUAGE_CODE='en')
 class TenantSignupTests(TestCase):
     """ Test the sign_up process of the API endpoint """
 
     def setUp(self):
-        """ """
+        """ The TENANT_DOMAIN is not used in tests because the sites migration is not loaded because of the bug (check settings.py)
+            Until then example.com is used as a default domain in testing.
+        """
+
+        self.domain = "example.com"
 
         self.sign_up_url = "/api/sign_up/"
 
@@ -23,8 +37,10 @@ class TenantSignupTests(TestCase):
         self.already_registered_company_name = 'We are first'
         self.already_registered_company_domain = 'first'
 
-        already_existing_subdomain = "{}.{}".format(self.already_registered_company_domain, settings.TENANT_DOMAIN)
-        already_existing_site = Site.objects.create(name=already_existing_subdomain, domain=already_existing_subdomain)
+        already_existing_site = Site.objects.get(domain=self.domain)
+        already_existing_subdomain = f"{self.already_registered_company_domain}.{already_existing_site.domain}"
+
+        Site.objects.get_or_create(name="First", domain=already_existing_subdomain)
 
         Tenant.objects.create(name=self.already_registered_company_name, site=already_existing_site)
         User.objects.create(email=self.already_registered_user_email, first_name="Was", last_name="First")
@@ -35,7 +51,7 @@ class TenantSignupTests(TestCase):
     def sign_up(self, post_data):
         """ Helper method for the correct sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json",  HTTP_HOST="example.com")
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json",  HTTP_HOST=self.domain)
         response_json = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 201, "Response code for adding user is incorrect! \n %s" % str(response_json))
@@ -63,8 +79,7 @@ class TenantSignupTests(TestCase):
     def sign_up_error(self, post_data, expected_error, expected_status_code=400):
         """ Helper method for an faulty sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST="example.com")
-
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.domain)
         self.assertContains(response, expected_error, status_code=expected_status_code)
 
         # There should be no created models
@@ -210,7 +225,7 @@ class TenantSignupTests(TestCase):
             "domain": self.already_registered_company_domain,
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "awesome1234"
+                "password": "test1234"
             }
         }
 

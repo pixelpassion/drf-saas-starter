@@ -25,8 +25,8 @@ def update_site_backward(apps, schema_editor):
     Site.objects.get_or_create(
         id=settings.SITE_ID,
         defaults={
-            'domain': settings.TENANT_DOMAIN,
-            'name': settings.PROJECT_NAME
+            'domain': 'example.com',
+            'name': 'example.com'
         }
     )
 

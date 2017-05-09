@@ -18,3 +18,4 @@ class Migration(migrations.Migration):
             field=models.CharField(help_text='Name of the tenant (the agency or company)', max_length=100, unique=True),
         ),
     ]
+

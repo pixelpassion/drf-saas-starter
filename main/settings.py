@@ -547,10 +547,19 @@ DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS', default=[
     '127.0.0.1:8000',
 ])
 
+if not STAGE == 'test':
+    #
+    # There is an error with Sites in the create_tenant Site.objects.create method, when using MIGRATION_MODULES
+    #
+    # django.db.utils.IntegrityError: duplicate key value violates unique constraint "django_site_pkey"
+    # DETAIL:  Key (id)=(1) already exists.
+    #
+    # Ticket is posted to Cookiecutter: https://github.com/pydanny/cookiecutter-django/issues/1163
 
-MIGRATION_MODULES = {
-    'sites': 'apps.contrib.sites.migrations'
-}
+    MIGRATION_MODULES = {
+        'sites': 'apps.contrib.sites.migrations'
+    }
+
 
 EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up
 

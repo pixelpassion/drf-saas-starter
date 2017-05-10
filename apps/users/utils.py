@@ -14,6 +14,7 @@ def logout_user(request):
 
 def send_email_verification(request, user, email_verification):
 
+    print("send email verifivation")
     has_verified_email = EmailAddress.objects.filter(user=user, verified=True).exists()
 
     if not has_verified_email:

@@ -294,7 +294,7 @@ class SignupApiTests(APITestCase):
     def setUp(self):
         """ """
         super(SignupApiTests, self).setUp()
-        self.signup_url = "%s/registration/"
+        self.signup_url = "%s/sign_up/"
 
     def user_signup(self, post_data, expected_status_code=200, expected_error=None):
         """
@@ -326,7 +326,8 @@ class SignupApiTests(APITestCase):
             "last_name": "Mustermann",
             "password": "Test1234!?",
         }
-        # self.user_signup(post_data)
+
+        self.user_signup(post_data)
 
     def test_already_existing_email(self):
         """ """
@@ -356,6 +357,7 @@ class SignupApiTests(APITestCase):
     def test_sending_of_activation_email(self):
         """ """
         email = 'max_mustermann@example.org'
+
         post_data = {
             "email": "%s" % email,
             "first_name": "Max",
@@ -390,8 +392,6 @@ class SignupApiTests(APITestCase):
         }
         # user = self.user_signup(post_data)
         # self.activate_user(user)
-
-
 
     def test_missing_password(self):
         """

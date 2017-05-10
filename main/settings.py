@@ -104,21 +104,19 @@ INSTALLED_APPS = [
     'django_premailer',
     'tinymce',
 
+    # django-rest_framework and Authentication
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-
-    'oauth2_provider',
-    'rest_framework_docs',
-    'rest_framework_swagger',
-
-    'django_extensions',        # This should be moved to only local, but it helps for testing
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
-    'crispy_forms',
-    'anymail',
+    'rest_auth.registration',
+    'rest_framework_swagger',
 
+
+    'django_extensions',        # This should be moved to only local, but it helps for testing
+
+    'anymail',
     'channels',
     #'channels_panel',
 
@@ -348,15 +346,17 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool('ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 #ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
+
+REST_SESSION_LOGIN = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'users:redirect'
@@ -460,7 +460,6 @@ elif STAGE == 'test':
 
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
 #     ),
 #     # 'DEFAULT_PERMISSION_CLASSES': (
 #     #     'rest_framework.permissions.IsAuthenticated',
@@ -480,14 +479,26 @@ elif STAGE == 'test':
 #         'api.pagination.StandardResultsSetPagination'
 # }
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#          'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#     ),
+# }
+
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'apps.users.serializers.CreateUserSerializer',
+}
+
 
 JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
 JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='einhorn-starter')
@@ -504,20 +515,12 @@ JWT_AUTH = {
     'JWT_ISSUER': 'einhorn-starter',
 }
 
-OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope',
-        'groups': 'Access to your groups',
-        'special_admin': 'Access to all data ressources'
-    },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 60 * 12
+#REST_USE_JWT = True
 
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': 'login',
+    'LOGOUT_URL': 'logout',
 }
-
-REST_USE_JWT = True
-
 
 ########################################################################################################################
 #                                             9 - Context (Admin, etc.)                                                #
@@ -559,9 +562,7 @@ if not STAGE == 'test':
         'sites': 'apps.contrib.sites.migrations'
     }
 
-
 EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up
-
 
 CHANNEL_LAYERS = {
     "default": {

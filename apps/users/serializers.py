@@ -6,7 +6,7 @@ from django.core import exceptions
 from .models import User
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class OldCreateUserSerializer(serializers.ModelSerializer):
     """Serialize data from the User """
 
     class Meta:
@@ -133,3 +133,57 @@ class CurrentPasswordSerializer(serializers.Serializer):
 
 class ChangePasswordSerializer(PasswordSerializer, CurrentPasswordSerializer):
     pass
+
+from django.utils.translation import ugettext_lazy as _
+from apps.users.utils import send_email_verification
+
+from django.conf import settings
+
+try:
+    from allauth.account import app_settings as allauth_settings
+    from allauth.utils import (email_address_exists,
+                               get_username_max_length)
+    from allauth.account.adapter import get_adapter
+    from allauth.account.utils import setup_user_email, complete_signup
+
+except ImportError:
+    raise ImportError("allauth needs to be added to INSTALLED_APPS.")
+
+from rest_auth.registration.serializers import RegisterSerializer
+
+
+class CreateUserSerializer(RegisterSerializer):
+    """ 
+        Overwriting the register_auth RegisterSerializer to enable first_name and last_name
+    """
+
+    username = serializers.CharField(
+        max_length=get_username_max_length(),
+        min_length=allauth_settings.USERNAME_MIN_LENGTH,
+        required=allauth_settings.USERNAME_REQUIRED
+    )
+
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
+    def get_cleaned_data(self):
+        return {
+            'username': self.validated_data.get('username', ''),
+            'first_name': self.validated_data.get('first_name', ''),
+            'last_name': self.validated_data.get('last_name', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'email': self.validated_data.get('email', '')
+        }
+
+    def save(self, request):
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+        adapter.save_user(request, user, self)
+        self.custom_signup(request, user)
+        setup_user_email(request, user, [])
+
+        return user

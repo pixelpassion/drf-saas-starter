@@ -6,6 +6,8 @@ from django.conf import settings
 from apps.mails.utils import create_and_send_mail
 from apps.users.models import User
 
+from allauth.utils import get_current_site
+
 
 class AccountAdapter(DefaultAccountAdapter):
 
@@ -15,7 +17,7 @@ class AccountAdapter(DefaultAccountAdapter):
     def generate_unique_username(self, txts, regex=None):
         """Use a given username and find the next free ID - if not use the first part of an email """
 
-        username=txts[3]
+        username = txts[3]
 
         if username is None or username == '':
             email = txts[2]
@@ -24,6 +26,8 @@ class AccountAdapter(DefaultAccountAdapter):
             return User.objects.find_next_available_username(username)
 
     def send_mail(self, template_prefix, email, context):
+
+        print("send mail with our adapter")
 
         context_dict = {
             'email': email,
@@ -39,3 +43,24 @@ class AccountAdapter(DefaultAccountAdapter):
         """ The URL to return to after successful e-mail confirmation. """
 
         return settings.EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL
+
+    def send_confirmation_mail(self, request, emailconfirmation, signup):
+
+        print("SEND CONFIRMATION MAIL")
+
+        current_site = get_current_site(request)
+        activate_url = self.get_email_confirmation_url(
+            request,
+            emailconfirmation)
+        ctx = {
+            "user": emailconfirmation.email_address.user,
+            "activate_url": activate_url,
+            "current_site": current_site,
+            "key": emailconfirmation.key,
+        }
+        if signup:
+            email_template = 'email_confirmation_signup'
+        else:
+            email_template = 'email_confirmation'
+
+        self.send_mail(email_template, emailconfirmation.email_address.email, ctx)

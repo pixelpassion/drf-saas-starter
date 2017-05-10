@@ -24,6 +24,11 @@ class TenantAdmin(admin.ModelAdmin):
 
 @admin.register(Invite)
 class InviteAdmin(admin.ModelAdmin):
+    """
+        Show invitations and gives the admin the chance to send an invite.
+    """
+
+    # TODO: #63 - Show the status of the invitation (clicked, used) and the date/time of the sending
 
     def send_invite(self, request, queryset):
 
@@ -41,6 +46,6 @@ class InviteAdmin(admin.ModelAdmin):
 
     send_invite.short_description = "Sent an invite"
 
-    list_display = ('tenant', 'email', )
-    search_fields = ('tenant', 'email', '')
+    list_display = ('tenant', 'first_name', 'last_name', 'email', )
+    search_fields = ('tenant', 'first_name', 'last_name', 'email', )
     actions = [send_invite, ]

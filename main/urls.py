@@ -1,45 +1,53 @@
-from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import TemplateView, RedirectView
 
-from apps.authentication.views import ConfirmEmailView
+from rest_framework_swagger.views import get_swagger_view
+
 from apps.letsencrypt.views import acme_challenge
-from apps.tenants.views import TenantSignUpView
+#from apps.tenants.views import TenantSignUpView
 
 urlpatterns = [
+    url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
+    url(r'^signup/$', TemplateView.as_view(template_name="signup.html"),
+        name='signup'),
+    url(r'^email-verification/$',
+        TemplateView.as_view(template_name="email_verification.html"),
+        name='email-verification'),
+    url(r'^login/$', TemplateView.as_view(template_name="login.html"),
+        name='login'),
+    url(r'^logout/$', TemplateView.as_view(template_name="logout.html"),
+        name='logout'),
+    url(r'^password-reset/$',
+        TemplateView.as_view(template_name="password_reset.html"),
+        name='password-reset'),
+    url(r'^password-reset/confirm/$',
+        TemplateView.as_view(template_name="password_reset_confirm.html"),
+        name='password-reset-confirm'),
 
-    # Static pages
-    url(r'^$', TemplateView.as_view(template_name='pages/index.html'), name='home'),
-    url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-    url(r'^dashboard/$', TemplateView.as_view(template_name='pages/dashboard.html'), name='dashboard'),
+    url(r'^user-details/$',
+        TemplateView.as_view(template_name="user_details.html"),
+        name='user-details'),
+    url(r'^password-change/$',
+        TemplateView.as_view(template_name="password_change.html"),
+        name='password-change'),
 
-    url(r'^users/', include('apps.users.urls', namespace='users')),
-    url(r'^accounts/', include('apps.authentication.urls')),
+
+    # this url is used to generate email content
+    url(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        TemplateView.as_view(template_name="password_reset_confirm.html"),
+        name='password_reset_confirm'),
+
+    url(r'^api/', include('rest_auth.urls')),
+    url(r'^api/sign_up/', include('rest_auth.registration.urls')),
+    url(r'^account/', include('allauth.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
+    url(r'^docs/$', get_swagger_view(title='API Docs'), name='api_docs'),
 
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
-
-    # JSON Web Token handling
-    url(r'^api/auth/', obtain_jwt_token),
-    url(r'^api/verify/', verify_jwt_token),
-
-    # Only on the main page
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/sign_up/', TenantSignUpView.as_view(), name="register"),
-    url(r"^confirm-email/(?P<key>[-:\w]+)/$", ConfirmEmailView.as_view(), name="account_confirm_email"),
-
-    url(r'^api/authentication/', include('rest_auth.urls')),
-
-    url(r'^api/users/', include('apps.users.api_urls', namespace='api_users')),
-
-    url(r'^api/docs/', include('rest_framework_docs.urls')),
-
-    #permission_required('users.can_read_swagger_docs', login_url='/admin/login/')
-
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
-
     url(r'.well-known/acme-challenge/(?P<token>.+)', acme_challenge),
 
 ]

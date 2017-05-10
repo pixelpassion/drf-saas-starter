@@ -47,9 +47,7 @@ class TenantManager(models.Manager):
 
 
 class Tenant(UUIDMixin):
-    """
-        The Tenant is the client on the platform.
-    """
+    """ The Tenant is the client on the platform. """
 
     name = models.CharField(max_length=100, help_text=_(u"Name of the tenant (the agency or company)"), unique=True)
 
@@ -88,9 +86,8 @@ def auto_delete_site_with_tenant(sender, instance, **kwargs):
 
 
 class Domain(models.Model):
-    """
-        Every tenant can have several extra-domains leading to his site subdomain.
-    """
+    """ Every tenant can have several extra-domains leading to his site subdomain. """
+
     domain = models.CharField(
         _('domain name'),
         max_length=100,
@@ -114,6 +111,7 @@ class Domain(models.Model):
 
 
 class TenantMixin(models.Model):
+    """ A mixin for models to be part of a Tenant """
 
     tenant = models.ForeignKey(Tenant, null=False, blank=False)
 
@@ -122,8 +120,19 @@ class TenantMixin(models.Model):
 
 
 class Invite(TenantMixin):
+    """ An invite to join in a tenants team """
 
     email = models.EmailField(null=False, blank=False)
+    first_name = models.CharField(_('first name'),
+                                  help_text=_("First Name of the user"),
+                                  max_length=30,
+                                  blank=True
+                                  )
+    last_name = models.CharField(_('last name'),
+                                 max_length=30,
+                                 blank=True,
+                                 help_text=_("Last Name of the user")
+                                 )
 
     class Meta:
         verbose_name = _('invite')
@@ -134,4 +143,12 @@ class Invite(TenantMixin):
 
     def send_invite(self):
 
-        create_and_send_mail(template_name="invite", context={'name': 'Jens'}, to_address=self.email)
+        # TODO: #62 - Show the status of the invitation (clicked, used) and the date/time of the sending
+
+        create_and_send_mail(template_name="invite", context={
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'tenant_name': self.tenant.name,
+            'activation_url': 'http://activation-url-not-created-yet.com'
+        }, to_address=self.email)

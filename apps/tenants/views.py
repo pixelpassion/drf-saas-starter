@@ -21,7 +21,6 @@ from django.views.decorators.debug import sensitive_post_parameters
 from apps.api.permissions import IsAuthenticatedOrCreate
 from apps.tenants.models import Tenant
 from apps.tenants.serializers import TenantSignUpSerializer
-from apps.users.utils import send_email_verification
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password')
@@ -70,7 +69,5 @@ class TenantSignUpView(generics.CreateAPIView):
             self.token = jwt_encode(user)
         else:
             create_token(self.token_model, user, serializer)
-
-        send_email_verification(self.request._request, user, app_settings.EMAIL_VERIFICATION)
 
         return user

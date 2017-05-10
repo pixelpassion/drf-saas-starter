@@ -34,7 +34,7 @@ class MailManager(models.Manager):
 
         if not isinstance(template_name, MailTemplate):
             try:
-                template = MailTemplate.objects.get(name=template_name)
+                template = MailTemplate.objects.get(name__iexact=template_name)
             except MailTemplate.DoesNotExist:
                 raise ValueError("{} is not a valid Template name".format(template_name))
         else:

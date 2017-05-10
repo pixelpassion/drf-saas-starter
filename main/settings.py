@@ -84,7 +84,6 @@ if REDIS_URL and CACHING:
 ########################################################################################################################
 
 INSTALLED_APPS = [
-    #'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -589,13 +588,6 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     #'channels_panel.panel.ChannelsDebugPanel',
 ]
-
-
-SUIT_CONFIG = {
-    # header
-    'ADMIN_NAME': 'Project Admin',
-    'HEADER_DATE_FORMAT': 'l, m.F Y',
-}
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",

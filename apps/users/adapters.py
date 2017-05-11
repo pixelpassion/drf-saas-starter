@@ -27,8 +27,6 @@ class AccountAdapter(DefaultAccountAdapter):
 
     def send_mail(self, template_prefix, email, context):
 
-        print("send mail with our adapter")
-
         context_dict = {
             'email': email,
             'site_domain': context["current_site"].domain,
@@ -45,8 +43,6 @@ class AccountAdapter(DefaultAccountAdapter):
         return settings.EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
-
-        print("SEND CONFIRMATION MAIL")
 
         current_site = get_current_site(request)
         activate_url = self.get_email_confirmation_url(

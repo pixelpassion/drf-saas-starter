@@ -157,6 +157,8 @@ class CreateUserSerializer(RegisterSerializer):
         Overwriting the register_auth RegisterSerializer to enable first_name and last_name
     """
 
+    tenant_name = serializers.CharField(required=True)
+
     username = serializers.CharField(
         max_length=get_username_max_length(),
         min_length=allauth_settings.USERNAME_MIN_LENGTH,
@@ -171,6 +173,7 @@ class CreateUserSerializer(RegisterSerializer):
 
     def get_cleaned_data(self):
         return {
+            'tenant_name': self.validated_data.get('tenant_name', ''),
             'username': self.validated_data.get('username', ''),
             'first_name': self.validated_data.get('first_name', ''),
             'last_name': self.validated_data.get('last_name', ''),

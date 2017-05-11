@@ -41,7 +41,12 @@ class MyUserCreationForm(UserCreationForm):
 class MyUserAdmin(AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser')
+    list_display = ('id', 'date_joined', 'username', 'email', 'first_name', 'last_name', 'get_tenants', 'is_active', 'is_superuser')
     list_editable = ('username', 'first_name', 'last_name', 'email', 'is_active',)
     search_fields = ['first_name', 'last_name', 'username', 'email', ]
+    ordering = ('date_joined', )
+
     inlines = (TenantInline,)
+
+    def get_tenants(self, obj):
+        return "\n".join([t.name for t in obj.tenants.all()])

@@ -2,6 +2,7 @@
 
 # Developer tools
 django-debug-toolbar
+Werkzeug
 Fabric3
 ipython
 

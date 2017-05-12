@@ -49,25 +49,25 @@ services:
       - "25672:25672"
       - "8080:8080"
 
-#  django:
-#    build:
-#      context: .
-#      dockerfile: ./compose/django/Dockerfile-dev
-#    command: /start-dev.sh
-#    depends_on:
-#      - postgres
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - USE_DOCKER=yes
-#    volumes:
-#      - .:/app
-#    ports:
-#      - "8000:8000"
-#      - "80:8000"
-#    links:
-#      - postgres
-#      - mailhog
-#      - rabbitmq
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile-dev
+    command: /start-dev.sh
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - USE_DOCKER=yes
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+      - "80:8000"
+    links:
+      - postgres
+      - mailhog
+      - rabbitmq
 
 #  jenkins:
 #    image: library/jenkins

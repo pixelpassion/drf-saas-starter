@@ -26,7 +26,7 @@
 
 * Helps a project kickoff with ALWAYS needed services (asynchronous tasks, Websockets, mail sending, cache, error handling etc.)
 * The added apps are pretty modular and can be turned on / off or configured on the fly
-* Uses Django 1.10.x and Python 3.5.2
+* Uses Django 1.10.x and Python 3.6.1
 * [Individual Project Setup](docs/project_setup.md)
 * [Roadmap](docs/roadmap.md)
 

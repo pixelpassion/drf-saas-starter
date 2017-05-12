@@ -1,0 +1,35 @@
+# For explanations / licenses check the documentation (docs/django_packages.md)
+
+# Django related
+Django<1.11             # Basics and boilerplate stuff
+django-environ          # Configuration by environment variables according to 12Factor model
+psycopg2                # Database connector
+whitenoise              # Static file serving
+sendgrid                # just for testing, we should use django-anymail to be more flexible
+django-allauth          # For user registration, either via email or Open ID Providers
+django-crispy-forms     # Better form handling
+celery                  # Asynchronous tasks
+django-anymail          # Email handling
+raven                   # Error handling
+django-premailer        # Inline CSS in HTML email templates
+django-extensions       # Django extensions (should be in local.txt after done with testing)
+djangorestframework     # RESTful API
+django-oauth-toolkit    # OAuth 2.0 support
+argon2-cffi             # password hashing
+WeasyPrint              # HTML to PDF conversion
+django-redis            # Redis handling
+django-tinymce          # HTMLField for models
+html2text               # Convert HTML to Markdown
+
+# Still for testing
+django-rest-auth
+djangorestframework-jwt
+drfdocs
+django-rest-swagger
+
+# Channels
+channels
+django-channels-panel
+Twisted
+h2
+asgi-redis

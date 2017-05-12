@@ -1,0 +1,27 @@
+-r base.txt
+
+# Developer tools
+django-debug-toolbar
+Fabric3
+ipython
+
+# PIP handling
+yolk3k
+
+# Import sorting
+isort
+
+# Package and dependency management
+pip-tools
+
+# Testing and linting
+coverage
+django-coverage-plugin
+flake8
+factory_boy
+pytest-django
+pytest-sugar
+pylint
+pylint-celery
+pylint-common
+pylint-django

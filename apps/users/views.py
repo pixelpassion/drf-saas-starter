@@ -25,6 +25,7 @@ from .utils import logout_user
 
 
 class UserDetailView(LoginRequiredMixin, TenantAccessRequiredMixin, DetailView):
+
     model = User
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'

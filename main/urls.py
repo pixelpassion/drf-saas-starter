@@ -41,11 +41,12 @@ urlpatterns = [
 
     url(r'^api/', include('rest_auth.urls')),
 
-
     url(r'^api/sign_up/', include('apps.tenants.registration.urls')),
 
-
+    url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
     url(r'^account/', include('allauth.urls')),
+    url(r'^users/', include('apps.users.urls', namespace='users')),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
     url(r'^docs/$', get_swagger_view(title='API Docs'), name='api_docs'),

@@ -30,10 +30,12 @@ from django.contrib.sites.models import Site
 
 class TenantUserRegisterView(RegisterView):
 
-    def create(self, request, name=None, *args, **kwargs):
+    def create(self, request, tenant_name=None, *args, **kwargs):
+
+        print(f"TenantUserRegisterView.create() for {tenant_name}")
 
         try:
-            site = Site.objects.get(name=f"{name}.{settings.TENANT_DOMAIN}")
+            site = Site.objects.get(name=f"{tenant_name}.{settings.TENANT_DOMAIN}")
         except Site.DoesNotExist:
             raise Http404
 
@@ -45,9 +47,9 @@ class TenantUserRegisterView(RegisterView):
         if not tenant.is_active:
             return Response({'error_message': _('Tenant is deactivated, no registration is possible')}, status=status.HTTP_400_BAD_REQUEST)
 
-        # TODO: tenant_name to serializer hinzufügen. Im CreateUserSerializer lassen oder nicht?
-
         request.data["tenant_name"] = tenant.name
+
+        print("CREATE with tenant_name or not?")
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

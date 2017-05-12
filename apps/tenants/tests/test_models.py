@@ -2,7 +2,7 @@ from django.contrib.sites.models import Site
 from django.db.utils import IntegrityError
 from django.test import TestCase, override_settings
 
-from .models import Domain, Tenant
+from apps.tenants.models import Domain, Tenant
 
 
 @override_settings(TENANT_DOMAIN="example.com")

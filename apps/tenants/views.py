@@ -26,6 +26,14 @@ sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password')
 )
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.tenants.mixins import TenantAccessRequiredMixin
+from django.views.generic.base import TemplateView
+
+
+class TenantDashboardView(LoginRequiredMixin, TenantAccessRequiredMixin, TemplateView):
+    template_name = "tenants/dashboard.html"
+
 
 class TenantSignUpView(generics.CreateAPIView):
 

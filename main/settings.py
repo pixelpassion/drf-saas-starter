@@ -542,12 +542,10 @@ ALLOWED_EMAIL_DOMAINS = [
 ]
 
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
-TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
-DEFAULT_DOMAINS = env.list('DEFAULT_DOMAINS', default=[
-    'www.localhost:8000',
-    '127.0.0.1:8000',
-])
+TENANT_SITE_ID = env.int('TENANT_SITE_ID', default=SITE_ID)
+
+TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
 if not STAGE == 'test':
     #

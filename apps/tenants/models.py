@@ -45,6 +45,19 @@ class TenantManager(models.Manager):
 
         return tenant
 
+    def get_tenant_domain(self, request=None):
+        """
+        Return the current Site based on the TENANT_SITE_ID in the project's settings.
+        If TENANT_SITE_ID isn't defined, return an error
+        """
+
+        from django.conf import settings
+        if getattr(settings, 'TENANT_SITE_ID', ''):
+            tenant_site_id = settings.TENANT_SITE_ID
+            return Site.objects.get(pk=tenant_site_id)
+
+        raise ImproperlyConfigured("You're using the Tenant model without having TENANT_SITE_ID setting. It should be set to the root Site for tenant subdomains ")
+
 
 class Tenant(UUIDMixin):
     """ The Tenant is the client on the platform. """

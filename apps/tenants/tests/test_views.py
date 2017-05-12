@@ -2,10 +2,10 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 
-from .models import Domain, Tenant
+from apps.tenants.models import Domain, Tenant
 
 
-@override_settings(TENANT_DOMAIN="example.com", DEFAULT_DOMAINS=['landingpage.com',])
+@override_settings(TENANT_DOMAIN="example.com")
 class TenantDomainTests(TestCase):
     """ """
 
@@ -20,10 +20,12 @@ class TenantDomainTests(TestCase):
         self.other_tenant = Tenant.objects.create(name="Other", site=self.other_site)
         self.other_domain = Domain.objects.create(domain="other.com", tenant=self.other_tenant)
 
+        self.marketing_page = Site.objects.create(name="Marketingpage", domain="landingpage.com")
+
         self.site_not_linked = Site.objects.create(name="notlinked.example.com", domain="notlinked.example.com")
         
         self.home_url = reverse("home")
-        self.secret_url = reverse("users:list")
+        self.secret_url = reverse("tenants:dashboard")
 
     def test_tenant_root_domain_should_be_accessible(self):
         """ The marketing page should be accessible """
@@ -34,7 +36,7 @@ class TenantDomainTests(TestCase):
     def test_tenant_marketing_domain_should_be_accessible(self):
         """ The marketing page should be accessible """
 
-        response = self.client.get(self.home_url, HTTP_HOST="landingpage.com")
+        response = self.client.get(self.home_url, HTTP_HOST=self.marketing_page)
         self.assertEquals(response.status_code, 200)
 
     def test_tenant_domain_should_be_accessible(self):

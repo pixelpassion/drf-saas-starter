@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
-    <h1>Welcome to {{ PROJECT_NAME }}!</h1>
-    <p>Read the API documentation, check the source code.</p>
-  </div>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Hello, {{ TENANT_NAME|default:"world" }}!</h1>
+            <p>This is a boilerplate for starting business / SaaS related webpages. Use it as a starting point to create something more
+                unique.</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="https://github.com/jensneuhaus/einhorn-starter" role="button">Github &raquo;</a>
+                <a class="btn btn-primary btn-lg" href="http://127.0.0.1:8000/docs/" role="button">Swagger Docs &raquo;</a>
+            </p>
+        </div>
+    </div>
+
 {% endblock %}

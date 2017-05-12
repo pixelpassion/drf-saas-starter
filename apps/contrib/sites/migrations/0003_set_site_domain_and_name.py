@@ -13,8 +13,8 @@ def update_site_forward(apps, schema_editor):
     Site.objects.update_or_create(
         id=settings.SITE_ID,
         defaults={
-            'domain': settings.TENANT_DOMAIN,
-            'name': settings.PROJECT_NAME
+            'domain': 'localhost:8000',
+            'name': 'localhost:8000'
         }
     )
 

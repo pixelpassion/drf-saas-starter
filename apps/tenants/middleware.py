@@ -32,47 +32,54 @@ class TenantMiddleware(object):
         # the view (and later middleware) are called.
 
         host = request.get_host()
+
         site_id = None
+        request.tenant = None
 
-        # Case 1 - it could be a regular (marketing) domain
-        if host in settings.DEFAULT_DOMAINS or host == settings.TENANT_DOMAIN:
-            site_id = Site.objects.get(domain=settings.TENANT_DOMAIN).id
-            request.tenant = None
+        # Case 1: An existing site (either belonging to the marketing page itself or a tenant)
+        try:
+            site = Site.objects.get(domain=host)
+            site_id = site.id
 
+            if hasattr(site, 'tenant'):
+                request.tenant = site.tenant
+
+        except Site.DoesNotExist:
+            pass
+
+        # Case 2 - it is an external domain belonging to a tenant, not registered within the Site model
+        try:
+            domain = Domain.objects.get(domain=host)
+            site_id = domain.tenant.site.id
+            request.tenant = domain.tenant
+        except Domain.DoesNotExist:
+            pass
+
+        logger.debug("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host, site_id, request.tenant))
+
+        domain_parts = host.split('.', 1)
+
+        print(domain_parts)
+        print(site_id)
+
+        print(settings.TENANT_SITE_ID)
+        print(settings.SITE_ID)
+
+        if site_id:
+            settings.SITE_ID = site_id
         else:
+            # Case 3 - somebody is accessing a tenant subdomain page, but it does not exist, raise 404
+
             domain_parts = host.split('.', 1)
+
+
+            print("YE")
+
 
             # Case 2 - this is a sub domain of a tenant
             if (len(domain_parts) == 2 and domain_parts[1] == settings.TENANT_DOMAIN) or \
                     (len(domain_parts) == 1 and domain_parts[0] == settings.TENANT_DOMAIN):
-                try:
-                    site = Site.objects.get(domain=host)
-                    site_id = site.id
-
-                    if hasattr(site, 'tenant'):
-                        request.tenant = site.tenant
-                    else:
-                        logger.debug("TenantMiddleware: Host: {}, Site_ID: {} has no tenant!".format(host, site_id))
-                        raise Http404
-
-                except Site.DoesNotExist:
-                    pass
-            # Case 3 - it is an external domain belonging to a tenant
-            else:
-                try:
-                    domain = Domain.objects.get(domain=host)
-                    site_id = domain.tenant.site.id
-                    request.tenant = domain.tenant
-                except Domain.DoesNotExist:
-                    pass
-
-        if not site_id:
-            logger.warning("TenantMiddleware: Host: {}, no Site found!".format(host))
-            raise Http404
-
-        logger.debug("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host, site_id, request.tenant))
-
-        settings.SITE_ID = site_id
+                raise Http404
 
         response = self.get_response(request)
 

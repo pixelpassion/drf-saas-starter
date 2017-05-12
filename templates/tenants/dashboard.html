@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Some secret stuff, {{ TENANT_NAME }}!</h1>
+            <p>This site should not be accessible from other tenants.</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="/admin/" role="button">{{ TENANT_NAME }} Admin &raquo;</a>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

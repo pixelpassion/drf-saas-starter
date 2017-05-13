@@ -3,6 +3,86 @@
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
+{% block extrastyle %}
+
+    <style type="text/css">
+
+        #branding h1, #branding h1 a:link, #branding h1 a:visited {
+            color: #fff;
+        }
+
+        #header {
+            width: auto;
+            height: 40px;
+            padding: 10px 40px;
+            background: #3f4c6b; /* Old browsers */
+            background: -moz-linear-gradient(left, #485563 0%, #29323c 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(left, #485563 0%, #29323c 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to right, #485563 0%, #29323c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f4c6b', endColorstr='#3f4c6b', GradientType=1); /* IE6-9 */
+            line-height: 40px;
+            color: #ffc;
+            overflow: hidden;
+            border-bottom: 2px #e74c3c;
+        }
+
+        .module h2, .module caption, .inline-group h2 {
+            margin: 0;
+            padding: 8px;
+            font-weight: 400;
+            font-size: 13px;
+            text-align: left;
+            background: #79aec8;
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#3f4c6b+0,3f4c6b+100;Blue+Grey+Flat */
+            background: #3f4c6b; /* Old browsers */
+            background: -moz-linear-gradient(left, #485563 0%, #485563 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(left, #485563 0%, #485563 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to right, #485563 0%, #485563 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f4c6b', endColorstr='#3f4c6b', GradientType=1); /* IE6-9 */
+            color: #fff;
+        }
+
+        div.breadcrumbs {
+            background: #5A6672;
+            padding: 10px 40px;
+            border: none;
+            font-size: 14px;
+            color: #c4dce8;
+            text-align: left;
+        }
+
+        .button, input[type=submit], input[type=button], .submit-row input, a.button {
+            background: #5A6672;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .submit-row a.deletelink {
+            background: #e74c3c !important;
+
+        }
+
+        .button.default, input[type=submit].default, .submit-row input.default {
+            float: right;
+            border: none;
+            font-weight: 400;
+            background: #485563;
+        }
+
+        .button.default:active, input[type=submit].default:active,
+        .button.default:focus, input[type=submit].default:focus,
+        .button.default:hover, input[type=submit].default:hover {
+            background: #609ab6;
+        }
+
+
+    </style>
+
+{% endblock %}
+
 {% block branding %}
     <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ PROJECT_NAME }} Administration</a></h1>
 {% endblock %}

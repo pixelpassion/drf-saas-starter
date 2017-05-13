@@ -20,7 +20,7 @@ class SingleTest(TestCase):
         Site.objects.create(name="foo", domain="foo.com")
 
 
-@override_settings(TENANT_DOMAIN="example.com", LANGUAGE_CODE='en')
+@override_settings(LANGUAGE_CODE='en')
 class TenantSignupTests(TestCase):
     """ Test the sign_up process of the API endpoint """
 
@@ -29,13 +29,17 @@ class TenantSignupTests(TestCase):
             Until then example.com is used as a default domain in testing.
         """
 
+        self.tenant_domain = Tenant.objects.get_tenant_domain()
+
         self.domain = "example.com"
 
         self.sign_up_url = "/api/sign_up/"
 
-        self.already_registered_user_email = 'first@example.com'
+        self.already_registered_user_email = f'first@{self.tenant_domain}'
         self.already_registered_company_name = 'We are first'
         self.already_registered_company_domain = 'first'
+
+        self.tenant_domain = Tenant.objects.get_tenant_domain()
 
         already_existing_site = Site.objects.get(domain=self.domain)
         already_existing_subdomain = f"{self.already_registered_company_domain}.{already_existing_site.domain}"
@@ -59,7 +63,7 @@ class TenantSignupTests(TestCase):
         # User, Site and Tenant models should be around
         user = User.objects.get(email="awesome-ceo@example.com")
 
-        correct_subdomain = "awesome.{}".format(settings.TENANT_DOMAIN)
+        correct_subdomain = "awesome.{}".format(self.tenant_domain)
         site = Site.objects.get(name=correct_subdomain, domain=correct_subdomain)
 
         tenant = Tenant.objects.get(name="Awesome customer", site=site)
@@ -85,7 +89,7 @@ class TenantSignupTests(TestCase):
         # There should be no created models
         self.assertEquals(User.objects.filter(email="awesome-ceo@example.com").count(), 0)
         self.assertEquals(Tenant.objects.filter(name="Awesome customer").count(), 0)
-        self.assertEquals(Site.objects.filter(domain="awesome.{}".format(settings.TENANT_DOMAIN)).count(), 0)
+        self.assertEquals(Site.objects.filter(domain="awesome.{}".format(self.tenant_domain)).count(), 0)
 
         # No activation email should be sent
         # self.assertEqual(len(mail.outbox), 0)

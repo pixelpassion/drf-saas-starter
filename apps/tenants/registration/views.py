@@ -27,15 +27,20 @@ from rest_framework import status
 from django.http import Http404
 from django.contrib.sites.models import Site
 
+from ..models import Tenant
+from apps.users.serializers import CreateUserSerializer
+
 
 class TenantUserRegisterView(RegisterView):
 
+    serializer_class = CreateUserSerializer
+
     def create(self, request, tenant_name=None, *args, **kwargs):
 
-        print(f"TenantUserRegisterView.create() for {tenant_name}")
+        tenant_domain = Tenant.objects.get_tenant_domain()
 
         try:
-            site = Site.objects.get(name=f"{tenant_name}.{settings.TENANT_DOMAIN}")
+            site = Site.objects.get(name=f"{tenant_name}.{tenant_domain}")
         except Site.DoesNotExist:
             raise Http404
 

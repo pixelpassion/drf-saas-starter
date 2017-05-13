@@ -22,10 +22,8 @@ def validate_default_site(value):
 
     """
 
-    if not hasattr(settings, 'TENANT_DOMAIN'):
-        raise ImproperlyConfigured("TENANT_DOMAIN is not set - its the root domain of all tenants basic domains")
-
-    tenant_domain_site_id = Site.objects.get(domain=settings.TENANT_DOMAIN).id
+    tenant_domain = Tenant.objects.get_tenant_domain()
+    tenant_domain_site_id = Site.objects.get(domain=tenant_domain).id
 
     if value == tenant_domain_site_id:
         raise ValidationError(
@@ -38,14 +36,15 @@ class TenantManager(models.Manager):
 
     def create_tenant(self, user, name, domain):
 
-        domain = "{}.{}".format(domain, settings.TENANT_DOMAIN)
+        tenant_domain = Tenant.objects.get_tenant_domain()
+        domain = "{}.{}".format(domain, tenant_domain)
         site = Site.objects.create(name=domain, domain=domain)
         tenant = Tenant.objects.create(name=name, site=site)
         tenant.add_user(user)
 
         return tenant
 
-    def get_tenant_domain(self, request=None):
+    def get_tenant_domain(self):
         """
         Return the current Site based on the TENANT_SITE_ID in the project's settings.
         If TENANT_SITE_ID isn't defined, return an error
@@ -54,7 +53,8 @@ class TenantManager(models.Manager):
         from django.conf import settings
         if getattr(settings, 'TENANT_SITE_ID', ''):
             tenant_site_id = settings.TENANT_SITE_ID
-            return Site.objects.get(pk=tenant_site_id)
+            site = Site.objects.get(pk=tenant_site_id)
+            return site.domain
 
         raise ImproperlyConfigured("You're using the Tenant model without having TENANT_SITE_ID setting. It should be set to the root Site for tenant subdomains ")
 

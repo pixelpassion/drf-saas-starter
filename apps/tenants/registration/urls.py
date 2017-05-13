@@ -5,7 +5,7 @@ from rest_auth.registration.views import VerifyEmailView, RegisterView
 from .views import TenantUserRegisterView
 
 urlpatterns = [
-    url(r'^$', RegisterView.as_view(), name='rest_register'),
+    url(r'^$', RegisterView.as_view(), name='tenant_rest_register'),
     url(r'^(?P<tenant_name>[-:\w]+)/$', TenantUserRegisterView.as_view(), name='user_rest_register'),
     url(r'^verify-email/$', VerifyEmailView.as_view(), name='rest_verify_email'),
 

@@ -121,7 +121,6 @@ class ConfirmEmailView(APIView, AllAuthConfirmEmailView):
             return self.render_to_response(ctx)
 
         tenant_redirect_url = "{}{}".format(tenant.domain, redirect_url)
-        print(tenant_redirect_url)
         return redirect(tenant_redirect_url)
 
     def get_object(self, queryset=None):

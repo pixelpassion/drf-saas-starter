@@ -84,6 +84,10 @@ if REDIS_URL and CACHING:
 ########################################################################################################################
 
 INSTALLED_APPS = [
+
+    #'material',
+    #'material.admin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -496,7 +500,7 @@ REST_FRAMEWORK = {
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'apps.users.serializers.CreateUserSerializer',
+    'REGISTER_SERIALIZER': 'apps.tenants.serializers.TenantSignUpSerializer',
 }
 
 
@@ -544,8 +548,6 @@ ALLOWED_EMAIL_DOMAINS = [
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 
 TENANT_SITE_ID = env.int('TENANT_SITE_ID', default=SITE_ID)
-
-TENANT_DOMAIN = env.str('TENANT_DOMAIN', default='localhost:8000')
 
 if not STAGE == 'test':
     #

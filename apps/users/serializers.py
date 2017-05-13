@@ -179,8 +179,6 @@ class CreateUserSerializer(RegisterSerializer):
         }
 
     def save(self, request):
-        print("user save")
-        print(request.data)
 
         adapter = get_adapter()
         user = adapter.new_user(request)

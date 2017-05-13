@@ -5,13 +5,13 @@ from django.test import TestCase, override_settings
 from apps.tenants.models import Domain, Tenant
 
 
-@override_settings(TENANT_DOMAIN="example.com")
 class TenantDomainTests(TestCase):
     """ """
 
     def setUp(self):
         """ """
 
+        self.tenant_domain = Tenant.objects.get_tenant_domain()
         self.site = Site.objects.create(name="a.example.com", domain="a.example.com")
         self.tenant = Tenant.objects.create(name="A", site=self.site)
 

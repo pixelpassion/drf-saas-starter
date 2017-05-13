@@ -7,11 +7,12 @@ from django.utils.translation import ugettext_lazy as _
 from apps.users.serializers import CreateUserSerializer
 
 from .models import Tenant
+from apps.users.models import User
 
 
 def unique_site_domain(value):
 
-    domain = "{}.{}".format(value, settings.TENANT_DOMAIN)
+    domain = "{}.{}".format(value, Tenant.objects.get_tenant_domain())
 
     try:
         Site.objects.get(domain=domain)
@@ -35,11 +36,34 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'domain', 'user')
         extra_kwargs = {'name': {'write_only': True}}
 
-    def create(self, validated_data):
-        """call create_tenant on the Tenant model."""
+    def get_cleaned_data(self):
+        return {
+            'name': self.validated_data.get('name', ''),
+            'domain': self.validated_data.get('domain', ''),
+            'user': self.validated_data.get('user', '')
+        }
 
-        user_serializer = CreateUserSerializer()
-        user = user_serializer.create(validated_data=validated_data.pop('user'))
-        Tenant.objects.create_tenant(user=user, **validated_data)
+    def save(self, request):
 
+
+
+        self.cleaned_data = self.get_cleaned_data()
+
+        print(self.cleaned_data)
+
+        user_serializer = CreateUserSerializer(data=self.cleaned_data["user"])
+
+        user_serializer.is_valid(raise_exception=True)
+
+        print(user_serializer)
+        user = user_serializer.save(request)
+
+        print(user)
+        
+        Tenant.objects.create_tenant(user=user, name=self.cleaned_data["name"], domain=self.cleaned_data["domain"])
+
+        print("ready.")
         return user
+
+
+

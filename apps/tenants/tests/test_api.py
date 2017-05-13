@@ -8,6 +8,7 @@ from django.test import TestCase, override_settings
 from apps.api.unit_tests import APITestCase
 from apps.tenants.models import Tenant
 from apps.users.models import User
+from django.core.urlresolvers import reverse
 
 
 class SingleTest(TestCase):
@@ -33,7 +34,7 @@ class TenantSignupTests(TestCase):
 
         self.domain = "example.com"
 
-        self.sign_up_url = "/api/sign_up/"
+        self.sign_up_url = reverse("tenant_rest_register")
 
         self.already_registered_user_email = f'first@{self.tenant_domain}'
         self.already_registered_company_name = 'We are first'
@@ -102,7 +103,10 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "a-w-e-s-o-m-e-1234"
+                "first_name": "Peter",
+                "last_name": "Lustig",
+                "password1": "a-w-e-s-o-m-e-1234",
+                "password2": "a-w-e-s-o-m-e-1234"
             }
         }
 
@@ -118,7 +122,8 @@ class TenantSignupTests(TestCase):
                 "first_name": "Mr.",
                 "last_name": "Awesome",
                 "email": "awesome-ceo@example.com",
-                "password": "a-w-e-s-o-m-e-1234"
+                "password1": "a-w-e-s-o-m-e-1234",
+                "password2": "a-w-e-s-o-m-e-1234"
             }
         }
 
@@ -134,8 +139,9 @@ class TenantSignupTests(TestCase):
             "name": "Awesome customer",
             "domain": "awesome",
             "user": {
-                "password": "awesome1234"
-            }
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+        }
         }
 
         self.sign_up_error(post_data, "This field is required")
@@ -148,7 +154,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": self.already_registered_user_email,
-                "password": "awesome1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -162,7 +169,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "sadly@email",
-                "password": "awesome1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -181,6 +189,21 @@ class TenantSignupTests(TestCase):
 
         self.sign_up_error(post_data, "This field is required")
 
+    def test_password_missmatch(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "awesome-ceo@example.com",
+                "password1": "awesome1234",
+                "password2": "awesome1235"
+            }
+        }
+
+        self.sign_up_error(post_data, "Enter a valid email address")
+
     def test_missing_name(self):
         """ """
 
@@ -188,7 +211,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "awesome1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -202,7 +226,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "awesome1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -215,7 +240,8 @@ class TenantSignupTests(TestCase):
             "name": "Awesome customer",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "awesome1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -229,7 +255,8 @@ class TenantSignupTests(TestCase):
             "domain": self.already_registered_company_domain,
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "test1234"
+                "password1": "awesome1234",
+                "password2": "awesome1234"
             }
         }
 
@@ -243,8 +270,9 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "z123"
-            }
+                "password1": "z123",
+                "password2": "z123"
+        }
         }
 
         self.sign_up_error(post_data, "This password is too short")
@@ -257,8 +285,9 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "awesome"
-            }
+                "password1": "awesome",
+                "password2": "awesome"
+        }
         }
 
         self.sign_up_error(post_data, "The password is too similar to the email address")
@@ -271,8 +300,9 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "12345678"
-            }
+                "password1": "12345678",
+                "password2": "12345678"
+        }
         }
 
         self.sign_up_error(post_data, "This password is entirely numeric")
@@ -285,7 +315,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password": "password1"
+                "password1": "password1",
+                "password2": "password1"
             }
         }
 
@@ -298,7 +329,11 @@ class SignupApiTests(APITestCase):
     def setUp(self):
         """ """
         super(SignupApiTests, self).setUp()
-        self.signup_url = "%s/sign_up/"
+
+        admin_user = User.objects.create_user(email="admin@example.com", first_name="Achim", last_name="Admin")
+        self.tenant = Tenant.objects.create_tenant(admin_user, "tenant", "tenant")
+
+        self.signup_url = reverse('user_rest_register', kwargs={'tenant_name': self.tenant.name})
 
     def user_signup(self, post_data, expected_status_code=200, expected_error=None):
         """
@@ -328,7 +363,8 @@ class SignupApiTests(APITestCase):
             "email": "max_mustermann@example.org",
             "first_name": "Max",
             "last_name": "Mustermann",
-            "password": "Test1234!?",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
         }
 
         self.user_signup(post_data)

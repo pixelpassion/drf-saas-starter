@@ -45,24 +45,15 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
 
     def save(self, request):
 
-
-
         self.cleaned_data = self.get_cleaned_data()
-
-        print(self.cleaned_data)
 
         user_serializer = CreateUserSerializer(data=self.cleaned_data["user"])
 
         user_serializer.is_valid(raise_exception=True)
-
-        print(user_serializer)
         user = user_serializer.save(request)
 
-        print(user)
-        
         Tenant.objects.create_tenant(user=user, name=self.cleaned_data["name"], domain=self.cleaned_data["domain"])
 
-        print("ready.")
         return user
 
 

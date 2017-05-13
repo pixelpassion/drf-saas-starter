@@ -12,7 +12,7 @@ def forwards_func(apps, schema_editor):
     MailTemplate.objects.using(db_alias).bulk_create([
         MailTemplate(name="hello", html_template="<p>Hello</p>"),
         MailTemplate(name="invite", html_template="<p>Invite</p>"),
-        MailTemplate(name="account/email/email_confirmation_signup", html_template="<a href='{{ activation_url }}'>Confirm email address</a"),
+        MailTemplate(name="email_confirmation_signup", html_template="<a href='{{ activation_url }}'>Confirm email address</a"),
     ])
 
 
@@ -23,7 +23,7 @@ def reverse_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     MailTemplate.objects.using(db_alias).filter(name="hello").delete()
     MailTemplate.objects.using(db_alias).filter(name="invite").delete()
-    MailTemplate.objects.using(db_alias).filter(name="account/email/email_confirmation_signup").delete()
+    MailTemplate.objects.using(db_alias).filter(name="email_confirmation_signup").delete()
 
 
 class Migration(migrations.Migration):

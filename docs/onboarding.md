@@ -20,3 +20,15 @@ How to board an new developer
 
 ## Slack
 
+## Testing
+
+We are using pytest for local tests
+
+Some useful commands:
+
+```
+$ pytest                                                            # Runs all tests
+$ pytest apps/tenants/tests/test_api.py                             # Runs the tests in the file
+$ pytest apps/tenants/tests/test_api.py::SignupApiTests             # Runs the tests of the specified class
+$ pytest -k test_correct_signup_data                                # Runs the given test
+```

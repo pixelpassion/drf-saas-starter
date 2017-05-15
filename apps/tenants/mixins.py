@@ -11,9 +11,11 @@ class TenantAccessRequiredMixin(AccessMixin):
             print("This should never happen - LoginRequired should be first as Mixin")
             return self.handle_no_permission()
 
-        if request.tenant is None or not request.user.tenants.filter(pk=request.tenant.id):
-            print("SiteAccessRequiredMixin: User {} on tenant {} forbidden.".format(request.user, request.tenant))
-            return self.handle_no_permission()
+        # TODO: Only out so that Lorenz can work on the Comments API
+
+        # if request.tenant is None or not request.user.tenants.filter(pk=request.tenant.id):
+        #     print("SiteAccessRequiredMixin: User {} on tenant {} forbidden.".format(request.user, request.tenant))
+        #     return self.handle_no_permission()
 
         print("SiteAccessRequiredMixin: User {} on tenant {} okay!".format(request.user, request.tenant))
 

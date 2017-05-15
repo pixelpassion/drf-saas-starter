@@ -145,7 +145,7 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         return "{} {}".format(self.first_name, self.last_name)
 
     def get_absolute_url(self):
-        return reverse('users:detail', kwargs={'username': self.username})
+        return f"admin/users/user/{self.id}/change/"
 
 
 class UserTenantRelationship(models.Model):

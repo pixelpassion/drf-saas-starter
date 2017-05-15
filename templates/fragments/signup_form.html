@@ -1,5 +1,20 @@
 <!-- Signup form -->
-<form class="form-horizontal ajax-post" id="signup" role="form" action="{% url 'rest_register' %}">{% csrf_token %}
+<form class="form-horizontal ajax-post" id="signup" role="form" action="{% url 'tenant_rest_register' %}">{% csrf_token %}
+
+      <div class="form-group">
+    <label for="name" class="col-sm-2 control-label">Name Instance</label>
+    <div class="col-sm-10">
+      <input name="name" type="text" class="form-control" id="name" placeholder="name">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="domain" class="col-sm-2 control-label">Domain</label>
+    <div class="col-sm-10">
+      <input name="domain" type="text" class="form-control" id="domain" placeholder="domain">
+    </div>
+  </div>
+
   <div class="form-group">
     <label for="email" class="col-sm-2 control-label">Email</label>
     <div class="col-sm-10">
@@ -8,11 +23,20 @@
   </div>
 
   <div class="form-group">
-    <label for="username" class="col-sm-2 control-label">Username</label>
+    <label for="first_name" class="col-sm-2 control-label">First name</label>
     <div class="col-sm-10">
-      <input name="username" type="text" class="form-control" id="username" placeholder="Username">
+      <input name="first_name" type="text" class="form-control" id="first_name" placeholder="First name">
     </div>
   </div>
+
+  <div class="form-group">
+    <label for="last_name" class="col-sm-2 control-label">Last name</label>
+    <div class="col-sm-10">
+      <input name="last_name" type="text" class="form-control" id="last_name" placeholder="LastName">
+    </div>
+  </div>
+
+
 
   <div class="form-group">
     <label for="password1" class="col-sm-2 control-label">Password</label>

@@ -34,7 +34,7 @@ class TestUser(TestCase):
     def test_get_absolute_url(self):
         self.assertEqual(
             self.existing_user.get_absolute_url(),
-            '/users/existing_user/'
+            f"admin/users/user/{self.existing_user.id}/change/"
         )
 
     def test_create_user_method(self):

@@ -26,9 +26,7 @@ def validate_default_site(value):
     tenant_domain_site_id = Site.objects.get(domain=tenant_domain).id
 
     if value == tenant_domain_site_id:
-        raise ValidationError(
-            _('The root domain can not be used.').format(value)
-        )
+        raise ValidationError(f'The root domain {{tenant_domain}}can not be used.')
 
 
 class TenantManager(models.Manager):
@@ -38,7 +36,13 @@ class TenantManager(models.Manager):
 
         tenant_domain = Tenant.objects.get_tenant_domain()
         domain = "{}.{}".format(domain, tenant_domain)
-        site = Site.objects.create(name=domain, domain=domain)
+
+        try:
+            Site.objects.get(domain=domain)
+            raise ValidationError(f'The domain {{domain}} is already used by another tenant.')
+        except Site.DoesNotExist:
+            site = Site.objects.create(name=domain, domain=domain)
+
         tenant = Tenant.objects.create(name=name, site=site)
         tenant.add_user(user)
 

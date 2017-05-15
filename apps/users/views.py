@@ -294,7 +294,7 @@ class ChangePasswordView(APIView):
 #         self.instance.create_contoworks_wallet()
 #
 #     def send_activation_mail(self, user, activation_token):
-#         subject = _(u"Untitled project Account Activation")
+#         subject = _(u"Account Activation")
 #         email_ctx = {
 #             'email_verification_url': "%s/api/v1/users/activate_account/%s/" % (settings.BASE_URL, activation_token),
 #         }

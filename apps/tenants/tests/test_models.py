@@ -1,8 +1,30 @@
 from django.contrib.sites.models import Site
 from django.db.utils import IntegrityError
 from django.test import TestCase, override_settings
+from django.core.exceptions import ValidationError
 
 from apps.tenants.models import Domain, Tenant
+from apps.users.models import User
+
+
+class SiteCreationTest(TestCase):
+    """ Testing the Site creation 
+    
+    There is an error with Sites in the create_tenant Site.objects.create method, when using MIGRATION_MODULES
+
+    django.db.utils.IntegrityError: duplicate key value violates unique constraint "django_site_pkey"
+    DETAIL:  Key (id)=(1) already exists.
+
+    Ticket is posted to Cookiecutter: https://github.com/pydanny/cookiecutter-django/issues/1163
+    
+    MIGRATION_MODULES = {
+        'sites': 'apps.contrib.sites.migrations'
+    }
+    """
+
+    def test_django_site_setup(self):
+
+        Site.objects.create(name="foo", domain="foo.com")
 
 
 class TenantDomainTests(TestCase):
@@ -32,12 +54,17 @@ class TenantDomainTests(TestCase):
 
         self.domain = Domain.objects.create(domain="a.com", tenant=self.tenant)
 
-    def test_tenant_can_not_use_the_main_tenant_domain(self):
-        """The example.com should not belong to any tenant"""
-        pass
+    def test_create_tenant_method(self):
+        """Can the tenant set external domains?"""
 
-        # This can not be avoided on model site. But it is checked when using a form.
+        user = User.objects.create(email="newtenant@example.com", first_name="Taylor", last_name="Tenant")
 
-    def test_create_site_with_invalid_tenant_domain(self):
-        """ Check that sites can only be created for the TENANT_DOMAIN (example.com) """
-        pass
+        Tenant.objects.create_tenant(user, "B", "b")
+
+    def test_create_tenant_with_already_existing_domain(self):
+        """Can the tenant set external domains?"""
+
+        user = User.objects.create(email="newtenant@example.com", first_name="Taylor", last_name="Tenant")
+
+        with self.assertRaises(ValidationError):
+            Tenant.objects.create_tenant(user, "A", "a")

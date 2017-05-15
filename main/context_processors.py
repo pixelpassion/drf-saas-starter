@@ -11,6 +11,7 @@ import django
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.sites.models import Site
 
 User = get_user_model()
 
@@ -26,6 +27,13 @@ def admin_settings(request):
         user.status = 'online' if hasattr(user, 'logged_in_user') else 'offline'
         user.full_name = user.get_full_name()
 
+    site_url = "-"
+
+    try:
+        site_url = get_current_site(request)
+    except Site.DoesNotExist:
+        pass
+
     ctx = {
         'MAILHOG_URL': settings.MAILHOG_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
@@ -34,7 +42,7 @@ def admin_settings(request):
         'django_version': django.get_version(),
         'python_version': python_version,
         'ON_HEROKU': settings.ON_HEROKU,
-        'SITE_URL': get_current_site(request),
+        'SITE_URL': site_url,
         'HOST_URL': request.get_host(),
         'users': users
     }

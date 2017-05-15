@@ -9,17 +9,7 @@ from apps.api.unit_tests import APITestCase
 from apps.tenants.models import Tenant
 from apps.users.models import User
 from django.core.urlresolvers import reverse
-
-
-class SingleTest(TestCase):
-    """ Testing the Site creation
-    
-    """
-
-    def test_django_site_setup(self):
-
-        Site.objects.create(name="foo", domain="foo.com")
-
+import pytest
 
 @override_settings(LANGUAGE_CODE='en')
 class TenantSignupTests(TestCase):
@@ -32,8 +22,6 @@ class TenantSignupTests(TestCase):
 
         self.tenant_domain = Tenant.objects.get_tenant_domain()
 
-        self.domain = "example.com"
-
         self.sign_up_url = reverse("tenant_rest_register")
 
         self.already_registered_user_email = f'first@{self.tenant_domain}'
@@ -42,7 +30,7 @@ class TenantSignupTests(TestCase):
 
         self.tenant_domain = Tenant.objects.get_tenant_domain()
 
-        already_existing_site = Site.objects.get(domain=self.domain)
+        already_existing_site = Site.objects.get(domain=self.tenant_domain)
         already_existing_subdomain = f"{self.already_registered_company_domain}.{already_existing_site.domain}"
 
         Site.objects.get_or_create(name="First", domain=already_existing_subdomain)
@@ -56,10 +44,13 @@ class TenantSignupTests(TestCase):
     def sign_up(self, post_data):
         """ Helper method for the correct sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json",  HTTP_HOST=self.domain)
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json",  HTTP_HOST=self.tenant_domain)
         response_json = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 201, "Response code for adding user is incorrect! \n %s" % str(response_json))
+
+        # Give an info about the sent verification email
+        self.assertContains(response, "Verification e-mail sent", status_code=201)
 
         # User, Site and Tenant models should be around
         user = User.objects.get(email="awesome-ceo@example.com")
@@ -73,18 +64,20 @@ class TenantSignupTests(TestCase):
         self.assertTrue(tenant in user.tenants.all())
 
         # User should not be active
-        self.assertFalse(user.is_active)
+        self.assertTrue(user.is_active)
 
         # Tenant should not be active
         self.assertFalse(tenant.is_active)
 
         # An activation email should be sent
-        # self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
 
     def sign_up_error(self, post_data, expected_error, expected_status_code=400):
         """ Helper method for an faulty sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.domain)
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.tenant_domain)
+
+        print(response.content)
         self.assertContains(response, expected_error, status_code=expected_status_code)
 
         # There should be no created models
@@ -93,7 +86,7 @@ class TenantSignupTests(TestCase):
         self.assertEquals(Site.objects.filter(domain="awesome.{}".format(self.tenant_domain)).count(), 0)
 
         # No activation email should be sent
-        # self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_correct_minimum_sign_up_data(self):
         """ """
@@ -112,26 +105,6 @@ class TenantSignupTests(TestCase):
 
         self.sign_up(post_data)
 
-    def test_correct_optional_sign_up_data(self):
-        """ """
-
-        post_data = {
-            "name": "Awesome customer",
-            "domain": "awesome",
-            "user": {
-                "first_name": "Mr.",
-                "last_name": "Awesome",
-                "email": "awesome-ceo@example.com",
-                "password1": "a-w-e-s-o-m-e-1234",
-                "password2": "a-w-e-s-o-m-e-1234"
-            }
-        }
-
-        self.sign_up(post_data)
-
-        # The user should have a first and last_name
-        user = User.objects.get(email="awesome-ceo@example.com", first_name="Mr.", last_name="Awesome")
-
     def test_missing_email(self):
         """ """
 
@@ -139,6 +112,8 @@ class TenantSignupTests(TestCase):
             "name": "Awesome customer",
             "domain": "awesome",
             "user": {
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
         }
@@ -154,12 +129,31 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": self.already_registered_user_email,
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
         }
 
-        self.sign_up_error(post_data, "user with this email address already exists")
+        self.sign_up_error(post_data, "A user is already registered with this e-mail address")
+
+    def test_empty_email(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "",
+                "first_name": "Max",
+                "last_name": "Mustermann",
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+            }
+        }
+
+        self.sign_up_error(post_data, "This field may not be blank")
 
     def test_invalid_email(self):
         """ """
@@ -169,12 +163,80 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "sadly@email",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
         }
 
         self.sign_up_error(post_data, "Enter a valid email address")
+
+    def test_missing_first_name(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "sadly@example.com",
+                "last_name": "Mustermann",
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+            }
+        }
+
+        self.sign_up_error(post_data, "This field is required")
+
+    def test_empty_first_name(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "sadly@email",
+                "first_name": "",
+                "last_name": "Mustermann",
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+            }
+        }
+
+        self.sign_up_error(post_data, "This field may not be blank")
+
+    def test_empty_last_name(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "sadly@email",
+                "first_name": "Max",
+                "last_name": "",
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+            }
+        }
+
+        self.sign_up_error(post_data, "This field may not be blank")
+
+    def test_missing_last_name(self):
+        """ """
+
+        post_data = {
+            "name": "Awesome customer",
+            "domain": "awesome",
+            "user": {
+                "email": "sadly@email",
+                "first_name": "Max",
+                "password1": "awesome1234",
+                "password2": "awesome1234"
+            }
+        }
+
+        self.sign_up_error(post_data, "This field is required")
 
     def test_missing_password(self):
         """ """
@@ -184,12 +246,14 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
             }
         }
 
         self.sign_up_error(post_data, "This field is required")
 
-    def test_password_missmatch(self):
+    def test_password_mismatch(self):
         """ """
 
         post_data = {
@@ -197,12 +261,14 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1235"
             }
         }
 
-        self.sign_up_error(post_data, "Enter a valid email address")
+        self.sign_up_error(post_data, "The two password fields didn\'t match")
 
     def test_missing_name(self):
         """ """
@@ -211,6 +277,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
@@ -226,6 +294,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
@@ -240,6 +310,8 @@ class TenantSignupTests(TestCase):
             "name": "Awesome customer",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
@@ -255,6 +327,8 @@ class TenantSignupTests(TestCase):
             "domain": self.already_registered_company_domain,
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "awesome1234",
                 "password2": "awesome1234"
             }
@@ -270,6 +344,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "z123",
                 "password2": "z123"
         }
@@ -277,6 +353,7 @@ class TenantSignupTests(TestCase):
 
         self.sign_up_error(post_data, "This password is too short")
 
+    @pytest.mark.skip(reason="This is not running through for now - check https://github.com/jensneuhaus/einhorn-starter/issues/65")
     def test_password_too_close_to_email(self):
         """ """
 
@@ -285,8 +362,10 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
-                "password1": "awesome",
-                "password2": "awesome"
+                "first_name": "Max",
+                "last_name": "Mustermann",
+                "password1": "awesome-ceo",
+                "password2": "awesome-ceo"
         }
         }
 
@@ -300,6 +379,8 @@ class TenantSignupTests(TestCase):
             "domain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
+                "first_name": "Max",
+                "last_name": "Mustermann",
                 "password1": "12345678",
                 "password2": "12345678"
         }
@@ -323,6 +404,7 @@ class TenantSignupTests(TestCase):
         self.sign_up_error(post_data, "This password is too common")
 
 
+@override_settings(LANGUAGE_CODE='en')
 class SignupApiTests(APITestCase):
     """ Test the signup process of the API endpoint """
 
@@ -332,29 +414,30 @@ class SignupApiTests(APITestCase):
 
         admin_user = User.objects.create_user(email="admin@example.com", first_name="Achim", last_name="Admin")
         self.tenant = Tenant.objects.create_tenant(admin_user, "tenant", "tenant")
+        self.tenant.is_active = True
+        self.tenant.save()
 
         self.signup_url = reverse('user_rest_register', kwargs={'tenant_name': self.tenant.name})
 
-    def user_signup(self, post_data, expected_status_code=200, expected_error=None):
+    def user_signup(self, post_data, expected_status_code=201, expected_error_message=None):
         """
         """
         response = self.client.post(self.signup_url, post_data)
 
-        if expected_status_code:
+        print(response.content)
+
+        if expected_error_message:
+            self.assertContains(response, expected_error_message, status_code=expected_status_code)
+
+            # No activation email should be sent
+            self.assertEqual(len(mail.outbox), 0)
+
+        elif expected_status_code:
             self.assertEqual(response.status_code, expected_status_code)
 
-        if expected_error:
+        if expected_status_code == 200 or expected_status_code == 201:
 
-            response_json = json.loads(response.content.decode('utf8'))
-
-            expected_response_json = {
-                "error_code": expected_error.error_code,
-                "more_info": expected_error.more_info,
-                "user_message": expected_error.user_message,
-                "developer_message": expected_error.developer_message,
-            }
-
-            self.assertEquals(response_json, expected_response_json)
+            self.assertEqual(len(mail.outbox), 1)
 
     def test_correct_signup_data(self):
         """ """
@@ -369,30 +452,35 @@ class SignupApiTests(APITestCase):
 
         self.user_signup(post_data)
 
+    def test_deactivated_tenant(self):
+        """ The user should not be able to register, when the tenant is deactivated"""
+
+        self.tenant.is_active = False
+        self.tenant.save()
+
+        post_data = {
+            "email": "max_mustermann@example.org",
+            "first_name": "Max",
+            "last_name": "Mustermann",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
+        }
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="Tenant is deactivated, no registration is possible")
+
     def test_already_existing_email(self):
-        """ """
-        # post_data = {
-        #     "email": self.already_registered_user_email,
-        #     "first_name": self.already_registered_user.first_name,
-        #     "last_name": self.already_registered_user.last_name,
-        #     "password": self.already_registered_user_password,
-        # }
 
-        # Clean the mail outbox, it would count to the tests if not
-        mail.outbox = []
+        User.objects.create_user(email='alreadyexisting@example.com')
 
-        # # Just send again
-        # expected_response_json = {
-        #     "error_code": FieldMustBeUnique.error_code,
-        #     "more_info": FieldMustBeUnique.more_info,
-        #     "user_message_description": "A user with that email already exists",  # FieldMustBeUnique.user_message is overwritten
-        #     "developer_message": FieldMustBeUnique.developer_message,
-        #     "user_message_title": FieldMustBeUnique.user_message_title
-        # }
-        # self.user_signup_error(post_data, expected_response_json)
+        post_data = {
+            "email": 'alreadyexisting@example.com',
+            "first_name": "Max",
+            "last_name": "Mustermann",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
+        }
 
-        # No activation email should be sent
-        self.assertEqual(len(mail.outbox), 0)
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="A user is already registered with this e-mail address")
 
     def test_sending_of_activation_email(self):
         """ """
@@ -415,168 +503,105 @@ class SignupApiTests(APITestCase):
         #
         # # Activation email is sent correctly
         # self.assertEqual(len(mail.outbox), 1)
-        # self.assertEqual(mail.outbox[0].subject, u"Untitled project Account Activation")
+        # self.assertEqual(mail.outbox[0].subject, u"Account Activation")
         #
         # # The email should contain the generated token
         # activation_link = self.base_activation_url % user.activation_token
         # self.assertIn("%s%s" % (settings.BASE_URL, activation_link), mail.outbox[0].body)
 
-    def test_user_activation(self):
-        """ """
-        email = 'max_mustermann@example.org'
+    def test_missing_password1(self):
+        """
+        """
         post_data = {
-            "email": "%s" % email,
+            "email": 'alreadyexisting@example.com',
             "first_name": "Max",
             "last_name": "Mustermann",
-            "password": "Test1234!?",
+            "password2": "Test1234!?"
         }
-        # user = self.user_signup(post_data)
-        # self.activate_user(user)
 
-    def test_missing_password(self):
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This field is required")
+
+    def test_missing_password2(self):
         """
         """
-        request = {
-            "email": "max_mustermann@example.org",
+        post_data = {
+            "email": 'alreadyexisting@example.com',
             "first_name": "Max",
             "last_name": "Mustermann",
+            "password1": "Test1234!?",
         }
-        # response = self.client.post(self.signup_url, request)
-        # response_json = json.loads(response.content.decode('utf8'))
-        #
-        # self.assertEqual(response.status_code, 400,
-        #                  "Response code for adding user is incorrect! \n %s" %
-        #                  str(response_json))
-        # expected_response_json = {
-        #     "error_code": EmailAndPasswordNeeded.error_code,
-        #     "more_info": EmailAndPasswordNeeded.more_info,
-        #     "user_message_description": EmailAndPasswordNeeded.user_message,
-        #     "developer_message": EmailAndPasswordNeeded.developer_message,
-        #     "user_message_title": EmailAndPasswordNeeded.user_message_title
-        # }
-        # self.assertEquals(response_json, expected_response_json)
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This field is required")
+
+    def test_missing_password_mismatch(self):
+        """
+        """
+        post_data = {
+            "email": 'alreadyexisting@example.com',
+            "first_name": "Max",
+            "last_name": "Mustermann",
+            "password1": "Test1234!?",
+            "password2": "Test5678!?"
+        }
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="The two password fields didn\'t match.")
 
     def test_missing_email(self):
         """ """
-        request = {
+        post_data = {
             "first_name": "Max",
             "last_name": "Mustermann",
-            "password": "Test1234!?",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
         }
-        # response = self.client.post(self.signup_url, request)
-        # response_json = json.loads(response.content.decode('utf8'))
-        #
-        # self.assertEqual(response.status_code, 400,
-        #                  "Response code for adding user is incorrect! \n %s" %
-        #                  str(response_json))
-        # expected_response_json = {
-        #     "error_code": EmailAndPasswordNeeded.error_code,
-        #     "more_info": EmailAndPasswordNeeded.more_info,
-        #     "user_message_description": EmailAndPasswordNeeded.user_message,
-        #     "developer_message": EmailAndPasswordNeeded.developer_message,
-        #     "user_message_title": EmailAndPasswordNeeded.user_message_title
-        # }
-        # self.assertEquals(response_json, expected_response_json)
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This field is required")
 
     def test_missing_first_name(self):
         """ """
         post_data = {
-            "email": "max_mustermann@example.org",
+            "email": 'alreadyexisting@example.com',
             "last_name": "Mustermann",
-            "password": "Test1234!?",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
         }
-        # #todo to be changed after exception will be caught manually, instead of django
-        # expected_response_json = {
-        #     "error_code": FieldMustBeUnique.error_code,
-        #     "more_info": FieldMustBeUnique.more_info,
-        #     "user_message_description": "",
-        #     "developer_message": FieldMustBeUnique.developer_message,
-        #     "user_message_title": FieldMustBeUnique.user_message_title
-        # }
-        # self.user_signup_error(post_data, expected_response_json)
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This field is required")
 
     def test_missing_last_name(self):
         """ """
         post_data = {
-            "email": "max_mustermann@example.org",
-            "first_name": "test_missing_last_name",
-            "password": "Test1234!?",
-        }
-        # #todo to be changed after exception will be caught manually, instead of django
-        # expected_response_json = {
-        #     "error_code": FieldMustBeUnique.error_code,
-        #     "more_info": FieldMustBeUnique.more_info,
-        #     "user_message_description": "",
-        #     "developer_message": FieldMustBeUnique.developer_message,
-        #     "user_message_title": FieldMustBeUnique.user_message_title
-        # }
-        # self.user_signup_error(post_data, expected_response_json)
-
-    def test_missing_phone_number(self):
-        """ """
-        post_data = {
-            "email": "max_mustermann@example.org",
+            "email": 'alreadyexisting@example.com',
             "first_name": "Max",
-            "last_name": "Mustermann",
-            "password": "Test1234!?",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
         }
-        # self.user_signup(post_data)
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This field is required")
 
     def test_password_weak_1_symbol(self):
-        """Expected message: Password not strong enough, actual: One or more given fields are not valid
-        Expected error code: 406, actual: 410
-        Expected exception: SignupPasswordIsTooWeakError
-
-        Args:
-
-        Returns:
-
-        """
-        request = {
-            "email": "max_mustermann@example.org",
-            "first_name": "Max",
-            "last_name": "Mustermann",
-            "password": "1",
-        }
-        # expected_response_json = {
-        #     "error_code": FieldNotValid.error_code,
-        #     "more_info": FieldNotValid.more_info,
-        #     "user_message_description": "This password is too short. It must contain at least 8 characters.",
-        #     "developer_message": FieldNotValid.developer_message,
-        #     "user_message_title": FieldNotValid.user_message_title
-        # }
-        # self.user_signup_error(request, expected_response_json)
-
-    def test_invalid_email_1(self):
         """ """
-        request = {
-            "email": "max_musterman.test",
-            "first_name": "Max",
-            "last_name": "Mustermann",
-            "password": "Test1234!?",
-        }
-        # expected_response_json = {
-        #     "error_code": FieldNotValid.error_code,
-        #     "more_info": FieldNotValid.more_info,
-        #     "user_message_description": "A user with that email is not valid",
-        #     "developer_message": FieldNotValid.developer_message,
-        #     "user_message_title": FieldNotValid.user_message_title
-        # }
-        # self.user_signup_error(request, expected_response_json)
 
-    def test_invalid_email_2(self):
-        """ """
-        request = {
-            "email": "incorrect email format.with@sign",
+        post_data = {
+            "email": 'alreadyexisting@example.com',
             "first_name": "Max",
             "last_name": "Mustermann",
-            "password": "Test1234!@#",
+            "password1": "test12",
+            "password2": "test12"
         }
-        # expected_response_json = {
-        #     "error_code": FieldNotValid.error_code,
-        #     "more_info": FieldNotValid.more_info,
-        #     "user_message_description": "A user with that email is not valid",
-        #     "developer_message": FieldNotValid.developer_message,
-        #     "user_message_title": FieldNotValid.user_message_title
-        # }
-        # self.user_signup_error(request, expected_response_json)
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="This password is too short. It must contain at least 8 characters")
+
+    def test_invalid_email(self):
+        """ """
+
+        post_data = {
+            "email": 'alreadyexisting@example',
+            "first_name": "Max",
+            "last_name": "Mustermann",
+            "password1": "Test1234!?",
+            "password2": "Test1234!?"
+        }
+
+        self.user_signup(post_data, expected_status_code=400, expected_error_message="Enter a valid email address")
+

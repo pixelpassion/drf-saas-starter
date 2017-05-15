@@ -7,6 +7,7 @@ from apps.mails.utils import create_and_send_mail
 from apps.users.models import User
 
 from allauth.utils import get_current_site
+import django.contrib.auth.password_validation as validators
 
 
 class AccountAdapter(DefaultAccountAdapter):

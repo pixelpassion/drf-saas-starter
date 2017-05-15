@@ -170,6 +170,17 @@ def licenses():
 
 
 @task
-def pip_updates():
-    """Print the pip apps, which have a new updated version available"""
-    local("yolk -U")
+def pip(update="none"):
+    """ Updates the pip requirements """
+
+    if update == "update" or update == "upgrade":
+        update_flag ="-U "
+    else:
+        update_flag = ""
+
+    local(f"pip-compile {update_flag}--output-file requirements/base.txt requirements/base.in")
+    local(f"pip-compile {update_flag}--output-file requirements/local.txt requirements/local.in")
+    local(f"pip-compile {update_flag}--output-file requirements/production.txt requirements/production.in")
+
+    print("Hint: Use fab print:update to update all requirements!")
+

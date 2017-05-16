@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.mails',
     'apps.htmltopdf',
+    'apps.comments',
     
     'main.celery.CeleryConfig',
     'django_premailer',

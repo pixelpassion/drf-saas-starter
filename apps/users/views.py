@@ -19,12 +19,13 @@ from django.views.generic.base import TemplateView
 from apps.api.permissions import IsAuthenticatedOrCreate
 from apps.tenants.mixins import TenantAccessRequiredMixin
 
+from ..comments.mixins import CommentsMixin
 from .models import User
 from .serializers import ChangePasswordSerializer, ResetPasswordSerializer, UserSerializer
 from .utils import logout_user
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(CommentsMixin, viewsets.ModelViewSet):
     """
     A viewset for viewing and editing user instances.
     """
@@ -99,5 +100,3 @@ class ChangePasswordView(APIView):
             logout_user(self.request)
 
         return Response({"msg": "Password updated successfully."}, status=status.HTTP_200_OK)
-
-

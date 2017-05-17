@@ -57,7 +57,10 @@ It will start different services locally.
 * Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
 * PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
 
+## Onboarding
+
+Are you contributing to the project? You can read more in [Onboarding as a new developer](docs/onboarding.md)
+
 ## Setup as a new Project
 
 You want to start a new project? Read more about the [Individual Project Setup](docs/project_setup.md)
-

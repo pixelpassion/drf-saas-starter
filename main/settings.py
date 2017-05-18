@@ -117,9 +117,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'rest_framework_swagger',
+    'corsheaders',
 
 
-    'django_extensions',        # This should be moved to only local, but it helps for testing
+    'django_extensions',  # This should be moved to only local, but it helps for testing
 
     'anymail',
     'channels',
@@ -133,6 +134,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -358,6 +360,9 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 #ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
 
+EMAIL_VERIFICATION_REDIRECT_URL = env.str('EMAIL_VERIFICATION_REDIRECT_URL', None)
+
+
 REST_SESSION_LOGIN = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -365,7 +370,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'admin:index'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',            # Needed to login by username in Django admin, regardless of `allauth`
@@ -463,46 +468,28 @@ elif STAGE == 'test':
 #                                                 8 - Django Rest Framework                                            #
 ########################################################################################################################
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#     ),
-#     # 'DEFAULT_PERMISSION_CLASSES': (
-#     #     'rest_framework.permissions.IsAuthenticated',
-#     # )
-# }
-
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'api.exceptions.basic_exception_handler',
-#
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'api.authentication.TokenAuthentication',
-#     ),
-#     'DEFAULT_PAGINATION_CLASS':
-#         'api.pagination.StandardResultsSetPagination'
-# }
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#          'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#     ),
-# }
-
 REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    )
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+    #'EXCEPTION_HANDLER': 'api.exceptions.basic_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20,
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'apps.tenants.serializers.TenantSignUpSerializer',
 }
 
+CORS_ORIGIN_WHITELIST = (
+    '0.0.0.0:8000',
+    'localhost:8000',
+    '127.0.0.1:8000',
+)
 
 JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
 JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='einhorn-starter')
@@ -513,18 +500,27 @@ JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'apps.api.jwt.get_username_from_payload_handler',
     'JWT_SECRET_KEY': JWT_SECRET,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=60*60*72),
-    'JWT_ALLOW_REFRESH': False,
+    'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=60*60*12),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_ISSUER': 'einhorn-starter',
 }
 
-#REST_USE_JWT = True
+REST_USE_JWT = True
 
 SWAGGER_SETTINGS = {
-    'LOGIN_URL': 'login',
-    'LOGOUT_URL': 'logout',
+    'LOGIN_URL': 'admin:index',
+    'LOGOUT_URL': 'admin:logout',
+    'USE_SESSION_AUTH': True,
+    'SECURITY_DEFINITIONS': {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+    }
 }
+
 
 ########################################################################################################################
 #                                             9 - Context (Admin, etc.)                                                #
@@ -548,8 +544,6 @@ ALLOWED_EMAIL_DOMAINS = [
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 
 TENANT_SITE_ID = env.int('TENANT_SITE_ID', default=SITE_ID)
-
-EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"     # e.g. Redirect for email confirmation at sign up
 
 CHANNEL_LAYERS = {
     "default": {

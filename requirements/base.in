@@ -14,7 +14,8 @@ raven                       # Error handling
 django-premailer            # Inline CSS in HTML email templates
 django-extensions           # Django extensions (should be in local.txt after done with testing)
 djangorestframework         # RESTful API
-django-rest-swagger         # Documewntation for the API
+django-rest-swagger         # Documentation for the API
+django-cors-headers         # Adds CORS (Cross-Origin Resource Sharing) headers to responses
 django-rest-auth            # Authentication with the django-rest-framework
 djangorestframework-jwt     # JSON Web token support
 argon2-cffi                 # password hashing

@@ -1,7 +1,7 @@
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase, override_settings
-from django.core.exceptions import ValidationError
 
 from apps.tenants.models import Domain, Tenant
 from apps.users.models import User

@@ -1,15 +1,17 @@
 import json
 
+import pytest
+
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
+from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 
 from apps.api.unit_tests import APITestCase
 from apps.tenants.models import Tenant
 from apps.users.models import User
-from django.core.urlresolvers import reverse
-import pytest
+
 
 @override_settings(LANGUAGE_CODE='en')
 class TenantSignupTests(TestCase):
@@ -22,7 +24,7 @@ class TenantSignupTests(TestCase):
 
         self.tenant_domain = Tenant.objects.get_tenant_domain()
 
-        self.sign_up_url = reverse("tenant_rest_register")
+        self.sign_up_url = reverse("api:tenant_rest_register")
 
         self.already_registered_user_email = f'first@{self.tenant_domain}'
         self.already_registered_company_name = 'We are first'
@@ -417,14 +419,12 @@ class SignupApiTests(APITestCase):
         self.tenant.is_active = True
         self.tenant.save()
 
-        self.signup_url = reverse('user_rest_register', kwargs={'tenant_name': self.tenant.name})
+        self.signup_url = reverse('api:user_rest_register', kwargs={'tenant_name': self.tenant.name})
 
     def user_signup(self, post_data, expected_status_code=201, expected_error_message=None):
         """
         """
         response = self.client.post(self.signup_url, post_data)
-
-        print(response.content)
 
         if expected_error_message:
             self.assertContains(response, expected_error_message, status_code=expected_status_code)
@@ -605,4 +605,3 @@ class SignupApiTests(APITestCase):
         }
 
         self.user_signup(post_data, expected_status_code=400, expected_error_message="Enter a valid email address")
-

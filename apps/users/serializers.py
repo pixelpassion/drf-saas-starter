@@ -1,7 +1,12 @@
+from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 
 import django.contrib.auth.password_validation as validators
+from django.conf import settings
 from django.core import exceptions
+from django.utils.translation import ugettext_lazy as _
+
+from apps.users.utils import send_email_verification
 
 from .models import User
 
@@ -134,10 +139,7 @@ class CurrentPasswordSerializer(serializers.Serializer):
 class ChangePasswordSerializer(PasswordSerializer, CurrentPasswordSerializer):
     pass
 
-from django.utils.translation import ugettext_lazy as _
-from apps.users.utils import send_email_verification
 
-from django.conf import settings
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -149,7 +151,6 @@ try:
 except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 
-from rest_auth.registration.serializers import RegisterSerializer
 
 
 class CreateUserSerializer(RegisterSerializer):

@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a User with the given username, email and password.
         """
-        if not email:
+        if email is None:
             raise ValueError('The email must be set')
 
         email = self.normalize_email(email)
@@ -61,6 +61,10 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, username, **extra_fields)
 
     def create_superuser(self, email, password, username=None, **extra_fields):
+
+        if password is None:
+            raise TypeError('Superusers must have a password.')
+
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)

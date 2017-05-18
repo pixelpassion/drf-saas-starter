@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from allauth.account.adapter import DefaultAccountAdapter
+from allauth.utils import get_current_site
+from rest_framework import status
+from rest_framework.response import Response
 
+import django.contrib.auth.password_validation as validators
 from django.conf import settings
+from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from apps.mails.utils import create_and_send_mail
 from apps.users.models import User
-
-from allauth.utils import get_current_site
-import django.contrib.auth.password_validation as validators
 
 
 class AccountAdapter(DefaultAccountAdapter):
@@ -41,7 +44,12 @@ class AccountAdapter(DefaultAccountAdapter):
     def get_email_confirmation_redirect_url(self, request):
         """ The URL to return to after successful e-mail confirmation. """
 
-        return settings.EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL
+        # TODO: Maybe have an JSON response, when content-type=JSON? Needs to be done higher in the stack
+
+        if settings.EMAIL_VERIFICATION_REDIRECT_URL:
+            return settings.EMAIL_VERIFICATION_REDIRECT_URL
+
+        return reverse('email_verified')
 
     def send_confirmation_mail(self, request, emailconfirmation, signup):
 

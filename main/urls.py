@@ -1,37 +1,35 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import TemplateView, RedirectView
-
-from rest_framework_swagger.views import get_swagger_view
-
-from apps.letsencrypt.views import acme_challenge
-#from apps.tenants.views import TenantSignUpView
+from django.views.generic import RedirectView, TemplateView
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
-    url(r'^signup/$', TemplateView.as_view(template_name="signup.html"),
-        name='signup'),
-    url(r'^email-verification/$',
-        TemplateView.as_view(template_name="email_verification.html"),
-        name='email-verification'),
-    url(r'^login/$', TemplateView.as_view(template_name="login.html"),
-        name='login'),
-    url(r'^logout/$', TemplateView.as_view(template_name="logout.html"),
-        name='logout'),
-    url(r'^password-reset/$',
-        TemplateView.as_view(template_name="password_reset.html"),
-        name='password-reset'),
-    url(r'^password-reset/confirm/$',
-        TemplateView.as_view(template_name="password_reset_confirm.html"),
-        name='password-reset-confirm'),
 
-    url(r'^user-details/$',
-        TemplateView.as_view(template_name="user_details.html"),
-        name='user-details'),
-    url(r'^password-change/$',
-        TemplateView.as_view(template_name="password_change.html"),
-        name='password-change'),
+    url(r'^email-verified/$', TemplateView.as_view(template_name="email_verified.html"), name='email_verified'),
+
+    # url(r'^signup/$', TemplateView.as_view(template_name="signup.html"),
+    #     name='signup'),
+    # url(r'^email-verification/$',
+    #     TemplateView.as_view(template_name="email_confirm.html"),
+    #     name='email-verification'),
+    # url(r'^login/$', TemplateView.as_view(template_name="login.html"),
+    #     name='login'),
+    # url(r'^logout/$', TemplateView.as_view(template_name="logout.html"),
+    #     name='logout'),
+    # url(r'^password-reset/$',
+    #     TemplateView.as_view(template_name="password_reset.html"),
+    #     name='password-reset'),
+    # url(r'^password-reset/confirm/$',
+    #     TemplateView.as_view(template_name="password_reset_confirm.html"),
+    #     name='password-reset-confirm'),
+    #
+    # url(r'^user-details/$',
+    #     TemplateView.as_view(template_name="user_details.html"),
+    #     name='user-details'),
+    # url(r'^password-change/$',
+    #     TemplateView.as_view(template_name="password_change.html"),
+    #     name='password-change'),
 
 
     # this url is used to generate email content
@@ -39,21 +37,20 @@ urlpatterns = [
         TemplateView.as_view(template_name="password_reset_confirm.html"),
         name='password_reset_confirm'),
 
-    url(r'^api/', include('rest_auth.urls')),
-
-    url(r'^api/sign_up/', include('apps.tenants.registration.urls')),
-    url(r'^api/users/', include('apps.users.urls', namespace='users')),
-
-    url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
-    url(r'^account/', include('allauth.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/profile/$', RedirectView.as_view(url='/', permanent=True), name='profile-redirect'),
-    url(r'^docs/$', get_swagger_view(title='API Docs'), name='api_docs'),
+
+    url(r'^api/', include('apps.api.urls', namespace="api")),
+    url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
+
+    url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
+    url(r'^', include('apps.letsencrypt.urls', namespace="letsencrypt")),
+
+    # Account handling from allauth, probably not needed in an API based backend, TODO: Delete
+    # url(r'^account/', include('allauth.urls')),
+
 
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
-    url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
-    url(r'.well-known/acme-challenge/(?P<token>.+)', acme_challenge),
+
 
 ]
 

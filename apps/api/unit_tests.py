@@ -2,10 +2,10 @@ import logging
 
 from rest_framework_jwt.test import APIJWTClient
 
-from django.core import mail
 from django.conf import settings
-from django.test import TestCase
 from django.contrib.sites.models import Site
+from django.core import mail
+from django.test import TestCase
 
 from apps.users.models import User
 

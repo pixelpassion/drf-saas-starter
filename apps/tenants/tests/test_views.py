@@ -1,9 +1,11 @@
+import pytest
+
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 
 from apps.tenants.models import Domain, Tenant
-import pytest
+
 
 class TenantDomainTests(TestCase):
     """ """

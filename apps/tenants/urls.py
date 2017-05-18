@@ -12,6 +12,4 @@ urlpatterns = [
         view=TenantDashboardView.as_view(),
         name='dashboard'
     ),
-
-
 ]

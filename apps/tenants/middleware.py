@@ -9,14 +9,14 @@ from apps.tenants.models import Domain
 
 class TenantMiddleware(object):
     """
-        The TenantMiddleware sets the tenant of the request depening on the URL.
+        The TenantMiddleware sets the tenant of the request depending on the URL.
 
-        There are 4 types of domains:
-        - shared ones (example.com, marketing.example.com, marketingpage.com)
-        - subdomains of the TENANT_DOMAIN (a.example.com, bar.example.com, foo.example.com) - in the Site model - each tenant has one
-        - additional, optional, external domains - they are registered in the Domain model
-        - unknown & domains, not linked with any tenant - a 404 is raised for those
-
+        There are 2 types of domains:
+        - subdomains of the TENANT_SITE_ID (a.example.com, bar.example.com, foo.example.com) - each tenant has one
+        - Additional, optional domains - they are registered in the Domain model
+         
+        We are NOT giving 404, if an Site is not existing. Only for the subdomains of the tenant domain.
+        
         Would be interesting to check out
         - django.contrib.sites CurrentSiteMiddleware
         - https://github.com/bernardopires/django-tenant-schemas
@@ -28,8 +28,7 @@ class TenantMiddleware(object):
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        # Code to be executed for each request before
-        # the view (and later middleware) are called.
+        # Code to be executed for each request before the view (and later middleware) are called.
 
         host_name = request.get_host()
 

@@ -3,16 +3,18 @@ from __future__ import absolute_import, unicode_literals
 
 from rest_framework.routers import DefaultRouter
 
-from django.conf.urls import include, url
+from .views import UserViewSet
 
-from . import views
+# Here the comments are added manually by including them under the detail view.
 
-# # Here the comments are added manually by including them under the detail view.
+# from django.conf.urls import include, url
+# from .views import UserViewSet, CurrentUserView
+#
 # urlpatterns = [
 #
 #     url(
 #         regex=r'^$',
-#         view=views.UserViewSet.as_view({'get': 'list'}),
+#         view=UserViewSet.as_view({'get': 'list'}),
 #         name='list'
 #     ),
 #
@@ -21,12 +23,12 @@ from . import views
 #         include([
 #             url(
 #                 r'^$',
-#                 views.UserViewSet.as_view({'get': 'retrieve'}),
+#                 UserViewSet.as_view({'get': 'retrieve'}),
 #                 name='detail'
 #             ),
 #             url(
 #                 r'^comments/$',
-#                 views.UserViewSet.as_view({'get': 'comments', 'post': 'comments'})
+#                 UserViewSet.as_view({'get': 'comments', 'post': 'comments'})
 #             ),
 #         ])
 #     ),
@@ -37,8 +39,7 @@ from . import views
 # If we use a router the comments are added via the @detail_route decorator in the CommentsMixin.
 # This means, that nothing has to be changed here.
 
+
 router = DefaultRouter()
-
-router.register(r'', views.UserViewSet)
-
+router.register(r'', UserViewSet)
 urlpatterns = router.urls

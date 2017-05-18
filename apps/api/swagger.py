@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-
-"""
-This provides an individual Swagger Schema handling
-"""
-
-import coreapi
 from rest_framework import exceptions
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import CoreJSONRenderer
@@ -13,14 +7,7 @@ from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
 from rest_framework_swagger import renderers
 
-from .authentication import AdminSessionAuthentication
-
-schema = coreapi.Document(
-    title='Bookings API',
-    content={
-
-    }
-)
+from rest_framework.authentication import SessionAuthentication
 
 
 def get_swagger_view(title=None, url=None):
@@ -37,7 +24,7 @@ def get_swagger_view(title=None, url=None):
         """ """
         _ignore_model_permissions = True
         exclude_from_schema = True
-        authentication_classes = [AdminSessionAuthentication, ]
+        authentication_classes = [SessionAuthentication, ]
         permission_classes = [AllowAny, ]
         renderer_classes = [
             CoreJSONRenderer,

@@ -5,8 +5,6 @@ from datetime import datetime
 from rest_framework_jwt.compat import get_username, get_username_field
 from rest_framework_jwt.settings import api_settings
 
-from django.conf import settings
-
 
 def payload_handler(user):
     """Function to generate the token payload

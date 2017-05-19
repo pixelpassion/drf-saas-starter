@@ -25,6 +25,7 @@ cssselect==1.0.1          # via cairosvg, premailer, weasyprint
 cssutils==1.0.2           # via premailer
 daphne==1.2.0             # via channels
 defusedxml==0.5.0         # via python3-openid
+django-activity-stream==0.6.3
 django-allauth==0.30.0
 django-anymail==0.9
 django-channels-panel==0.0.5

@@ -6,8 +6,9 @@ class UsersConfig(AppConfig):
     verbose_name = "Users"
 
     def ready(self):
-        """Override this to put in:
-            Users system checks
-            Users signal registration
-        """
-        pass
+        """If django-activity-stream is installed, register the User model for usage."""
+        try:
+            from actstream import registry
+            registry.register(self.get_model('User'))
+        except ImportError:
+            pass

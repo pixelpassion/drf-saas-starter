@@ -15,7 +15,7 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^api/', include('apps.api.urls', namespace="api")),
+    url(r'^api/', include('apps.api.urls')),
     url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),

@@ -25,6 +25,7 @@ cssselect==1.0.1
 cssutils==1.0.2
 daphne==1.2.0
 defusedxml==0.5.0
+django-activity-stream==0.6.3
 django-allauth==0.30.0
 django-anymail==0.9
 django-channels-panel==0.0.5

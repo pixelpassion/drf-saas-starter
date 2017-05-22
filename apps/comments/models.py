@@ -45,3 +45,11 @@ class Comment(models.Model):
         return f"{self.time_created.isoformat(timespec='seconds')} " \
                f"{self.author}: " \
                f"{self.content[:50]}{'' if len(self.content) < 50 else '...'}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        try:
+            from actstream import action
+            action.send(self.author, verb='made comment', action_object=self, target=self.content_object)
+        except ImportError:
+            pass

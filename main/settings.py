@@ -100,10 +100,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.tenants',
-    'apps.users',
+    'apps.users.apps.UsersConfig',
     'apps.mails',
     'apps.htmltopdf',
-    'apps.comments',
+    'apps.comments.apps.CommentsConfig',
     
     'main.celery.CeleryConfig',
     'django_premailer',
@@ -125,6 +125,8 @@ INSTALLED_APPS = [
     'anymail',
     'channels',
     #'channels_panel',
+
+    'actstream',
 
 ]
 

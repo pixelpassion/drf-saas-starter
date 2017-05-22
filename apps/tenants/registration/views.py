@@ -36,10 +36,10 @@ class TenantUserRegisterView(RegisterView):
 
     def create(self, request, tenant_name=None, *args, **kwargs):
 
-        tenant_domain = Tenant.objects.get_tenant_domain()
+        tenant_root_domain = Tenant.objects.get_tenant_root_domain()
 
         try:
-            site = Site.objects.get(name=f"{tenant_name}.{tenant_domain}")
+            site = Site.objects.get(name=f"{tenant_name}.{tenant_root_domain}")
         except Site.DoesNotExist:
             raise Http404
 

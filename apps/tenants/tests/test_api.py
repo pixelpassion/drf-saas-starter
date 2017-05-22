@@ -18,21 +18,21 @@ class TenantSignupTests(TestCase):
     """ Test the sign_up process of the API endpoint """
 
     def setUp(self):
-        """ The TENANT_DOMAIN is not used in tests because the sites migration is not loaded because of the bug (check settings.py)
+        """ The TENANT_ROOT_DOMAIN is not used in tests because the sites migration is not loaded because of the bug (check settings.py)
             Until then example.com is used as a default domain in testing.
         """
 
-        self.tenant_domain = Tenant.objects.get_tenant_domain()
+        self.tenant_root_domain = Tenant.objects.get_tenant_root_domain()
 
         self.sign_up_url = reverse("tenant_rest_register")
 
-        self.already_registered_user_email = f'first@{self.tenant_domain}'
+        self.already_registered_user_email = f'first@{self.tenant_root_domain}'
         self.already_registered_company_name = 'We are first'
         self.already_registered_company_domain = 'first'
 
-        self.tenant_domain = Tenant.objects.get_tenant_domain()
+        self.tenant_root_domain = Tenant.objects.get_tenant_root_domain()
 
-        already_existing_site = Site.objects.get(domain=self.tenant_domain)
+        already_existing_site = Site.objects.get(domain=self.tenant_root_domain)
         already_existing_subdomain = f"{self.already_registered_company_domain}.{already_existing_site.domain}"
 
         Site.objects.get_or_create(name="First", domain=already_existing_subdomain)
@@ -46,7 +46,7 @@ class TenantSignupTests(TestCase):
     def sign_up(self, post_data):
         """ Helper method for the correct sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json",  HTTP_HOST=self.tenant_domain)
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.tenant_root_domain)
         response_json = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 201, "Response code for adding user is incorrect! \n %s" % str(response_json))
@@ -57,7 +57,7 @@ class TenantSignupTests(TestCase):
         # User, Site and Tenant models should be around
         user = User.objects.get(email="awesome-ceo@example.com")
 
-        correct_subdomain = "awesome.{}".format(self.tenant_domain)
+        correct_subdomain = "awesome.{}".format(self.tenant_root_domain)
         site = Site.objects.get(name=correct_subdomain, domain=correct_subdomain)
 
         tenant = Tenant.objects.get(name="Awesome customer", site=site)
@@ -77,7 +77,7 @@ class TenantSignupTests(TestCase):
     def sign_up_error(self, post_data, expected_error, expected_status_code=400):
         """ Helper method for an faulty sign_up """
 
-        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.tenant_domain)
+        response = self.client.post(self.sign_up_url, json.dumps(post_data), content_type="application/json", HTTP_HOST=self.tenant_root_domain)
 
         print(response.content)
         self.assertContains(response, expected_error, status_code=expected_status_code)
@@ -85,7 +85,7 @@ class TenantSignupTests(TestCase):
         # There should be no created models
         self.assertEquals(User.objects.filter(email="awesome-ceo@example.com").count(), 0)
         self.assertEquals(Tenant.objects.filter(name="Awesome customer").count(), 0)
-        self.assertEquals(Site.objects.filter(domain="awesome.{}".format(self.tenant_domain)).count(), 0)
+        self.assertEquals(Site.objects.filter(domain="awesome.{}".format(self.tenant_root_domain)).count(), 0)
 
         # No activation email should be sent
         self.assertEqual(len(mail.outbox), 0)
@@ -95,7 +95,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Peter",
@@ -112,7 +112,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "first_name": "Max",
                 "last_name": "Mustermann",
@@ -128,7 +128,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": self.already_registered_user_email,
                 "first_name": "Max",
@@ -145,7 +145,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "",
                 "first_name": "Max",
@@ -162,7 +162,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "sadly@email",
                 "first_name": "Max",
@@ -179,7 +179,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "sadly@example.com",
                 "last_name": "Mustermann",
@@ -195,7 +195,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "sadly@email",
                 "first_name": "",
@@ -212,7 +212,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "sadly@email",
                 "first_name": "Max",
@@ -229,7 +229,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "sadly@email",
                 "first_name": "Max",
@@ -245,7 +245,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -260,7 +260,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -276,7 +276,7 @@ class TenantSignupTests(TestCase):
         """ """
 
         post_data = {
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -293,7 +293,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": self.already_registered_company_name,
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -326,7 +326,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": self.already_registered_company_domain,
+            "subdomain": self.already_registered_company_domain,
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -343,7 +343,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -361,7 +361,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -378,7 +378,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "first_name": "Max",
@@ -395,7 +395,7 @@ class TenantSignupTests(TestCase):
 
         post_data = {
             "name": "Awesome customer",
-            "domain": "awesome",
+            "subdomain": "awesome",
             "user": {
                 "email": "awesome-ceo@example.com",
                 "password1": "password1",

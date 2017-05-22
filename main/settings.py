@@ -544,7 +544,7 @@ ALLOWED_EMAIL_DOMAINS = [
 
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 
-TENANT_SITE_ID = env.int('TENANT_SITE_ID', default=SITE_ID)
+TENANT_ROOT_SITE_ID = env.int('TENANT_ROOT_SITE_ID', default=SITE_ID)
 
 CHANNEL_LAYERS = {
     "default": {

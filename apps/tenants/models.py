@@ -18,24 +18,24 @@ from apps.mails.utils import create_and_send_mail
 def validate_default_site(value):
     """ This validates the given Site - the default Site can not be used for a tenant
 
-        TODO: Check, if the site URL is part of TENANT_DOMAIN root
+        TODO: Check, if the site URL is part of TENANT_ROOT_DOMAIN root
 
     """
 
-    tenant_domain = Tenant.objects.get_tenant_domain()
-    tenant_domain_site_id = Site.objects.get(domain=tenant_domain).id
+    tenant_root_domain = Tenant.objects.get_tenant_root_domain()
+    tenant_domain_site_id = Site.objects.get(domain=tenant_root_domain).id
 
     if value == tenant_domain_site_id:
-        raise ValidationError(f'The root domain {{tenant_domain}}can not be used.')
+        raise ValidationError(f'The root domain {{tenant_root_domain}}can not be used.')
 
 
 class TenantManager(models.Manager):
     use_in_migrations = True
 
-    def create_tenant(self, user, name, domain):
+    def create_tenant(self, user, name, subdomain):
 
-        tenant_domain = Tenant.objects.get_tenant_domain()
-        domain = "{}.{}".format(domain, tenant_domain)
+        tenant_root_domain = Tenant.objects.get_tenant_root_domain()
+        domain = "{}.{}".format(subdomain, tenant_root_domain)
 
         try:
             Site.objects.get(domain=domain)
@@ -48,19 +48,20 @@ class TenantManager(models.Manager):
 
         return tenant
 
-    def get_tenant_domain(self):
+    def get_tenant_root_domain(self):
         """
-        Return the current Site based on the TENANT_SITE_ID in the project's settings.
-        If TENANT_SITE_ID isn't defined, return an error
+        Return the current Site based on the TENANT_ROOT_SITE_ID in the project's settings.
+        If TENANT_ROOT_SITE_ID isn't defined, return an error
         """
 
         from django.conf import settings
-        if getattr(settings, 'TENANT_SITE_ID', ''):
-            tenant_site_id = settings.TENANT_SITE_ID
-            site = Site.objects.get(pk=tenant_site_id)
+        if getattr(settings, 'TENANT_ROOT_SITE_ID', ''):
+            tenant_root_site_id = settings.TENANT_ROOT_SITE_ID
+            site = Site.objects.get(pk=tenant_root_site_id)
             return site.domain
 
-        raise ImproperlyConfigured("You're using the Tenant model without having TENANT_SITE_ID setting. It should be set to the root Site for tenant subdomains ")
+        raise ImproperlyConfigured("You're using the Tenant model without having TENANT_ROOT_SITE_ID setting."
+                                   " It should be set to the root Site for tenant subdomains ")
 
 
 class Tenant(UUIDMixin):
@@ -92,7 +93,7 @@ class Tenant(UUIDMixin):
         UserTenantRelationship.objects.create(user=user, tenant=self)
 
     @property
-    def domain(self):
+    def subdomain(self):
         return "{}://{}".format(settings.DEFAULT_PROTOCOL, self.site.domain)
 
 

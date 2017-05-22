@@ -33,7 +33,7 @@ class TenantDomainTests(TestCase):
     def setUp(self):
         """ """
 
-        self.tenant_domain = Tenant.objects.get_tenant_domain()
+        self.tenant_root_domain = Tenant.objects.get_tenant_root_domain()
         self.site = Site.objects.create(name="a.example.com", domain="a.example.com")
         self.tenant = Tenant.objects.create(name="A", site=self.site)
 

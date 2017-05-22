@@ -10,7 +10,7 @@ from .models import Tenant
 
 def unique_site_domain(value):
 
-    domain = "{}.{}".format(value, Tenant.objects.get_tenant_domain())
+    domain = "{}.{}".format(value, Tenant.objects.get_tenant_root_domain())
 
     try:
         Site.objects.get(domain=domain)
@@ -25,19 +25,24 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
         A name and domain is used to start an tenant environment. The given user will be the first admin.
     """
 
-    domain = serializers.CharField(label=_(u"Domain"), help_text="The subdomain will be created for the tenant", write_only=True, validators=[unique_site_domain])
+    subdomain = serializers.CharField(
+        label=_("subdomain"),
+        help_text="The subdomain will be created for the tenant",
+        write_only=True,
+        validators=[unique_site_domain])
+
     user = CreateUserSerializer(write_only=True)
 
     class Meta:
         """ """
         model = Tenant
-        fields = ('id', 'name', 'domain', 'user')
+        fields = ('id', 'name', 'subdomain', 'user')
         extra_kwargs = {'name': {'write_only': True}}
 
     def get_cleaned_data(self):
         return {
             'name': self.validated_data.get('name', ''),
-            'domain': self.validated_data.get('domain', ''),
+            'subdomain': self.validated_data.get('subdomain', ''),
             'user': self.validated_data.get('user', '')
         }
 
@@ -49,6 +54,6 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
         user_serializer.is_valid(raise_exception=True)
         user = user_serializer.save(request)
 
-        Tenant.objects.create_tenant(user=user, name=self.cleaned_data["name"], domain=self.cleaned_data["domain"])
+        Tenant.objects.create_tenant(user=user, name=self.cleaned_data["name"], subdomain=self.cleaned_data["subdomain"])
 
         return user

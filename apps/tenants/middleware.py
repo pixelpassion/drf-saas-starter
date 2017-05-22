@@ -12,7 +12,7 @@ class TenantMiddleware(object):
         The TenantMiddleware sets the tenant of the request depending on the URL.
 
         There are 2 types of domains:
-        - subdomains of the TENANT_SITE_ID (a.example.com, bar.example.com, foo.example.com) - each tenant has one
+        - subdomains of the TENANT_ROOT_SITE_ID (a.example.com, bar.example.com, foo.example.com) - each tenant has one
         - Additional, optional domains - they are registered in the Domain model
          
         We are NOT giving 404, if an Site is not existing. Only for the subdomains of the tenant domain.
@@ -64,10 +64,10 @@ class TenantMiddleware(object):
             domain_parts = host_name.split('.', 1)
 
             from .models import Tenant
-            tenant_domain = Tenant.objects.get_tenant_domain()
+            tenant_root_domain = Tenant.objects.get_tenant_root_domain()
 
-            if (len(domain_parts) == 2 and domain_parts[1] == tenant_domain) or \
-                    (len(domain_parts) == 1 and domain_parts[0] == tenant_domain):
+            if (len(domain_parts) == 2 and domain_parts[1] == tenant_root_domain) or \
+                    (len(domain_parts) == 1 and domain_parts[0] == tenant_root_domain):
                 raise Http404
 
         response = self.get_response(request)

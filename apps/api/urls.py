@@ -27,6 +27,6 @@ urlpatterns = [
 
     url(r'^users/', include('apps.users.urls', namespace='users')),
 
-    url(r'^docs/$', get_swagger_view(title='Project API'), name='docs'),
+    url(r'^docs/$', get_swagger_view(title='Project API'), name='api_docs'),
 
 ]

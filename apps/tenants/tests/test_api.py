@@ -24,7 +24,7 @@ class TenantSignupTests(TestCase):
 
         self.tenant_domain = Tenant.objects.get_tenant_domain()
 
-        self.sign_up_url = reverse("api:tenant_rest_register")
+        self.sign_up_url = reverse("tenant_rest_register")
 
         self.already_registered_user_email = f'first@{self.tenant_domain}'
         self.already_registered_company_name = 'We are first'
@@ -419,7 +419,7 @@ class SignupApiTests(APITestCase):
         self.tenant.is_active = True
         self.tenant.save()
 
-        self.signup_url = reverse('api:user_rest_register', kwargs={'tenant_name': self.tenant.name})
+        self.signup_url = reverse('user_rest_register', kwargs={'tenant_name': self.tenant.name})
 
     def user_signup(self, post_data, expected_status_code=201, expected_error_message=None):
         """

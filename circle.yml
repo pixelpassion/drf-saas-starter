@@ -16,7 +16,7 @@ dependencies:
     # Only install packages listed on https://devcenter.heroku.com/articles/stack-packages
     # Dependencies seem to be installed anyway
     - sudo apt-get update; sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 shared-mime-info
-    - pip install coverage pytest-django pytest-cov
+    - pip install coverage pytest-django pytest-cov factory_boy
 test:
   override:
     - py.test --cov-branch --cov

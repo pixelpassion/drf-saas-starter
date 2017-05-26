@@ -19,7 +19,7 @@ dependencies:
     - pip install coverage pytest-django pytest-cov
 test:
   override:
-    - py.test --cov
+    - py.test --cov-branch --cov
     - coverage html
   post:
     - mkdir -p $CIRCLE_ARTIFACTS/htmlcov

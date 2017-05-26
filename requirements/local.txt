@@ -100,9 +100,12 @@ pylint-plugin-utils==0.2.6  # via pylint-celery, pylint-common, pylint-django
 pylint==1.7.1
 pyparsing==2.2.0          # via packaging
 pyphen==0.9.4
+pytest-cov==2.5.1         # via pytest-cover
+pytest-cover==3.0.0       # via pytest-coverage
+pytest-coverage==0.0
 pytest-django==3.1.2
 pytest-sugar==0.8.0
-pytest==3.0.7             # via pytest-django, pytest-sugar
+pytest==3.0.7             # via pytest-cov, pytest-django, pytest-sugar
 python-dateutil==2.6.0    # via faker
 python-http-client==2.2.1
 python3-openid==3.1.0

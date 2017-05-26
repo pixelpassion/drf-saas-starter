@@ -23,6 +23,7 @@ WeasyPrint                  # HTML to PDF conversion
 django-redis                # Redis handling
 django-tinymce              # HTMLField for models
 html2text                   # Convert HTML to Markdown
+django-nyt                  # Notification system
 
 #### Still for testing ####
 channels

@@ -32,3 +32,13 @@ $ pytest apps/tenants/tests/test_api.py                             # Runs the t
 $ pytest apps/tenants/tests/test_api.py::SignupApiTests             # Runs the tests of the specified class
 $ pytest -k test_correct_signup_data                                # Runs the given test
 ```
+
+## Updating requirements
+
+Add the requirement in base.in, local.in or production.in
+
+```
+fab pip             # Updates the base.txt, local.txt and production.txt files
+fab pip:update      # Updates the requirements to the newest version (excluding the pinned ones)
+```
+

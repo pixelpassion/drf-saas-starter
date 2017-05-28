@@ -1,9 +1,11 @@
 from rest_auth.views import LoginView, LogoutView, PasswordChangeView, \
     PasswordResetConfirmView, PasswordResetView, UserDetailsView
 
+
 from django.conf.urls import include, url
 
 from .swagger import get_swagger_view
+
 
 urlpatterns = [
 

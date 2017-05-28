@@ -8,6 +8,7 @@ services:
 
   # Database
   postgres:
+    restart: always
     build: ./compose/postgres
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
@@ -17,12 +18,14 @@ services:
 
   # In-memory data structure store
   redis:
+    restart: always
     image: redis:latest
     ports:
       - "6379:6379"
 
   # The Redis Browser (https://github.com/humante/redis-browser) is a simple Key/Value browser
   redis-browser:
+    restart: always
     image: birkof/redis-browser:latest
     command: "-B 0.0.0.0 -P 8019 --url redis://redis:6379"
     depends_on:
@@ -39,6 +42,7 @@ services:
 
   # Message broker RabbitMQ with an HTTP-based API for management and monitoring
   rabbitmq:
+    restart: always
     image: rabbitmq:3-management
     ports:
       - "4369:4369"
@@ -50,6 +54,7 @@ services:
       - "8080:8080"
 
   django:
+    restart: always
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile-dev
@@ -69,12 +74,18 @@ services:
       - mailhog
       - rabbitmq
 
-#  jenkins:
-#    image: library/jenkins
-#    ports:
-#      - "50000:50000"
-#      - "8090:8080"
-
+  worker:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: python manage.py runworker
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    links:
+      - redis
 
 #  celeryworker:
 #    build:

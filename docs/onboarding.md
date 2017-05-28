@@ -40,5 +40,7 @@ Add the requirement in base.in, local.in or production.in
 ```
 fab pip             # Updates the base.txt, local.txt and production.txt files
 fab pip:update      # Updates the requirements to the newest version (excluding the pinned ones)
+
+pip install -r requirements/local.txt       # Install the changed pips locally
 ```
 

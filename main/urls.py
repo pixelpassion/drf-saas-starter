@@ -3,8 +3,14 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView, TemplateView
 
+from .views import HomeView
+
+from apps.notifications.views import NotificationCreateView, TestLoginAsUser
+from django_nyt.urls import get_pattern
+
+
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
 
     url(r'^email-verified/$', TemplateView.as_view(template_name="email_verified.html"), name='email_verified'),
 
@@ -24,9 +30,12 @@ urlpatterns = [
     # Account handling from allauth, probably not needed in an API based backend, TODO: Delete
     # url(r'^account/', include('allauth.urls')),
 
-
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
 
+    url(r'^nyt/', get_pattern()),
+
+    url(r'^create/$', NotificationCreateView.as_view(), name='create_notification'),
+    url(r'^login-as/(?P<pk>\d+)/$', TestLoginAsUser.as_view(), name='login_as'),
 
 ]
 

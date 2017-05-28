@@ -21,11 +21,7 @@ def admin_settings(request):
 
     python_version = "%s.%s.%s" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
 
-    users = User.objects.select_related('logged_in_user')
-
-    for user in users:
-        user.status = 'online' if hasattr(user, 'logged_in_user') else 'offline'
-        user.full_name = user.get_full_name()
+    logged_in_users = User.objects.exclude(signed_in=None)
 
     site_url = "-"
 
@@ -44,7 +40,7 @@ def admin_settings(request):
         'ON_HEROKU': settings.ON_HEROKU,
         'SITE_URL': site_url,
         'HOST_URL': request.get_host(),
-        'users': users
+        'logged_in_users': logged_in_users
     }
 
     if hasattr(request, "tenant") and request.tenant:

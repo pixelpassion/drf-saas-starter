@@ -13,6 +13,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import six, timezone
 from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
 
 from apps.tenants.models import Tenant
 
@@ -129,6 +130,8 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
+    signed_in = models.DateTimeField(_('Signed in'), help_text=_("Is the user signed in?"), null=True)
+
     tenants = models.ManyToManyField(Tenant, help_text=_("Where is the user registered?"), through='UserTenantRelationship')
 
     USERNAME_FIELD = 'email'
@@ -164,15 +167,15 @@ class UserTenantRelationship(models.Model):
         verbose_name_plural = _('employments')
 
 
-class LoggedInUser(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='logged_in_user')
-
-
 @receiver(user_logged_in)
 def on_user_login(sender, **kwargs):
-    LoggedInUser.objects.get_or_create(user=kwargs.get('user'))
+    user = kwargs.get('user')
+    user.signed_in = datetime.now()
+    user.save()
 
 
 @receiver(user_logged_out)
 def on_user_logout(sender, **kwargs):
-    LoggedInUser.objects.filter(user=kwargs.get('user')).delete()
+    user = kwargs.get('user')
+    user.signed_in = None
+    user.save()

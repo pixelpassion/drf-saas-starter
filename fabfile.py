@@ -182,4 +182,5 @@ def pip(update="none"):
     local(f"pip-compile {update_flag}--output-file requirements/local.txt requirements/local.in")
     local(f"pip-compile {update_flag}--output-file requirements/production.txt requirements/production.in")
 
+    print("")
     print("Hint: Use fab print:update to update all requirements!")

@@ -139,14 +139,12 @@
                 <li><strong>Running locally!</strong></li>
             {% endif %}
         </ul>
-        <h3>{%  trans 'Users online' %} ({{ users.count }})</h3>
+        <h3>{%  trans 'Users online' %} ({{ logged_in_users.count|default:0}})</h3>
         <ul class="actionlist" id="users_online_list">
-            {% for user in users %}
-                {% if user.status == "online" %}
-                    <li data-username="{{ user.username|escape }}">
-                        {{ user.full_name|escape }}
-                    </li>
-                {% endif %}
+            {% for user in logged_in_users %}
+                <li data-username="{{ user.username|escape }}">
+                    {{ user.get_full_name|escape }}
+                </li>
             {% endfor %}
         </ul>
     </div>

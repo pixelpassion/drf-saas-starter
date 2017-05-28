@@ -41,8 +41,9 @@ class MyUserCreationForm(UserCreationForm):
 class MyUserAdmin(AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
-    list_display = ('id', 'date_joined', 'username', 'email', 'first_name', 'last_name', 'get_tenants', 'is_active', 'is_superuser')
+    list_display = ('id', 'date_joined', 'signed_in', 'username', 'email', 'first_name', 'last_name', 'get_tenants', 'is_active', 'is_superuser')
     list_editable = ('username', 'first_name', 'last_name', 'email', 'is_active',)
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'signed_in', 'date_joined', )
     search_fields = ['first_name', 'last_name', 'username', 'email', ]
     ordering = ('date_joined', )
 

@@ -104,7 +104,8 @@ INSTALLED_APPS = [
     'apps.mails',
     'apps.htmltopdf',
     'apps.comments.apps.CommentsConfig',
-    
+    'apps.notifications',
+
     'main.celery.CeleryConfig',
     'django_premailer',
     'tinymce',
@@ -119,11 +120,12 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
 
+    'channels',
+    'django_nyt',
 
     'django_extensions',  # This should be moved to only local, but it helps for testing
 
     'anymail',
-    'channels',
     #'channels_panel',
 
     'actstream',
@@ -244,7 +246,7 @@ if ON_HEROKU:
 
 
 ########################################################################################################################
-#                                                Logging                                                               #
+#                                                Logging & Debugging                                                   #
 ########################################################################################################################
 
 # Disable CSSutils warnings (django_premailer)
@@ -346,6 +348,21 @@ else:
         }
     }
 
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    #'channels_panel.panel.ChannelsDebugPanel',
+]
 
 ########################################################################################################################
 #                                                5 - Authentication                                                    #
@@ -442,7 +459,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 ########################################################################################################################
-#                                                 7 - Celery                                                           #
+#                                                 7 - Celery & Websockets                                              #
 ########################################################################################################################
 
 # Settings should be moved to the new lowercase format
@@ -464,6 +481,21 @@ if STAGE == 'local':
     CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
 elif STAGE == 'test':
     CELERY_TASK_ALWAYS_EAGER = True
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "ROUTING": "main.routing.channel_routing",
+        #"ROUTING": "apps.databinding.databinding.routing.channel_routing",
+
+        #"ROUTING": "django_nyt.routing.channel_routing",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        }
+    }
+}
+
+NYT_ENABLE_ADMIN = True
 
 
 ########################################################################################################################
@@ -533,6 +565,14 @@ SENTRY_URL = env.str('SENTRY_URL', default="#")
 MAILHOG_URL = env.str('MAILHOG_URL', default="#")
 RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'width': '70%',
+    'height': '500px'
+}
 
 ########################################################################################################################
 #                                                 10 - Tenants                                                         #
@@ -545,38 +585,3 @@ ALLOWED_EMAIL_DOMAINS = [
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
 
 TENANT_ROOT_SITE_ID = env.int('TENANT_ROOT_SITE_ID', default=SITE_ID)
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
-        "ROUTING": "main.routing.channel_routing",
-        "CONFIG": {
-            "hosts": [REDIS_URL],
-        }
-    },
-}
-
-DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-    #'channels_panel.panel.ChannelsDebugPanel',
-]
-
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,spellchecker,paste,searchreplace",
-    'theme': "advanced",
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 10,
-    'width': '70%',
-    'height': '500px'
-}

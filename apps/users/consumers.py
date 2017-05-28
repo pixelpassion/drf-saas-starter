@@ -63,9 +63,21 @@ def users_ws_disconnect(message):
         Group('users').discard(message.reply_channel)
 
 
+def ws_add(message):
+    # Accept the incoming connection
+
+    message.reply_channel.send({"accept": True})
+    # Add them to the chat group
+
+    Group("chat").add(message.reply_channel)
+    # Connected to websocket.disconnect
+
+
+def ws_disconnect(message):
+    Group("chat").discard(message.reply_channel)
+
+
 def ws_message(message):
-    # ASGI WebSocket packet-received and send-packet message types
-    # both have a "text" key for their textual data.
 
     print(f"ws_message: {message.channel}, {message.content}")
 
@@ -78,6 +90,6 @@ def ws_message(message):
 
     cache.set("ws_messages", ws_messages)
 
-    message.reply_channel.send({
+    Group("chat").send({
         "text": message.content['text']
     })

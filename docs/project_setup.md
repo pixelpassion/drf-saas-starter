@@ -41,7 +41,7 @@ $ fab push_to_heroku
 Check the logs
 
 ```
-$ heroku logs --app einhorn-starter -f                                                                                                                                              
+$ heroku logs --app einhorn-starter -f
 ```
 
 Run commands or a shell
@@ -50,18 +50,17 @@ Run commands or a shell
 heroku run "python manage.py shell" --app einhorn-starter
 ```
 
-## SSL with letsencrypt
+Setup domains and an SSL certificate.
+
+Heroku takes care of SSL automatically now for paid dynos. Check [the anncouncement](https://blog.heroku.com/announcing-automated-certificate-management) and the [help page](https://devcenter.heroku.com/articles/automated-certificate-management).
+
 
 ```
-sudo certbot certonly --manual
+heroku certs:auto:enable -a einhorn-starter                 # Only needed for already existing apps
+heroku domains:add test.einhornmanufaktur.de                # Add an domain, set the DNS to the given domain
 
-heroku config:set ACME_TOKEN=
-heroku config:set ACME_KEY=
-
-sudo heroku certs:add /etc/letsencrypt/live/starter.einhornmanufaktur.de/fullchain.pem /etc/letsencrypt/live/starter.einhornmanufaktur.de/privkey.pem --app einhorn-starter
-
-heroku config:set SECURE_SSL_REDIRECT=True
-
+heroku domains                                              # Checks all domains
+heroku certs:auto                                           # Checks the status of the automated SSL handling
 ```
 
 ## Sentry
@@ -72,13 +71,13 @@ Errors are pushed to Sentry. Update the SENTRY_DSN setting in the .env
 
 Asynchronous tasks are used for taks, which really run asynchronous - for example bills, which are created in the background and then send to a user.
 
-We are using RabbitMQ / CloudAMQP as a message broker and Nameko for prodiving the services.
+We are using Celery with RabbitMQ / CloudAMQP as a message broker.
 
 ## Websockets & django-channels
 
 This is used for asynchronous, but more directly tasks - like messages to the user or an activity stream. 
 
-## Subdomains
+## Subdomains locally
 
 To try subdomains, you can locally change your /etc/hosts file:
 ```

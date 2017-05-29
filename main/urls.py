@@ -19,11 +19,6 @@ urlpatterns = [
     url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
-    url(r'^', include('apps.letsencrypt.urls', namespace="letsencrypt")),
-
-    # Account handling from allauth, probably not needed in an API based backend, TODO: Delete
-    # url(r'^account/', include('allauth.urls')),
-
 
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
 

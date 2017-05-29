@@ -30,4 +30,4 @@ deployment:
   staging:
     branch: master
     commands:
-      - ./scripts/heroku_deploy.sh einhorn-starter
+      - ./bin/circleci_heroku_deploy.sh einhorn-starter

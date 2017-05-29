@@ -5,7 +5,6 @@ from django.views.generic import RedirectView, TemplateView
 
 from .views import HomeView
 
-from apps.notifications.views import NotificationCreateView, TestLoginAsUser
 from django_nyt.urls import get_pattern
 
 
@@ -28,10 +27,8 @@ urlpatterns = [
 
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
 
+    # TODO: The url structure of nyt should fit into our /api/ structure
     url(r'^nyt/', get_pattern()),
-
-    url(r'^create/$', NotificationCreateView.as_view(), name='create_notification'),
-    url(r'^login-as/(?P<pk>\d+)/$', TestLoginAsUser.as_view(), name='login_as'),
 
 ]
 

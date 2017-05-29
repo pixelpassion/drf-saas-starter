@@ -22,7 +22,8 @@
         <div class="container">
             <h2>Websockets</h2>
             <p>The numbers should be synchronized in different Browsers. </p>
-            <a class="btn btn-primary btn-lg" href="#" onclick="return false;" id="send_notification" role="button">Add number &raquo;</a>
+            <a class="btn btn-primary btn-lg" href="#" onclick="return false;" id="send_notification" role="button">Add
+                number &raquo;</a>
             <ul class="actionlist" id="ws_messages">
                 {% for message in ws_messages %}
                     <li>{{ message|escape }}</li>
@@ -36,8 +37,6 @@
 
 
 {% block script %}
-
-    <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
 
     <script>
 

@@ -23,7 +23,7 @@ if test $MIGRATION_CHANGES -gt 0; then
     heroku scale worker=0 --app $APP_NAME
   fi
 
-  heroku run python manage.py migrate --app $APP_NAME
+  heroku run python manage.py migrate --noinput --app $APP_NAME
 
   if test $PREV_WORKERS -gt 0; then
     heroku scale worker=$PREV_WORKERS --app $APP_NAME

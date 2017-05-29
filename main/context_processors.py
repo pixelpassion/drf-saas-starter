@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
+import re
 
 User = get_user_model()
 
@@ -45,9 +46,18 @@ def admin_settings(request):
     SENTRY_DSN = os.environ.get('SENTRY_DSN', None)
 
     if SENTRY_DSN:
-        ctx.update({
-            'SENTRY_DSN': SENTRY_DSN,
-        })
+
+        try:
+            regex_result = re.search('https://(.*):(.*)@(.*)', SENTRY_DSN)
+
+            sentry_frontend_dsn = str.replace(SENTRY_DSN, ":" + regex_result.group(2), "")
+
+            ctx.update({
+                'SENTRY_FRONTEND_DSN': sentry_frontend_dsn,
+            })
+
+        except AttributeError:
+            print("The SENTRY_DSN is in the wrong format, skipping: {}".format(SENTRY_DSN))
 
     if hasattr(request, "tenant") and request.tenant:
         ctx.update({

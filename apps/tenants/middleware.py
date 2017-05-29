@@ -54,7 +54,7 @@ class TenantMiddleware(object):
         except Domain.DoesNotExist:
             pass
 
-        logger.debug("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host_name, site_id, request.tenant))
+        # logger.debug("TenantMiddleware: Host: {}, Site_ID: {}, Tenant: {}".format(host_name, site_id, request.tenant))
 
         if site_id:
             settings.SITE_ID = site_id

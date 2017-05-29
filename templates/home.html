@@ -1,17 +1,76 @@
 {% extends "base.html" %}
 
+{% load i18n humanize static %}
+
 {% block content %}
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="container">
             <h1 class="display-3">Hello, {{ TENANT_NAME|default:"world" }}!</h1>
-            <p>This is a boilerplate for starting business / SaaS related webpages. Use it as a starting point to create something more
+            <p>This is a boilerplate for starting business / SaaS related webpages. Use it as a starting point to create
+                something more
                 unique.</p>
             <p>
-                <a class="btn btn-primary btn-lg" href="https://github.com/jensneuhaus/einhorn-starter" role="button">Github &raquo;</a>
+                <a class="btn btn-primary btn-lg" href="https://github.com/jensneuhaus/einhorn-starter" role="button">Github
+                    &raquo;</a>
                 <a class="btn btn-primary btn-lg" href="{% url 'api_docs' %}" role="button">Swagger Docs &raquo;</a>
             </p>
         </div>
     </div>
 
+    <div class="jumbotron">
+        <div class="container">
+            <h2>Websockets</h2>
+            <p>The numbers should be synchronized in different Browsers. </p>
+            <a class="btn btn-primary btn-lg" href="#" onclick="return false;" id="send_notification" role="button">Add
+                number &raquo;</a>
+            <ul class="actionlist" id="ws_messages">
+                {% for message in ws_messages %}
+                    <li>{{ message|escape }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="jumbotron">
+        <div class="container">
+            <h2>Notifications</h2>
+            <p>The latest user notifications should be shown here. Examples:</p>
+            <ul>
+                <li><a href="http://django-nyt.readthedocs.io/en/latest/html.html">http://django-nyt.readthedocs.io/en/latest/html.html</a></li>
+                <li><a href="https://github.com/benjaoming/django-nyt/blob/master/test-project/testapp/templates/testapp/ind">https://github.com/benjaoming/django-nyt/blob/master/test-project/testapp/templates/testapp/ind</a></li>
+            </ul>
+        </div>
+    </div>
+
 {% endblock %}
+
+
+{% block script %}
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Note that the path doesn't matter for routing; any WebSocket
+            // connection gets bumped over to WebSocket consumers
+            var socket = new WebSocket("ws{% if USING_SSL %}s{% endif %}://" + window.location.host + "/chat/");
+
+            $("#send_notification").click(function () {
+                var number = 1 + Math.floor(Math.random() * 10000);
+                socket.send(number);
+            });
+
+
+            socket.onmessage = function (e) {
+                $('#ws_messages').append("<li>" + e.data + "</li>");
+            }
+
+        });
+
+    </script>
+
+{% endblock %}
+
+

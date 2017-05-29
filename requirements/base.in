@@ -23,11 +23,11 @@ WeasyPrint                  # HTML to PDF conversion
 django-redis                # Redis handling
 django-tinymce              # HTMLField for models
 html2text                   # Convert HTML to Markdown
+django-nyt==1.0b3           # Notification system (needs to be pinned because --pre is not working)
 
 #### Still for testing ####
 channels
 django-channels-panel
-Twisted
-h2
+Twisted[tls,http2]          # Twisted with TLS & https2 support
 asgi-redis
 django-activity-stream

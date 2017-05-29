@@ -18,6 +18,8 @@ dependencies:
     - sudo apt-get update; sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 shared-mime-info
     - pip install coverage pytest-django pytest-cov factory_boy
 test:
+  pre:
+    - python manage.py collectstatic --noinput
   override:
     - py.test --cov-branch --cov
     - coverage html
@@ -28,4 +30,4 @@ deployment:
   staging:
     branch: master
     commands:
-      - ./scripts/heroku_deploy.sh einhorn-starter
+      - ./bin/circleci_heroku_deploy.sh einhorn-starter

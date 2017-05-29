@@ -4,11 +4,13 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
+-e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest-env-running-before-django-settings
 amqp==2.1.4
+appnope==0.1.0            # via ipython
 argon2-cffi==16.3.0
 asgi-redis==1.3.0
 asgiref==1.1.1
-asn1crypto==0.22.0        # via cryptography
+asn1crypto==0.22.0
 astroid==1.5.2            # via pylint, pylint-celery, pylint-plugin-utils
 attrs==16.3.0
 autobahn==17.5.1
@@ -25,7 +27,7 @@ contextlib2==0.5.5
 coreapi==2.3.0
 coreschema==0.0.4
 coverage==4.4.1
-cryptography==1.8.1       # via paramiko
+cryptography==1.8.2
 cssselect==1.0.1
 cssutils==1.0.2
 daphne==1.2.0
@@ -41,6 +43,7 @@ django-crispy-forms==1.6.1
 django-debug-toolbar==1.8
 django-environ==0.4.3
 django-extensions==1.7.9
+django-nyt==1.0b3
 django-premailer==0.2.0
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -54,12 +57,12 @@ factory-boy==2.8.1
 faker==0.7.12             # via factory-boy
 first==2.0.1              # via pip-tools
 flake8==3.3.0
-h2==3.0.1
+h2==2.6.2
 hpack==3.0.0
 html2text==2016.9.19
 html5lib==0.999999999
 hyperframe==5.1.0
-idna==2.5                 # via cryptography
+idna==2.5
 incremental==16.10.1
 ipython-genutils==0.2.0   # via traitlets
 ipython==6.0.0
@@ -76,18 +79,20 @@ msgpack-python==0.4.8
 oauthlib==2.0.2
 olefile==0.44
 openapi-codec==1.3.1
-packaging==16.8           # via cryptography
+packaging==16.8
 paramiko==2.1.2           # via fabric3
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
 pillow==4.1.1
 pip-tools==1.9.0
 premailer==3.0.0
+priority==1.3.0
 prompt-toolkit==1.0.14    # via ipython
 psycopg2==2.7.1
 ptyprocess==0.5.1         # via pexpect
 py==1.4.33                # via pytest
-pyasn1==0.2.3             # via paramiko
+pyasn1-modules==0.0.8
+pyasn1==0.2.3
 pycodestyle==2.3.1        # via flake8
 pycparser==2.17
 pyflakes==1.5.0           # via flake8
@@ -98,7 +103,8 @@ pylint-common==0.2.5
 pylint-django==0.7.2
 pylint-plugin-utils==0.2.6  # via pylint-celery, pylint-common, pylint-django
 pylint==1.7.1
-pyparsing==2.2.0          # via packaging
+pyopenssl==17.0.0
+pyparsing==2.2.0
 pyphen==0.9.4
 pytest-cov==2.5.1         # via pytest-cover
 pytest-cover==3.0.0       # via pytest-coverage
@@ -115,6 +121,7 @@ redis==2.10.5
 requests-oauthlib==0.8.0
 requests==2.14.2
 sendgrid==4.1.0
+service-identity==17.0.0
 simplegeneric==0.8.1      # via ipython
 simplejson==3.10.0
 six==1.10.0
@@ -122,7 +129,7 @@ sqlparse==0.2.3
 termcolor==1.1.0          # via pytest-sugar
 tinycss==0.4
 traitlets==4.3.2          # via ipython
-twisted==17.1.0
+twisted[http2,tls]==17.1.0
 txaio==2.7.1
 uritemplate==3.0.0
 vine==1.1.3

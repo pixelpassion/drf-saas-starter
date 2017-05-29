@@ -3,6 +3,7 @@ Updates the context sent to all templates with every request
 """
 
 import sys
+import os
 from datetime import datetime
 
 import django
@@ -10,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
+import re
 
 User = get_user_model()
 
@@ -19,11 +21,7 @@ def admin_settings(request):
 
     python_version = "%s.%s.%s" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
 
-    users = User.objects.select_related('logged_in_user')
-
-    for user in users:
-        user.status = 'online' if hasattr(user, 'logged_in_user') else 'offline'
-        user.full_name = user.get_full_name()
+    logged_in_users = User.objects.exclude(signed_in=None)
 
     site_url = "-"
 
@@ -33,17 +31,33 @@ def admin_settings(request):
         pass
 
     ctx = {
-        'MAILHOG_URL': settings.MAILHOG_URL,
+        'MAILHOG_MANAGEMENT_URL': settings.MAILHOG_MANAGEMENT_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
-        'SENTRY_URL':  settings.SENTRY_URL,
+        'SENTRY_MANAGEMENT_URL':  settings.SENTRY_MANAGEMENT_URL,
         'PROJECT_NAME': settings.PROJECT_NAME,
         'django_version': django.get_version(),
         'python_version': python_version,
         'ON_HEROKU': settings.ON_HEROKU,
         'SITE_URL': site_url,
         'HOST_URL': request.get_host(),
-        'users': users
+        'logged_in_users': logged_in_users,
     }
+
+    SENTRY_DSN = os.environ.get('SENTRY_DSN', None)
+
+    if SENTRY_DSN:
+
+        try:
+            regex_result = re.search('https://(.*):(.*)@(.*)', SENTRY_DSN)
+
+            sentry_frontend_dsn = str.replace(SENTRY_DSN, ":" + regex_result.group(2), "")
+
+            ctx.update({
+                'SENTRY_FRONTEND_DSN': sentry_frontend_dsn,
+            })
+
+        except AttributeError:
+            print("The SENTRY_DSN is in the wrong format, skipping: {}".format(SENTRY_DSN))
 
     if hasattr(request, "tenant") and request.tenant:
         ctx.update({
@@ -56,6 +70,7 @@ def admin_settings(request):
             'HEROKU_RELEASE_VERSION': settings.HEROKU_RELEASE_VERSION,
             'HEROKU_SLUG_COMMIT': settings.HEROKU_SLUG_COMMIT[:8],
             'HEROKU_SLUG_DESCRIPTION': settings.HEROKU_SLUG_DESCRIPTION,
+            'USING_SSL': settings.SECURE_SSL_REDIRECT,
         })
 
     return ctx

@@ -23,6 +23,11 @@ factory_boy
 pytest-django
 pytest-coverage
 pytest-sugar
+
+# Not needed on CircleCI, because environment variables can be set in circle.yml
+# Using an Github repository because PR in python-env is not getting merged, check https://github.com/MobileDynasty/pytest-env/issues/3
+-e git://github.com/unicorn-supplies/pytest-env.git#egg=pytest-env-running-before-django-settings
+
 pylint
 pylint-celery
 pylint-common

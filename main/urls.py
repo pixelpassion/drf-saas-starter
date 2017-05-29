@@ -3,8 +3,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import RedirectView, TemplateView
 
+from .views import HomeView
+
+from django_nyt.urls import get_pattern
+
+
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
 
     url(r'^email-verified/$', TemplateView.as_view(template_name="email_verified.html"), name='email_verified'),
 
@@ -22,6 +27,8 @@ urlpatterns = [
 
     url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
 
+    # TODO: The url structure of nyt should fit into our /api/ structure
+    url(r'^nyt/', get_pattern()),
 
 ]
 

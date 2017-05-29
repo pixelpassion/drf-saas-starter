@@ -5,7 +5,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from .serializers import ActionSerializer
 
 
-class ActivityViewSet(ReadOnlyModelViewSet):
+class ActivitiesViewSet(ReadOnlyModelViewSet):
     serializer_class = ActionSerializer
     queryset = Action.objects.all()
 

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """ Mixins for the API """
 
 import uuid

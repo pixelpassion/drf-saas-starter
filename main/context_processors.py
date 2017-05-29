@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Updates the context sent to all templates with every request
 """

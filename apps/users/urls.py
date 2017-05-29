@@ -4,9 +4,8 @@ from django.conf.urls import include, url
 
 from .views import UserViewSet
 
-
-# Here the comments and activity is added manually by including them under the detail view.
-
+# # Here the comments and activity is added manually by including them under the detail view.
+#
 # urlpatterns = [
 #
 #     url(
@@ -19,17 +18,19 @@ from .views import UserViewSet
 #         r'^(?P<pk>[\w.@+-]+)/',
 #         include([
 #             url(
-#                 r'^$',
-#                 UserViewSet.as_view({'get': 'retrieve'}),
+#                 regex=r'^$',
+#                 view=UserViewSet.as_view({'get': 'retrieve'}),
 #                 name='detail'
 #             ),
 #             url(
-#                 r'^comments/$',
-#                 UserViewSet.as_view({'get': 'comments', 'post': 'comments'})
+#                 regex=r'^comments/$',
+#                 view=UserViewSet.as_view({'get': 'comments', 'post': 'comments'}),
+#                 name='user-comments'
 #             ),
 #             url(
-#                 r'^activity/$',
-#                 UserViewSet.as_view({'get': 'activity'})
+#                 regex=r'^activities/$',
+#                 view=UserViewSet.as_view({'get': 'activities'}),
+#                 name='user-activities'
 #             ),
 #         ])
 #     ),
@@ -38,9 +39,8 @@ from .views import UserViewSet
 
 
 # If we use a router the comments and activity is added via
-# the @detail_route decorator in the CommentsMixin and ActivityMixin.
+# the @detail_route decorator in the CommentsMixin and ActivitiesMixin.
 # This means, that nothing has to be changed here.
-
 
 router = DefaultRouter()
 router.register(r'', UserViewSet)

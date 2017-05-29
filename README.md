@@ -11,10 +11,10 @@
 
 * Optimized for Python 3.5+ and Django 1.10
 * [12-Factor](12factor.net) based settings via [django-environ](12factor.net)
-* SSL Support with [letsencrypt](#)
 * HTML Generator build in with [weasyprint](#)
 * Based on an API build with the awesome [django-rest-framework](#)
 * API documentation build with [Swagger](#)
+* Testing with [py.test](#)
 * Fabric for faster deployments
 * Send emails via [Anymail](#) (using [Sendgrid](#) as default)
 * HTML Templates with Tinymce

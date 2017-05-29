@@ -9,15 +9,12 @@ class CommentViewSet(ModelViewSet):
     """The ViewSet for comments where available information from the request will be integrated."""
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # permission_classes = (,)  # FIXME There should be restrictions
 
     def create(self, request, *args, **kwargs):
         """Add content_type, object_id and author to the comment."""
         self.request.data['content_type'] = kwargs['content_type'].pk
-        self.request.data['object_id'] = kwargs['pk']
-        # FIXME Once the login works this can be integrated
-        # self.request.data['author'] = self.request.user
-        self.request.data['author'] = 'c4bce8af-20f4-450c-a89e-78aac2128038'
+        self.request.data['object_id'] = str(kwargs['pk'])
+        self.request.data['author'] = self.request.user.pk
         return super().create(self.request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):

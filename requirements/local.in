@@ -21,6 +21,7 @@ django-coverage-plugin
 flake8
 factory_boy
 pytest-django
+pytest-coverage
 pytest-sugar
 pylint
 pylint-celery

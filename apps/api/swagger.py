@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from rest_framework import exceptions
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import CoreJSONRenderer

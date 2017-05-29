@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
+-e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest-env-running-before-django-settings
 amqp==2.1.4
 appnope==0.1.0            # via ipython
 argon2-cffi==16.3.0

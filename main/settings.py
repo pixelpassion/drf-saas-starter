@@ -85,9 +85,6 @@ if REDIS_URL and CACHING:
 
 INSTALLED_APPS = [
 
-    #'material',
-    #'material.admin',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -95,8 +92,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.humanize',
-
-    #'whitenoise.runserver_nostatic',   # use whitenoise for development , add above django.contrib.staticfiles
     'django.contrib.staticfiles',
 
     'apps.tenants',
@@ -105,11 +100,7 @@ INSTALLED_APPS = [
     'apps.htmltopdf',
     'apps.comments.apps.CommentsConfig',
 
-    'main.celery.CeleryConfig',
-    'django_premailer',
-    'tinymce',
-
-    # django-rest_framework and Authentication
+    # API & Authentication
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -119,14 +110,16 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
 
+    # Channels
     'channels',
     'django_nyt',
+    # 'channels_panel',     # There is a problem for now
 
-    'django_extensions',  # This should be moved to only local, but it helps for testing
-
+    # Other apps
+    'main.celery.CeleryConfig',
+    'django_premailer',
+    'tinymce',
     'anymail',
-    #'channels_panel',
-
     'actstream',
 
 ]
@@ -149,6 +142,7 @@ if DEBUG is True and STAGE == 'local':
 
         INSTALLED_APPS += [
             'debug_toolbar',
+            'django_extensions',
         ]
 
         MIDDLEWARE = [

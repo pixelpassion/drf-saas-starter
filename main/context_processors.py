@@ -40,7 +40,7 @@ def admin_settings(request):
         'ON_HEROKU': settings.ON_HEROKU,
         'SITE_URL': site_url,
         'HOST_URL': request.get_host(),
-        'logged_in_users': logged_in_users
+        'logged_in_users': logged_in_users,
     }
 
     SENTRY_DSN = os.environ.get('SENTRY_DSN', None)
@@ -70,6 +70,7 @@ def admin_settings(request):
             'HEROKU_RELEASE_VERSION': settings.HEROKU_RELEASE_VERSION,
             'HEROKU_SLUG_COMMIT': settings.HEROKU_SLUG_COMMIT[:8],
             'HEROKU_SLUG_DESCRIPTION': settings.HEROKU_SLUG_DESCRIPTION,
+            'USING_SSL': settings.SECURE_SSL_REDIRECT,
         })
 
     return ctx

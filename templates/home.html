@@ -55,7 +55,7 @@
 
             // Note that the path doesn't matter for routing; any WebSocket
             // connection gets bumped over to WebSocket consumers
-            var socket = new WebSocket("ws://" + window.location.host + "/chat/");
+            var socket = new WebSocket("ws{% if USING_SSL %}s{% endif %}://" + window.location.host + "/chat/");
 
             $("#send_notification").click(function () {
                 var number = 1 + Math.floor(Math.random() * 10000);

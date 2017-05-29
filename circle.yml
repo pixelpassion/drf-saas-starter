@@ -18,6 +18,8 @@ dependencies:
     - sudo apt-get update; sudo apt-get install libcairo2 libpango1.0-0 libgdk-pixbuf2.0-0 shared-mime-info
     - pip install coverage pytest-django pytest-cov
 test:
+  pre:
+    - python manage.py collectstatic --noinput
   override:
     - py.test --cov
     - coverage html

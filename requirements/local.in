@@ -32,3 +32,6 @@ pylint
 pylint-celery
 pylint-common
 pylint-django
+
+sphinx
+sphinx-autobuild

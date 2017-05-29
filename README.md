@@ -9,58 +9,138 @@
 
 ## Features
 
-* Optimized for Python 3.5+ and Django 1.10
+* Optimized for Python 3.6+ and Django 1.10+
 * [12-Factor](12factor.net) based settings via [django-environ](12factor.net)
-* HTML Generator build in with [weasyprint](#)
 * Based on an API build with the awesome [django-rest-framework](#)
 * API documentation build with [Swagger](#)
-* Testing with [py.test](#)
-* Fabric for faster deployments
+* Optimized testing with [py.test](https://docs.pytest.org/en/latest/) & coverage of > 90%
+* [Fabric](#) for faster and easier deployments
 * Send emails via [Anymail](#) (using [Sendgrid](#) as default)
-* HTML Templates with Tinymce
-* Dockerfile for development
+* Serving dynamic HTML E-Mail Templates, editable with [Tinymce](#)
+* [Docker-compose](#) File for easier development
 * Support for Channels with [django-channels](#), optimized for [Heroku](https://blog.heroku.com/in_deep_with_django_channels_the_future_of_real_time_apps_in_django)
-* Optimized for speed
-* Script for developer onboarding
-* Build in support for [Sentry](#)
-* Deployment for Heroku with [Procfile](#) and [Whitenoise](#)
-* --Tested with coverage of 100%--
-* Custom user, Multitenancy and Feature-Handling
+* Build in support for [Sentry](#) Error monitoring
+* Deployment for Heroku with [Procfile](#), [app.json](#), [Whitenoise](#)
+* Custom user, multi-tenancy and feature-Handling with [django-waffle](#)
 * Continuous integration with [CircleCI](#)
 
 ## Local setup
 
-```
-$ ./local_setup {{project_name}}        # Will create a database, a virtual environment folder .venv and an .env file
-$ source .venv/bin/activate             # Start the virtual environment
-$ pip install fabric3                   # Installs fabric3
-$ fab update                            # Updates requirements and migrations etc.
-```
-
-## Docker
-
-Download & install Docker Community Edition
+### Download & install the Docker Community edition
 
 * https://www.docker.com/community-edition
 
-Start all the services (they will be built once)
 
 ```
-$ docker-compose -f dev.yml up
+$ docker-compose build     # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
+$ docker-compose up        # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
+
 ```
 
 It will start different services locally.
 
-* RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling)
+* Django: http://localhost:8000
 * Redis: rediscache://127.0.0.1:6379 (used for caching and django-channels)
 * Redis Browser: http://localhost:8019/ (a simple Key/Value browser to debug Redis)
 * Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
 * PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
+* RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling with Celery)
 
-## Onboarding
+You can use the Docker shell to start manage.py commands:
+
+```
+$ docker-compose run django python manage.py migrate
+$ docker-compose run django python manage.py createsuperuser
+```
+
+### Handling of subdomains locally
+
+To try subdomains, you can locally change your /etc/hosts file:
+```
+$ sudo nano /etc/hosts
+```
+
+Add the following line:
+```
+127.0.0.1       a a.localhost b.localhost c.localhost d.localhost
+```
+
+Restart domain services (OSX 10.9 and above)
+
+```
+$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+```
+
+Now `a` and `a.localhost` etc. can be pinged or reached within any Browser.
+
+## Deployment to Heroku
+
+### Creating an new Heroku app
+
+#### Heroku Setup
+
+Download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
+
+If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
+
+```
+$ heroku login
+```
+
+#### Create a new app
+
+Use our Heroku setup script:
+
+```
+$ fab create_heroku_app:cool-new-app
+```
+
+#### Setup domains and an SSL certificate:
+
+Heroku takes care of SSL automatically for paid dynos. Check the [anncouncement](https://blog.heroku.com/announcing-automated-certificate-management) or the [help page](https://devcenter.heroku.com/articles/automated-certificate-management).
+
+
+```
+heroku certs:auto:enable -a cool-new-app                    # Only needed for already existing apps
+heroku domains:add test.yourdomain.de                       # Add an domain, set the DNS to the given domain
+
+heroku domains                                              # Checks all domains
+heroku certs:auto                                           # Checks the status of the automated SSL handling
+```
+
+
+### Using an existing Heroku app
+
+```
+$ heroku git:clone -a cool-new-app
+```
+
+### Working with Heroku
+
+Pushing to Heroku:
+
+```
+$ git push heroku master
+
+or
+
+$ fab push_to_heroku
+```
+
+Checking the logs
+
+```
+$ heroku logs --app cool-new-app -f
+```
+
+Run commands or a shell
+
+```
+heroku run python manage.py shell --app cool-new-app
+heroku run python manage.py migrate --app cool-new-app
+```
+
+
+## Contributing?
 
 Are you contributing to the project? You can read more in [Onboarding as a new developer](docs/onboarding.md)
-
-## Setup as a new Project
-
-You want to start a new project? Read more about the [Individual Project Setup](docs/project_setup.md)

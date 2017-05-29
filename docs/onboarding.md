@@ -20,9 +20,23 @@ How to board an new developer
 
 ## Slack
 
+## Sentry
+
+Errors are pushed to Sentry. Update the SENTRY_DSN setting in the .env
+
+## Asynchronous tasks
+
+Asynchronous tasks are used for taks, which really run asynchronous - for example bills, which are created in the background and then send to a user.
+
+We are using Celery with RabbitMQ / CloudAMQP as a message broker.
+
+## Websockets & django-channels
+
+This is used for asynchronous, but more directly tasks - like messages to the user or an activity stream.
+
 ## Testing
 
-We are using pytest for local tests
+We are using py.test for local tests
 
 Some useful commands:
 

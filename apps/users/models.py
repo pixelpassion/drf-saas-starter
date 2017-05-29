@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
-from main.logging import logger
 from main.mixins import UUIDMixin
 
 from django.conf import settings

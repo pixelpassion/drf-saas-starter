@@ -561,8 +561,8 @@ SWAGGER_SETTINGS = {
 
 PROJECT_NAME = env.str('PROJECT_NAME', default='Untitled Project')
 
-SENTRY_URL = env.str('SENTRY_URL', default="#")
-MAILHOG_URL = env.str('MAILHOG_URL', default="#")
+SENTRY_MANAGEMENT_URL = env.str('SENTRY_MANAGEMENT_URL', default="#")
+MAILHOG_MANAGEMENT_URL = env.str('MAILHOG_MANAGEMENT_URL', default="#")
 RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
 
 TINYMCE_DEFAULT_CONFIG = {

@@ -5,6 +5,7 @@ Updates the context sent to all templates with every request
 """
 
 import sys
+import os
 from datetime import datetime
 
 import django
@@ -31,9 +32,9 @@ def admin_settings(request):
         pass
 
     ctx = {
-        'MAILHOG_URL': settings.MAILHOG_URL,
+        'MAILHOG_MANAGEMENT_URL': settings.MAILHOG_MANAGEMENT_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
-        'SENTRY_URL':  settings.SENTRY_URL,
+        'SENTRY_MANAGEMENT_URL':  settings.SENTRY_MANAGEMENT_URL,
         'PROJECT_NAME': settings.PROJECT_NAME,
         'django_version': django.get_version(),
         'python_version': python_version,
@@ -42,6 +43,13 @@ def admin_settings(request):
         'HOST_URL': request.get_host(),
         'logged_in_users': logged_in_users
     }
+
+    SENTRY_DSN = os.environ.get('SENTRY_DSN', None)
+
+    if SENTRY_DSN:
+        ctx.update({
+            'SENTRY_DSN': SENTRY_DSN,
+        })
 
     if hasattr(request, "tenant") and request.tenant:
         ctx.update({

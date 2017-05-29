@@ -45,7 +45,6 @@ django-tinymce==2.6.0
 django==1.10.7
 djangorestframework-jwt==1.10.0
 djangorestframework==3.6.3
-gunicorn==19.7.1
 h2==2.6.2
 hpack==3.0.0
 html2text==2016.9.19

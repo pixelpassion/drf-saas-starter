@@ -23,13 +23,20 @@ Installation
 
 Install Docker as described in  :doc:`docker`
 
-Clone the Github repository and start the Docker::
+Clone the Github repository::
 
     $ git clone git@github.com/jensneuhaus/einhorn-starter
-    $ ./local_setup.py
+
+Start the local setup, it creates the required .env file::
+
+    $ python local_setup.py
+
+Start the Docker containers::
+
     $ docker-compose build
     $ docker-compose up
 
+You should be able to open http://localhost:8000 in your browser.
 
 .. warning::
    The following is work in progress. The installation procedere (Cookiecutter & PyPi) needs to be discussed.

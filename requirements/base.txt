@@ -32,7 +32,6 @@ django-allauth==0.30.0
 django-anymail==0.9
 django-channels-panel==0.0.5
 django-cors-headers==2.0.2
-django-crispy-forms==1.6.1
 django-debug-toolbar==1.8  # via django-channels-panel
 django-environ==0.4.3
 django-extensions==1.7.9

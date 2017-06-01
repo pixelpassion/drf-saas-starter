@@ -1,4 +1,0 @@
-settings.py
-============
-
-Lorem ipsum.

@@ -24,123 +24,20 @@
 * Custom user, multi-tenancy and feature-Handling with [django-waffle](#)
 * Continuous integration with [CircleCI](#)
 
+## Documentation
+
+Read our documentation at ..
+
 ## Local setup
 
-### Download & install the Docker Community edition
-
+Download & install the Docker Community edition
 * https://www.docker.com/community-edition
 
+Run the following commands, it will build & start the needed containers (Django, Worker, Postgres DB, Redis, Mailhog)*[]:
 
 ```
-$ docker-compose build     # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
-$ docker-compose up        # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
-
+$ docker-compose build
+$ docker-compose up
 ```
 
-It will start different services locally.
-
-* Django: http://localhost:8000
-* Redis: rediscache://127.0.0.1:6379 (used for caching and django-channels)
-* Redis Browser: http://localhost:8019/ (a simple Key/Value browser to debug Redis)
-* Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
-* PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
-* RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling with Celery)
-
-You can use the Docker shell to start manage.py commands:
-
-```
-$ docker-compose run django python manage.py migrate
-$ docker-compose run django python manage.py createsuperuser
-```
-
-### Handling of subdomains locally
-
-To try subdomains, you can locally change your /etc/hosts file:
-```
-$ sudo nano /etc/hosts
-```
-
-Add the following line:
-```
-127.0.0.1       a a.localhost b.localhost c.localhost d.localhost
-```
-
-Restart domain services (OSX 10.9 and above)
-
-```
-$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-```
-
-Now `a` and `a.localhost` etc. can be pinged or reached within any Browser.
-
-## Deployment to Heroku
-
-### Creating an new Heroku app
-
-#### Heroku Setup
-
-Download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
-
-If you haven't already, log in to your Heroku account and follow the prompts to create a new SSH public key.
-
-```
-$ heroku login
-```
-
-#### Create a new app
-
-Use our Heroku setup script:
-
-```
-$ fab create_heroku_app:cool-new-app
-```
-
-#### Setup domains and an SSL certificate:
-
-Heroku takes care of SSL automatically for paid dynos. Check the [anncouncement](https://blog.heroku.com/announcing-automated-certificate-management) or the [help page](https://devcenter.heroku.com/articles/automated-certificate-management).
-
-
-```
-heroku certs:auto:enable -a cool-new-app                    # Only needed for already existing apps
-heroku domains:add test.yourdomain.de                       # Add an domain, set the DNS to the given domain
-
-heroku domains                                              # Checks all domains
-heroku certs:auto                                           # Checks the status of the automated SSL handling
-```
-
-
-### Using an existing Heroku app
-
-```
-$ heroku git:clone -a cool-new-app
-```
-
-### Working with Heroku
-
-Pushing to Heroku:
-
-```
-$ git push heroku master
-
-or
-
-$ fab push_to_heroku
-```
-
-Checking the logs
-
-```
-$ heroku logs --app cool-new-app -f
-```
-
-Run commands or a shell
-
-```
-heroku run python manage.py shell --app cool-new-app
-heroku run python manage.py migrate --app cool-new-app
-```
-
-
-## Contributing?
-
-Are you contributing to the project? You can read more in [Onboarding as a new developer](docs/onboarding.md)
+Open your browser and go to http://localhost:8000/

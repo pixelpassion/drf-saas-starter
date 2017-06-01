@@ -1,4 +1,4 @@
-settings.py
+Settings
 ============
 
 Lorem ipsum.

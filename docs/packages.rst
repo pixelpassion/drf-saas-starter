@@ -79,7 +79,7 @@ Others
 Requirements of requirements
 --------------------
 
-For a complete list of all used packages check out the requirements/local.txt and requirements/production.txt.
+For a complete list of all used packages check out the ``requirements/local.txt`` and ``requirements/production.txt``.
 Thanks to pip-compile these files are containing all installed packages. This means it contains the required packages of required packages and so on.
 
 

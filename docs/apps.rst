@@ -1,31 +1,7 @@
 Integrated apps
 ============
 
-django-saas-starter ships with some apps::
-
-
-    INSTALLED_APPS = (
-        ...
-        'apps.users.apps.UsersConfig',
-        'apps.tenants',
-        'apps.mails',
-        'apps.comments.apps.CommentsConfig',
-        ...
-
-    )
-
-
-
-API
------------------------------------------
-
-The API app does not have models, so its not included in INSTALLED_APPS.
-
-The API provides functionality for the django-rest-framework integration:
-* Sign in and Sign up for tenants and users.
-* Password reset / forget endpoints
-* Users listing / details with comments & activation-stream Endpoints
-* A notification endpoint.
+django-saas-starter ships with some apps.
 
 User
 -----------------------------------------

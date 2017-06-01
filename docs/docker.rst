@@ -16,10 +16,10 @@ Build and start the containers::
 It will start different services locally.
 
  * ``Django``: The webapplication itself (http://localhost:8000)
- * ``Documentation``: Automated Sphinx documentation (http://localhost:8007)
- * ``Mailhog``: A simple local mailserver for debugging mails (http://localhost:8025)
- * ``Postgres``: The used database, is used in DATABASE_URL (postgres://postgres@localhost/einhorn_starter)
- * ``Redis``: Key-Value store for caching & channels (localhost:6379)
+ * ``Documentation``: Automated Sphinx :doc:`documentation` (http://localhost:8007)
+ * ``Mailhog``: A simple local mailserver for debugging mails, check out :doc:`email` (http://localhost:8025)
+ * ``Postgres``: The used database, is used in ``DATABASE_URL`` (postgres:///einhorn-starter)
+ * ``Redis``: Key-Value store for caching & :doc:`channels`, used as ``REDIS_URL`` (localhost:6379)
  * ``Redis Browser``: For debugging Redis key/values (http://localhost:8019/)
  * ``RabbitMQ Management``: For monitoring & debugging RabbitMQ, used for :doc:`celery` (http://localhost:15672)
  * A :doc:`channels` worker

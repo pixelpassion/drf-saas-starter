@@ -28,7 +28,7 @@ Please read the :doc:`docker` information next.
 
 The project needs an .env file - it contains secret incredentials or such which should not be contained into the code.
 
-A basic .env file is created automatically, when calling :doc:`./local_setup.py`:
+A basic .env file is created automatically, when calling ``python local_setup.py``:
 
 The following entries are needed::
 

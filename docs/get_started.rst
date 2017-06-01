@@ -8,8 +8,9 @@ This template is used for Saas applications.
 
 It is supposed to work for User-tenant-applications. The client can choose to register only one tenant (and all user registrations work for this one) or to add several tenants (adminstrators / billed partners of a platform), which can add users on their own.
 
-Users
+The Package provides an backend with Restful API endpoints. The admin is only for system operators. It needs an Javascript frontend for user and tenants.
 
+Users
 * need to be activated by the tenant.
 * can edit their profile informations.
 * can add comments to other users (or other objects in the system).

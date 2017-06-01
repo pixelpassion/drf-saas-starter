@@ -53,7 +53,7 @@ def build():
 
 @task
 def test():
-    local('python manage.py test')
+    local('py.test')
 
 
 @task
@@ -87,7 +87,7 @@ def test():
 @task
 def coverage():
     """ Run coverage """
-    local('coverage run manage.py test')
+    local('coverage py.test')
     local('coverage html')
 
 
@@ -103,7 +103,6 @@ def update():
     local('pip install -r requirements/local.txt')
     local('python manage.py migrate')
 
-
 @task
 def pull_and_update(branch="master"):
     local("git checkout %s" % branch)
@@ -115,15 +114,6 @@ def pull_and_update(branch="master"):
 def push_to_heroku():
     local("git push heroku master")
     local('heroku run "python manage.py migrate" --app einhorn-starter')
-
-
-@task
-def doc():
-    """ Creates the sphinx documnentation for a new developer """
-
-    local('sphinx-apidoc . -o docs/ -f */migrations/*')
-    with lcd("docs"):
-        local('make html')
 
 
 @task
@@ -184,3 +174,12 @@ def pip(update="none"):
 
     print("")
     print("Hint: Use fab print:update to update all requirements!")
+
+@task
+def doc(flag="none"):
+    """ Creates or updated the sphinx documentation  """
+
+    if flag == "autobuild":
+        local("sphinx-autobuild docs/. docs/_build -p 8007")
+    else:
+        local("sphinx-build docs/. docs/_build")

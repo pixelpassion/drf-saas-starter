@@ -1,0 +1,4 @@
+Settings
+============
+
+Lorem ipsum.

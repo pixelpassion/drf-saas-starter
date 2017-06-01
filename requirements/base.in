@@ -7,7 +7,6 @@ psycopg2                    # Database connector
 whitenoise                  # Static file serving
 sendgrid                    # just for testing, we should use django-anymail to be more flexible
 django-allauth==0.30.0      # For user registration, either via email or Open ID Providers
-django-crispy-forms         # Better form handling
 celery                      # Asynchronous tasks
 django-anymail              # Email handling
 raven                       # Error handling

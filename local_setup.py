@@ -42,6 +42,7 @@ class EinhornEnvBuilder(venv.EnvBuilder):
         if self.requirements_path: 
             self.pip_install(context, '-r', self.requirements_path)
 
+
 def create_database(project_name):
 
     try:
@@ -77,21 +78,23 @@ def create_venv(requirements_path):
 
 def create_env_file(project_name): 
     """ Creates an .env file - if one is not existing already"""
-    def generate_secret_key():
-        return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
+    def generate_secret_key(count=50):
+        return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(count)])
 
     env_file_name = ".env"
     env_path = os.path.join(os.getcwd(), env_file_name)
 
     try: 
         with open(env_path, 'x') as env_file: 
-            print("The .env file will be created at: {}".format(env_path))
+            print("The .env file was created: {}".format(env_path))
 
             env_file.write("DEBUG=True\n")
             env_file.write("STAGE=local\n")
             env_file.write("ALLOWED_HOSTS='*'\n")
             env_file.write("DATABASE_URL=postgres:///{}\n".format(project_name))
-            env_file.write("SECRET_KEY='{}'\n".format(generate_secret_key()))
+            env_file.write("REDIS_URL=redis://127.0.0.1:6379\n")
+            env_file.write("SECRET_KEY='{}'\n".format(generate_secret_key(50)))
+            env_file.write("JWT_SECRET='{}'\n".format(generate_secret_key(100)))
 
     except FileExistsError:
         print(".env file already exists. Skipping .env creation")
@@ -99,21 +102,29 @@ def create_env_file(project_name):
 
 def main(argv):
 
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 1:
         print("ERROR: Incorrect number of args!")
-        print("This command takes zero argument exactly:")
-        print("name:   the name of the project to be created")
-        return 1
-    project_name = sys.argv[1]
+
+    # if len(sys.argv) != 2:
+    #     print("ERROR: Incorrect number of args!")
+    #     print("This command takes zero argument exactly:")
+    #     print("name:   the name of the project to be created")
+    #     return 1
+
+    project_name = "einhorn-starter"
+    #project_name = sys.argv[1]
 
     # Maybe some project name validation checking here
 
     requirements_path = os.path.join(os.getcwd(), 'requirements/local.txt')
 
-    try: 
-        create_database(project_name)
-        create_venv(requirements_path)
+    try:
+        # Deactivated because we use Docker
+        #create_database(project_name)
+        #create_venv(requirements_path)
+
 #       setup_docker()
+
         create_env_file(project_name)
     except subprocess.CalledProcessError as e:
         print("Command: {}\nReturn code: {}\n{}\n{}".format(e.cmd, 
@@ -122,14 +133,15 @@ def main(argv):
                                                             e.stderr))
 
     # Everything worked!
+    print("")
     print("Done!")
-    print("")
-    print("")
-    print("Please run:")
-    print("source .venv/bin/activate")
-    print("fab update")
-    print("python manage.py createsuperuser")
-    print("python manage.py runserver")
+    # print("")
+    # print("")
+    # print("Please run:")
+    # print("source .venv/bin/activate")
+    # print("fab update")
+    # print("python manage.py createsuperuser")
+    # print("python manage.py runserver")
     return 0
 
 

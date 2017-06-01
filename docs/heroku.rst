@@ -81,7 +81,7 @@ Heroku takes care of SSL automatically for paid dynos. Check the [anncouncement]
 
 Enable certificates for an old app (it is automatically activated for old ones)::
 
-    heroku certs:auto:enable -a cool-new-app                    # Only needed for already existing apps
+    heroku certs:auto:enable -a cool-new-app
 
 Add a domain::
 

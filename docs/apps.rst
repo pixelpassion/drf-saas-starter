@@ -1,4 +1,4 @@
-Apps
+Integrated apps
 ============
 
 django-saas-starter ships with some apps::
@@ -19,33 +19,33 @@ django-saas-starter ships with some apps::
 API
 -----------------------------------------
 
-The API app does not have models, so its not needed in INSTALLED_APPS.
+The API app does not have models, so its not included in INSTALLED_APPS.
 
 The API provides functionality for the django-rest-framework integration:
-* Feature 1
-* Feature 2
+* Sign in and Sign up for tenants and users.
+* Password reset / forget endpoints
+* Users listing / details with comments & activation-stream Endpoints
+* A notification endpoint.
 
 User
 -----------------------------------------
 
 A customer user with some special features:
 
-* Feature 1
-* Feature 2
+* E-Mail required for sign up / sign in
 
-Fore more informations read :doc:`users`::
-
+Fore more informations read :doc:`users`:
 
 Tenants
 -------
 
+Handling for multi-tenancy. It takes care, that a user belongs to one or many tenants.
 
-Handling for multi-tenancy. It takes care, that a user belongs to one or many tenants
+* An registration for users within a tenant
+* The possiblity for invites by a tenant
+* Tenant Middleware for accessing tenant resources
 
-settings in :doc:`settings.py`::
-    TENANT_ROOT_SITE_ID=1      # What Site is used as a root domain for given subdomains?
-
-Fore more informations read :doc:`users`::
+Fore more informations read :doc:`users`:
 
 
 Mails
@@ -57,7 +57,7 @@ Handling of mails. It has some features:
 * Saving mails to the database
 * Use of dynamic mail templates
 
-Fore more informations read :doc:`email`::
+Fore more informations read :doc:`email`:
 
 
 Comments

@@ -4,44 +4,57 @@ Docker
 Local development
 --------------------
 
-### Download & install the Docker Community edition
-
+Download & install the Docker Community edition:
 * https://www.docker.com/community-edition
 
+Build and start the containers::
 
-```
-$ docker-compose build     # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
-$ docker-compose up        # Build the containers (Django, Worker, Postgres DB, Redis, Mailhog)
+    $ docker-compose build
+    $ docker-compose up
 
-```
 
 It will start different services locally.
 
-* Django: http://localhost:8000
-* Redis: rediscache://127.0.0.1:6379 (used for caching and django-channels)
-* Redis Browser: http://localhost:8019/ (a simple Key/Value browser to debug Redis)
-* Mailhog: http://localhost:8025 (a simple local mailserver for debugging mails)
-* PostgreSQL database: postgres://postgres@localhost/einhorn_starter (can be used as a database, if set as a DATABASE_URL)
-* RabbitMQ Management: http://localhost:15672/ (Management for RabbitMQ - for asynchronous tasks handling with Celery)
+ * ``Django``: The webapplication itself (http://localhost:8000)
+ * ``Documentation``: Automated Sphinx documentation (http://localhost:8007)
+ * ``Mailhog``: A simple local mailserver for debugging mails (http://localhost:8025)
+ * ``Postgres``: The used database, is used in DATABASE_URL (postgres://postgres@localhost/einhorn_starter)
+ * ``Redis``: Key-Value store for caching & channels (localhost:6379)
+ * ``Redis Browser``: For debugging Redis key/values (http://localhost:8019/)
+ * ``RabbitMQ Management``: For monitoring & debugging RabbitMQ, used for :doc:`celery` (http://localhost:15672)
+ * A :doc:`channels` worker
+ * A :doc:`celery` worker
+
+It is possible to start single services (e.g. if you have your own Django setup and only need a particular service)::
+
+    $ docker-compose up redis
 
 
-
-
-
-
-You can use the Docker shell to start manage.py commands:
-
-```
-$ docker-compose run django python manage.py migrate
-$ docker-compose run django python manage.py createsuperuser
-```
-
-
-
-
-Production
+Accessing containers
 --------------------
 
-not used for now.
+For migrations run::
 
+    $ docker-compose run django python manage.py migrate
+
+For the creation of a superuser run::
+
+    $ docker-compose run django python manage.py createsuperuser
+
+You can access the Python shell::
+
+    $ docker-compose run django python manage.py shell_plus
+
+
+Also you can access the bash command line of the docker container::
+
+    $ docker-compose run django bash
+
+    (you need to type 'exit' to exit the bash) TODO?
+
+
+Use in production
+--------------------
+
+The docker files can be used to be deployed into production. This is unsupported right now in favor of Heroku.
 

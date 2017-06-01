@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
--e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest-env-running-before-django-settings
+-e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest_env
 alabaster==0.7.10         # via sphinx
 amqp==2.1.4
 appnope==0.1.0            # via ipython
@@ -136,6 +136,7 @@ simplejson==3.10.0
 six==1.10.0
 snowballstemmer==1.2.1    # via sphinx
 sphinx-autobuild==0.6.0
+sphinx-rtd-theme==0.2.4
 sphinx==1.6.2
 sphinxcontrib-websupport==1.0.1  # via sphinx
 sqlparse==0.2.3

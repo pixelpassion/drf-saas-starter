@@ -34,6 +34,7 @@ def admin_settings(request):
         'MAILHOG_MANAGEMENT_URL': settings.MAILHOG_MANAGEMENT_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
         'SENTRY_MANAGEMENT_URL':  settings.SENTRY_MANAGEMENT_URL,
+        'SPHINX_DOCUMENTATION_URL': settings.SPHINX_DOCUMENTATION_URL,
         'PROJECT_NAME': settings.PROJECT_NAME,
         'django_version': django.get_version(),
         'python_version': python_version,

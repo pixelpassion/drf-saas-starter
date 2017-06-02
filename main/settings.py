@@ -97,7 +97,6 @@ INSTALLED_APPS = [
     'apps.tenants',
     'apps.users.apps.UsersConfig',
     'apps.mails',
-    'apps.htmltopdf',
     'apps.comments.apps.CommentsConfig',
 
     # API & Authentication

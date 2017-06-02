@@ -25,8 +25,6 @@ urlpatterns = [
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
 
-    url(r'^htmltopdf/', include('apps.htmltopdf.urls')),
-
     # TODO: The url structure of nyt should fit into our /api/ structure
     url(r'^nyt/', get_pattern()),
 

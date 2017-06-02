@@ -92,7 +92,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/sphinx/Dockerfile
-    command: sphinx-autobuild docs/. docs/_build -p 8007
+    command: sphinx-autobuild docs/. docs/_build -H 0.0.0.0 -p 8007
     volumes:
       - .:/app
     ports:

@@ -87,6 +87,17 @@ services:
     links:
       - redis
 
+  sphinx-autobuild:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/sphinx/Dockerfile
+    command: sphinx-autobuild docs/. docs/_build -H 0.0.0.0 -p 8007
+    volumes:
+      - .:/app
+    ports:
+      - "8007:8007"
+      
 #  celeryworker:
 #    build:
 #      context: .

@@ -66,7 +66,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Lets cache some things
 REDIS_URL = env.str('REDIS_URL', default=None)
-CACHING = env.bool('CACHING', default=True)
+CACHING = env.bool('CACHING', default=False)
 
 if REDIS_URL and CACHING:
 
@@ -554,8 +554,9 @@ SWAGGER_SETTINGS = {
 PROJECT_NAME = env.str('PROJECT_NAME', default='Untitled Project')
 
 SENTRY_MANAGEMENT_URL = env.str('SENTRY_MANAGEMENT_URL', default="#")
-MAILHOG_MANAGEMENT_URL = env.str('MAILHOG_MANAGEMENT_URL', default="#")
-RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="#")
+MAILHOG_MANAGEMENT_URL = env.str('MAILHOG_MANAGEMENT_URL', default="http://localhost:8025")
+RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="http://localhost:15672")
+SPHINX_DOCUMENTATION_URL = env.str('SPHINX_DOCUMENTATION_URL', default="http://localhost:8007")
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",
@@ -575,5 +576,8 @@ ALLOWED_EMAIL_DOMAINS = [
 ]
 
 DEFAULT_PROTOCOL = env.str('DEFAULT_PROTOCOL', default='https')
+
+if STAGE == 'local' or STAGE == 'testing':
+    DEFAULT_PROTOCOL = 'http'
 
 TENANT_ROOT_SITE_ID = env.int('TENANT_ROOT_SITE_ID', default=SITE_ID)

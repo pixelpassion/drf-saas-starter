@@ -1,4 +1,5 @@
 import factory
+from allauth.account.models import EmailAddress
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -9,3 +10,12 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'users.User'
         django_get_or_create = ('username', )
+
+
+class VerifiedUserFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+    email = factory.LazyAttribute(lambda a: a.user.email)
+    verified = True
+
+    class Meta:
+        model = EmailAddress

@@ -173,5 +173,7 @@ def on_user_login(sender, **kwargs):
 @receiver(user_logged_out)
 def on_user_logout(sender, **kwargs):
     user = kwargs.get('user')
-    user.signed_in = None
-    user.save()
+    # Do not process anonymous users
+    if user:
+        user.signed_in = None
+        user.save()

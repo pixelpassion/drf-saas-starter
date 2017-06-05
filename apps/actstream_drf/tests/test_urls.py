@@ -4,7 +4,7 @@ from django.urls import resolve, reverse
 from apps.users.tests.factories import UserFactory
 
 
-class TestURLs(TestCase):
+class TestActivitiesURLs(TestCase):
     """Test whether the the URLs for activities of users can be resolved and reversed.
 
     This only works if the integration with user has been made.

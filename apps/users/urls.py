@@ -4,6 +4,8 @@ from django.conf.urls import include, url
 
 from .views import UserViewSet
 
+app_name = 'apps.users'
+
 # # Here the comments and activity is added manually by including them under the detail view.
 #
 # urlpatterns = [
@@ -11,7 +13,7 @@ from .views import UserViewSet
 #     url(
 #         regex=r'^$',
 #         view=UserViewSet.as_view({'get': 'list'}),
-#         name='list'
+#         name='user-list'
 #     ),
 #
 #     url(
@@ -20,7 +22,7 @@ from .views import UserViewSet
 #             url(
 #                 regex=r'^$',
 #                 view=UserViewSet.as_view({'get': 'retrieve'}),
-#                 name='detail'
+#                 name='user-detail'
 #             ),
 #             url(
 #                 regex=r'^comments/$',

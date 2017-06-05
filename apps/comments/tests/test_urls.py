@@ -4,7 +4,7 @@ from django.urls import resolve, reverse
 from apps.users.tests.factories import UserFactory
 
 
-class TestURLs(TestCase):
+class TestCommentsURLs(TestCase):
     """Test whether the the URLs for comments on users can be resolved and reversed.
 
     This only works if the integration with user has been made.

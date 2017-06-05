@@ -23,8 +23,6 @@ urlpatterns = [
     # url(r'^account-confirm-email/(?P<key>[-:\w]+)/$', TemplateView.as_view(),
     #     name='account_confirm_email'),
 
-    url(r"^confirm-email/$", email_verification_sent,
-        name="account_email_verification_sent"),
-    url(r"^confirm-email/(?P<key>[-:\w]+)/$", VerifyEmailView.as_view(),
-        name="account_confirm_email"),
+    url(r'^confirm-email/$', email_verification_sent, name='account_email_verification_sent'),
+    url(r'^confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(), name='account_confirm_email'),
 ]

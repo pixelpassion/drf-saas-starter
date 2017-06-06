@@ -20,8 +20,20 @@ dependencies:
     - pip install coverage pytest-django pytest-cov factory_boy
 test:
   pre:
-    - ./bin/circleci_wait_for_redis.sh
     - python manage.py collectstatic --noinput
+    # https://discuss.circleci.com/t/how-to-run-redis-3-2/5815/5
+    - sudo service redis-server stop
+    - >
+      cd ~ && if [ ! -d "redis-3.2.8" ]; then
+        wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+        tar xzf redis-3.2.8.tar.gz
+        cd redis-3.2.8 && make;
+      fi
+    - cd ~/redis-3.2.8 && sudo make install
+    - sudo sed -i 's/bin/local\/bin/g' /etc/init/redis-server.conf
+    - sudo service redis-server start
+  cache_directories:
+    - ~/redis-3.2.8
   override:
     - py.test --cov-branch --cov
     - coverage html

@@ -20,6 +20,7 @@ dependencies:
     - pip install coverage pytest-django pytest-cov factory_boy
 test:
   pre:
+    - ./bin/circleci_wait_for_redis.sh
     - python manage.py collectstatic --noinput
   override:
     - py.test --cov-branch --cov

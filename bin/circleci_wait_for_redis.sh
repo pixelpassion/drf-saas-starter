@@ -7,3 +7,5 @@ until bash -c "sudo service redis-server status"; do
   bash -c "sudo service redis-server start"
   sleep 1
 done
+
+exit 0

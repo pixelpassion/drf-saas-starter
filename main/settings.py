@@ -65,18 +65,16 @@ DATABASES = {
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Lets cache some things
-REDIS_URL = env.str('REDIS_URL', default=None)
+REDIS_URL = env.str('REDIS_URL')
 CACHING = env.bool('CACHING', default=False)
 
-if REDIS_URL and CACHING:
-
-    CACHES = {
-        'default': {
-            'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': '{}/0'.format(REDIS_URL),
-            'TIMEOUT': env.int('CACHE_TIMEOUT', default=86400),
-        }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': '{}/0'.format(REDIS_URL),
+        'TIMEOUT': env.int('CACHE_TIMEOUT', default=86400),
     }
+}
 
 
 ########################################################################################################################
@@ -232,9 +230,7 @@ if ON_HEROKU:
         'release': GIT_BRANCH
     }
 
-    if CACHES:
-        CACHES['default']['KEY_PREFIX'] = "{}-{}".format(HEROKU_APP_NAME, HEROKU_RELEASE_VERSION)
-
+    CACHES['default']['KEY_PREFIX'] = "{}-{}".format(HEROKU_APP_NAME, HEROKU_RELEASE_VERSION)
 
 
 ########################################################################################################################
@@ -435,6 +431,7 @@ if ON_HEROKU:
     }
 
     EMAIL_BACKEND = env('EMAIL_BACKEND', default='anymail.backends.sendgrid.SendGridBackend')
+
 
 else:
 

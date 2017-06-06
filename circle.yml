@@ -9,7 +9,7 @@ machine:
     SECRET_KEY: 'dx8hsu_#i%r4b##9q)-$1negl5@gw&^ddof@w!14%1y4=v6o-3'
     ALLOWED_HOSTS: '*'
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
-    REDIS_URL: redis://127.0.0.1:6391
+    REDIS_URL: redis://127.0.0.1:6379
     CLOUDAMQP_URL: amqp://localhost:5672
     EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 dependencies:

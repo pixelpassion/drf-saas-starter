@@ -22,15 +22,8 @@ RUN pip install --upgrade pip  \
 # 6 Copy the project folder
 COPY . /app/
 
-# 7 Copy the starting script
-
-COPY ./compose/django/start_daphne.sh /start_daphne.sh
-
-# 8 Set the rights to access the files
-RUN sed -i 's/\r//' /start_daphne.sh \
-    && chmod +x /start_daphne.sh \
-    && chown django /start_daphne.sh \
-    && chown -R django /app
+# 7 Set the rights to access the files
+RUN chown -R django /app
 
 # 9 Set the working dir
 WORKDIR /app

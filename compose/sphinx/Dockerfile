@@ -1,17 +1,13 @@
-FROM python:3.6.1
+FROM python:3.6.1-slim
 
 ENV PYTHONUNBUFFERED 1
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
-COPY ./requirements /requirements
+COPY ./requirements/documentation.txt /requirements/documentation.txt
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip \
+    && pip install -r /requirements/documentation.txt
 
-RUN pip install -r /requirements/local.txt \
-    && groupadd -r django \
-    && useradd -r -g django django
-
-COPY . /app
-RUN chown -R django /app
+COPY ./docs/ /app
 
 WORKDIR /app

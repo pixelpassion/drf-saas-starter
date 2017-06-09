@@ -1,14 +1,18 @@
 Documentation
 ============
 
-Local documentation
+Sphinx documentation
 --------------------
 
-We are using Sphinx to create the (this) documentation.
+We are using `Sphinx <http://sphinx-doc.org/>`_ to create the (this) documentation.
+
+
+
 
 The Documentation will be served under http://localhost:15672 as soon as :doc:`docker` is started.
 
-The files for creation are under ``docs/``, the config file for `Sphinx <http://sphinx-doc.org/>`_ is called ``conf.py``
+The files for creation are under ``docs/``, the config file for Sphinx is called ``conf.py``. You can check out the `cheatsheet <http://matplotlib.org/sampledoc/cheatsheet.html>`_ for informations how to format the ``.rst``-Files.
+
 
 If needed, you can manually update it with::
 
@@ -16,9 +20,11 @@ If needed, you can manually update it with::
     fab doc:autobuild      # Starts the sphinx-autobuild server
 
 
-Swagger
+Swagger API Docs
 --------------------
 
 Swagger is used to print an API documentation, accessible within http://localhost:8000/api/docs.
 
 You need to be signed in to access all endpoints.
+
+

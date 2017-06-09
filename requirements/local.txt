@@ -5,10 +5,8 @@
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
 -e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest_env
-alabaster==0.7.10         # via sphinx
 amqp==2.1.4
 appnope==0.1.0            # via ipython
-argh==0.26.2              # via sphinx-autobuild, watchdog
 argon2-cffi==16.3.0
 asgi-redis==1.3.0
 asgiref==1.1.1
@@ -17,14 +15,12 @@ astroid==1.5.2            # via pylint, pylint-celery, pylint-plugin-utils
 attrs==16.3.0
 autobahn==17.5.1
 automat==0.5.0
-babel==2.4.0              # via sphinx
 billiard==3.5.0.2
 celery==4.0.2
 cffi==1.10.0
 channels==1.1.3
 click==6.7                # via pip-tools
 constantly==15.1.0
-contextlib2==0.5.5
 coreapi==2.3.0
 coreschema==0.0.4
 coverage==4.4.1
@@ -40,7 +36,6 @@ django-anymail==0.9
 django-channels-panel==0.0.5
 django-cors-headers==2.0.2
 django-coverage-plugin==1.5.0
-django-crispy-forms==1.6.1
 django-debug-toolbar==1.8
 django-environ==0.4.3
 django-extensions==1.7.9
@@ -53,7 +48,6 @@ django-tinymce==2.6.0
 django==1.10.7
 djangorestframework-jwt==1.10.0
 djangorestframework==3.6.3
-docutils==0.13.1          # via sphinx
 fabric3==1.13.1.post1
 factory-boy==2.8.1
 faker==0.7.12             # via factory-boy
@@ -64,7 +58,6 @@ hpack==3.0.0
 html2text==2016.9.19
 hyperframe==5.1.0
 idna==2.5
-imagesize==0.7.1          # via sphinx
 incremental==16.10.1
 ipython-genutils==0.2.0   # via traitlets
 ipython==6.0.0
@@ -74,7 +67,6 @@ jedi==0.10.2              # via ipython
 jinja2==2.9.6
 kombu==4.0.2
 lazy-object-proxy==1.3.1  # via astroid
-livereload==2.5.1         # via sphinx-autobuild
 lxml==3.7.3
 markupsafe==1.0
 mccabe==0.6.1             # via flake8, pylint
@@ -83,11 +75,9 @@ oauthlib==2.0.2
 openapi-codec==1.3.1
 packaging==16.8
 paramiko==2.1.2           # via fabric3
-pathtools==0.1.2          # via sphinx-autobuild, watchdog
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
 pip-tools==1.9.0
-port_for==0.3.1           # via sphinx-autobuild
 premailer==3.0.0
 priority==1.3.0
 prompt-toolkit==1.0.14    # via ipython
@@ -99,7 +89,7 @@ pyasn1==0.2.3
 pycodestyle==2.3.1        # via flake8
 pycparser==2.17
 pyflakes==1.5.0           # via flake8
-pygments==2.2.0           # via ipython, sphinx
+pygments==2.2.0           # via ipython
 pyjwt==1.5.0
 pylint-celery==0.3
 pylint-common==0.2.5
@@ -118,8 +108,6 @@ python-dateutil==2.6.0    # via faker
 python-http-client==2.2.1
 python3-openid==3.1.0
 pytz==2017.2
-pyyaml==3.12              # via sphinx-autobuild, watchdog
-raven==6.0.0
 redis==2.10.5
 requests-oauthlib==0.8.0
 requests==2.14.2
@@ -128,21 +116,13 @@ service-identity==17.0.0
 simplegeneric==0.8.1      # via ipython
 simplejson==3.10.0
 six==1.10.0
-snowballstemmer==1.2.1    # via sphinx
-sphinx-autobuild==0.6.0
-sphinx-rtd-theme==0.2.4
-sphinx==1.6.2
-sphinxcontrib-websupport==1.0.1  # via sphinx
-sqlparse==0.2.3
+sqlparse==0.2.3           # via django-debug-toolbar
 termcolor==1.1.0          # via pytest-sugar
-tinycss==0.4
-tornado==4.5.1            # via livereload, sphinx-autobuild
 traitlets==4.3.2          # via ipython
 twisted[http2,tls]==17.1.0
 txaio==2.7.1
 uritemplate==3.0.0
 vine==1.1.3
-watchdog==0.8.3           # via sphinx-autobuild
 wcwidth==0.1.7            # via prompt-toolkit
 werkzeug==0.12.1
 whitenoise==3.3.0

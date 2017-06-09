@@ -5,6 +5,8 @@ django-debug-toolbar
 Werkzeug
 Fabric3
 ipython
+django-channels-panel       # A panel for debugging django-channels with debugtoolbar
+django-extensions           # Django extensions (should be in local.txt after done with testing)
 
 # PIP handling
 yolk3k
@@ -32,7 +34,3 @@ pylint
 pylint-celery
 pylint-common
 pylint-django
-
-sphinx
-sphinx-autobuild
-sphinx_rtd_theme

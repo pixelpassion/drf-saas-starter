@@ -4,16 +4,23 @@ Testing
 py.test
 --------------------
 
-We are using py.test for local tests
+We are using py.test for local tests::
 
-Some useful commands:
+    $ docker-compose run --rm django py.test
 
-```
-$ pytest                                                            # Runs all tests
-$ pytest apps/tenants/tests/test_api.py                             # Runs the tests in the file
-$ pytest apps/tenants/tests/test_api.py::SignupApiTests             # Runs the tests of the specified class
-$ pytest -k test_correct_signup_data                                # Runs the given test
-```
+The ``--rm`` remove the container after run. If you get a message ``"test_postgres" can not be created`` or such it could be possible, that you have another container with the given command running.
+
+Run only tests in one file::
+
+    $ docker-compose run --rm django py.test apps/tenants/tests/test_api.py
+
+Run tests of a specified class::
+
+    $ docker-compose run --rm django py.test apps/tenants/tests/test_api.py::SignupApiTest
+
+Run exactly one given test::
+
+    $ docker-compose run --rm django py.test -k test_correct_signup_data
 
 
 Tests

@@ -35,8 +35,8 @@ The following entries are needed::
     DEBUG=True
     STAGE=local
     ALLOWED_HOSTS='*'
-    DATABASE_URL=postgres:///einhorn-starter
-    REDIS_URL=redis://127.0.0.1:6379
+    DATABASE_URL=postgres://postgres@postgres/postgres
+    REDIS_URL=redis://redis:6379
     SECRET_KEY='<a generated secret>'
     JWT_SECRET='<a generated secret>'
 
@@ -45,9 +45,7 @@ requirements
 
 We are using pip-compile for management of requirements.
 
-If you want to add new requirements, you need to add them to base.in (the package is needed in development & production) or local.in (only locally needed) or production.in (only production use).
-
-Run the following command afterwards to update the base.txt, local.txt and production.txt files::
+If you want to add new requirements, you need to add them to one of the ``.in``files, the `.txt` files are generated with the following command::
 
     fab pip
 
@@ -55,6 +53,13 @@ Run the following command afterwards to update the base.txt, local.txt and produ
 Update requirements to the newest version, only excluding pinned packages::
 
     fab pip:update
+
+There are different requirement files:
+
+* base.txt (for packages needed in development & production)
+* local.txt (only locally needed)
+* production.txt (only production use)
+* documentation.txt (For the Sphinx Docker container)
 
 
 Pycharm
@@ -70,7 +75,7 @@ Read more informations regarding :doc:`testing`.
 Mailhog
 --------------------
 
-We are using Mailhog as a local mailserver in development. It receives mails at localhost:1025 and provides an mail client, served under https://localhost:8025/ (when using docker-compose).
+We are using `Mailhog <https://github.com/mailhog/MailHog>`_ as a local mailserver in development. It receives mails at localhost:1025 and provides an mail client, served under https://localhost:8025/ (when using docker-compose).
 
 
 Fabfile

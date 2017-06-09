@@ -1,4 +1,4 @@
-# For explanations / licenses check the documentation (docs/django_packages.md)
+# For explanations / licenses check the documentation (http://127.0.0.1:8007/packages.html)
 
 # Django related
 Django<1.11                 # Basics and boilerplate stuff
@@ -9,9 +9,7 @@ sendgrid                    # just for testing, we should use django-anymail to 
 django-allauth==0.30.0      # For user registration, either via email or Open ID Providers
 celery                      # Asynchronous tasks
 django-anymail              # Email handling
-raven                       # Error handling
 django-premailer            # Inline CSS in HTML email templates
-django-extensions           # Django extensions (should be in local.txt after done with testing)
 djangorestframework         # RESTful API
 django-rest-swagger         # Documentation for the API
 django-cors-headers         # Adds CORS (Cross-Origin Resource Sharing) headers to responses
@@ -22,10 +20,7 @@ django-redis                # Redis handling
 django-tinymce              # HTMLField for models
 html2text                   # Convert HTML to Markdown
 django-nyt==1.0b3           # Notification system (needs to be pinned because --pre is not working)
-
-#### Still for testing ####
-channels
-django-channels-panel
+channels                    # Django channels
 Twisted[tls,http2]          # Twisted with TLS & https2 support
-asgi-redis
-django-activity-stream
+asgi-redis                  # ASGI handling with Redis
+django-activity-stream      # Use of activity streams for objects

@@ -1,7 +1,7 @@
 django-saas-starter
 ===========================================================
 
-A boilerplate for production SaaS apps. The goal is providing a boilerplate package for modern SaaS web applications - including the basic stuff, they often need.
+A boilerplate for building production SaaS apps. The goal is providing a boilerplate package for modern SaaS web applications - including the basic stuff, they often need.
 
 .. toctree::
    :maxdepth: 1

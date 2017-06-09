@@ -78,10 +78,6 @@ def commit_and_push(message):
     push()
 
 
-@task
-def test():
-    """ Run tests"""
-    local('python manage.py test')
 
 
 @task
@@ -162,24 +158,6 @@ def licenses():
 def pip(update="none"):
     """ Updates the pip requirements """
 
-    if update == "update" or update == "upgrade":
-        update_flag ="-U "
-    else:
-        update_flag = ""
+    print("DEPRECATED, use make pip-compile, make pip-update or make pip-install")
 
-    local(f"pip-compile {update_flag}--output-file requirements/base.txt requirements/base.in")
-    local(f"pip-compile {update_flag}--output-file requirements/local.txt requirements/local.in")
-    local(f"pip-compile {update_flag}--output-file requirements/production.txt requirements/production.in")
-    local("pip install -r requirements/local.txt")
 
-    print("")
-    print("Hint: Use fab print:update to update all requirements!")
-
-@task
-def doc(flag="none"):
-    """ Creates or updated the sphinx documentation  """
-
-    if flag == "autobuild":
-        local("sphinx-autobuild docs/. docs/_build -p 8007")
-    else:
-        local("sphinx-build docs/. docs/_build")

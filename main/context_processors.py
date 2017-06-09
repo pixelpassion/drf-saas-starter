@@ -35,6 +35,7 @@ def admin_settings(request):
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
         'SENTRY_MANAGEMENT_URL':  settings.SENTRY_MANAGEMENT_URL,
         'SPHINX_DOCUMENTATION_URL': settings.SPHINX_DOCUMENTATION_URL,
+        'REDIS_BROWSER_MANAGEMENT_URL': settings.REDIS_BROWSER_MANAGEMENT_URL,
         'PROJECT_NAME': settings.PROJECT_NAME,
         'django_version': django.get_version(),
         'python_version': python_version,

@@ -432,12 +432,11 @@ if ON_HEROKU:
 
     EMAIL_BACKEND = env('EMAIL_BACKEND', default='anymail.backends.sendgrid.SendGridBackend')
 
-
 else:
 
     EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
     EMAIL_PORT = env("EMAIL_PORT", default=1025)
-    EMAIL_HOST = env("EMAIL_HOST", default='localhost')
+    EMAIL_HOST = env("EMAIL_HOST", default='mailhog')
     EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='')
     EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default='')
     EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=False)
@@ -554,6 +553,7 @@ SENTRY_MANAGEMENT_URL = env.str('SENTRY_MANAGEMENT_URL', default="#")
 MAILHOG_MANAGEMENT_URL = env.str('MAILHOG_MANAGEMENT_URL', default="http://localhost:8025")
 RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="http://localhost:15672")
 SPHINX_DOCUMENTATION_URL = env.str('SPHINX_DOCUMENTATION_URL', default="http://localhost:8007")
+REDIS_BROWSER_MANAGEMENT_URL = env.str('REDIS_BROWSER_MANAGEMENT_URL', default="http://localhost:8019")
 
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': "table,spellchecker,paste,searchreplace",

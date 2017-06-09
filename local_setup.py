@@ -53,7 +53,6 @@ def create_database(project_name):
         print("Database '{}' was created.".format(project_name))
 
 
-
 def create_venv(requirements_path):
     """ Creates venv and pip installs everything in the environment """
 
@@ -91,8 +90,8 @@ def create_env_file(project_name):
             env_file.write("DEBUG=True\n")
             env_file.write("STAGE=local\n")
             env_file.write("ALLOWED_HOSTS='*'\n")
-            env_file.write("DATABASE_URL=postgres:///{}\n".format(project_name))
-            env_file.write("REDIS_URL=redis://127.0.0.1:6379\n")
+            env_file.write("DATABASE_URL=postgres://postgres@postgres/postgres")
+            env_file.write("REDIS_URL=redis://redis:6379\n")
             env_file.write("SECRET_KEY='{}'\n".format(generate_secret_key(50)))
             env_file.write("JWT_SECRET='{}'\n".format(generate_secret_key(100)))
 

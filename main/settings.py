@@ -241,7 +241,7 @@ if ON_HEROKU:
 
 cssutils.log.setLevel(logging.ERROR)
 
-if ON_HEROKU or STAGE in ['test', 'circleci']:
+if ON_HEROKU:
 
     # Heroku expects to receive error messages on STDERR, the following logging takes care of this
     LOGGING = {
@@ -282,6 +282,33 @@ if ON_HEROKU or STAGE in ['test', 'circleci']:
             },
             'sentry.errors': {
                 'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+        },
+    }
+
+elif STAGE in ['test', 'circleci']:
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s '
+                          '%(process)d %(thread)d %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            }
+        },
+        'loggers': {
+            'django.db.backends': {
+                'level': 'ERROR',
                 'handlers': ['console'],
                 'propagate': False,
             },

@@ -1,15 +1,14 @@
+from datetime import datetime
+
 from main.mixins import UUIDMixin
 
-from django.conf import settings
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator
-from django.core.urlresolvers import reverse
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.dispatch import receiver
-from django.utils import six, timezone
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from datetime import datetime
 
 from apps.tenants.models import Tenant
 
@@ -33,9 +32,7 @@ class UserManager(BaseUserManager):
             checked_username = "{}{}".format(wanted_username, counter)
 
     def _create_user(self, email, password, username=None, **extra_fields):
-        """
-        Creates and saves a User with the given username, email and password.
-        """
+        """Create and save a User with the given username, email and password."""
         if email is None:
             raise ValueError('The email must be set')
 
@@ -75,12 +72,15 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
+    email = models.EmailField(
+        _('email address'),
+        help_text=_("Email of the user"),
+        null=False,
+        blank=False,
+        unique=True
+    )
 
-    email = models.EmailField(_('email address'),
-                              help_text=_("Email of the user"),
-                              null=False, blank=False, unique=True)
-
-    username_validator = UnicodeUsernameValidator() if six.PY3 else ASCIIUsernameValidator()
+    username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
         _('username'),
@@ -93,16 +93,20 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         },
     )
 
-    first_name = models.CharField(_('first name'),
-                                  help_text=_("First Name of the user"),
-                                  max_length=30,
-                                  blank=True
-                                  )
-    last_name = models.CharField(_('last name'),
-                                 max_length=30,
-                                 blank=True,
-                                 help_text=_("Last Name of the user")
-                                 )
+    first_name = models.CharField(
+        _('first name'),
+        help_text=_("First Name of the user"),
+        max_length=30,
+        blank=True
+    )
+
+    last_name = models.CharField(
+        _('last name'),
+        max_length=30,
+        blank=True,
+        help_text=_("Last Name of the user")
+    )
+
     activation_token = models.CharField(_('activation_token'),
                                         help_text=_("The activation token of the user"),
                                         max_length=100, blank=True)
@@ -122,13 +126,17 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         help_text=_('Designates whether the user can log into this admin site.'),
     )
 
-    #is_instance_admin = models.BooleanField...
+    # is_instance_admin = models.BooleanField...
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
     signed_in = models.DateTimeField(_('Signed in'), help_text=_("Is the user signed in?"), null=True)
 
-    tenants = models.ManyToManyField(Tenant, help_text=_("Where is the user registered?"), through='UserTenantRelationship')
+    tenants = models.ManyToManyField(
+        Tenant,
+        help_text=_("Where is the user registered?"),
+        through='UserTenantRelationship'
+    )
 
     USERNAME_FIELD = 'email'
 

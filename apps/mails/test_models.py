@@ -26,13 +26,13 @@ class CreateMailTest(TestCase):
         self.valid_from_address = "mail-test@mailtest.com"
         self.valid_subject = "Hello there {{ name }}"
         self.valid_context = {
-            'name' : 'Cheryl'
+            'name': 'Cheryl'
         }
 
     def create_mail(self, template=None, context=None, to_address=None,
                     from_address="Default", subject="Default"):
-        """Creates and returns Mail object with default valid fields"""
-        
+        """Create and return Mail object with default valid fields."""
+
         return Mail.objects.create_mail(
             template if template else self.valid_template,
             context if context else self.valid_context,
@@ -40,11 +40,10 @@ class CreateMailTest(TestCase):
             from_address if from_address is not "Default" else self.valid_from_address,
             subject if subject is not "Default" else self.valid_subject
         )
-    
+
     def test_create_mail_with_required_fields_only(self):
-        """Call Mail.objects.create_mail with valid required arguments should succeed
-        """
-        
+        """Call Mail.objects.create_mail with valid required arguments should succeed."""
+
         mail_with_required_fields_only = self.create_mail(from_address=None, subject=None)
 
         # Make sure arguments were recorded correctly
@@ -57,13 +56,12 @@ class CreateMailTest(TestCase):
 
         # Subject should be set to None
         self.assertIsNone(mail_with_required_fields_only.subject)
-        
+
     def test_create_mail_with_optional_fields(self):
-        """Call Mail.objects.create_mail with optional arguments should succeed
-        """
-        
+        """Call Mail.objects.create_mail with optional arguments should succeed."""
+
         mail_with_optional_fields = self.create_mail()
-        
+
         # Make sure arguments were recorded correctly
         self.assertEqual(mail_with_optional_fields.template, self.valid_template)
         self.assertEqual(mail_with_optional_fields.context, self.valid_context)
@@ -73,29 +71,29 @@ class CreateMailTest(TestCase):
 
     def test_create_mail_with_invalid_template(self):
         """Call Mail.objects.create_mail with invalid template should fail."""
-        
+
         with self.assertRaises(ValueError, msg="Invalid template name should raise ValueError"):
             self.create_mail(template="really bad template name")
 
     def test_create_mail_with_invalid_context(self):
         """Call Mail.objects.create_mail with invalid context should fail."""
-        
+
         # Invalid context should raise ValueError
         with self.assertRaises(ValueError, msg="Invalid context should raise ValueError"):
             self.create_mail(context="Not a dictionary")
-    
+
     def test_create_mail_with_invalid_to_address(self):
-        """Call Mail.objects.create_mail with invalid to_address should fail"""
-        
+        """Call Mail.objects.create_mail with invalid to_address should fail."""
+
         with self.assertRaises(ValueError, msg="Invalid to address should raise ValueError"):
             self.create_mail(to_address="invalid email address")
 
     def test_create_mail_with_invalid_from_address(self):
-        """Call Mail.objects.create_mail with invalid from_address should fail"""
-        
+        """Call Mail.objects.create_mail with invalid from_address should fail."""
+
         with self.assertRaises(ValueError, msg="Invalid from address should raise ValueError"):
             self.create_mail(from_address="invalid email address")
-        
+
     def tearDown(self):
         self.valid_template = None
         self.valid_to_address = None
@@ -118,23 +116,25 @@ class SendMailTest(TestCase):
         template.save()
 
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail("test_template", {'name': 'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com')
+        self.mail = Mail.objects.create_mail(
+            "test_template", {'name': 'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com')
 
     def test_send_mail_anymail(self):
-        """Call mail.send() 
+        """Call mail.send().
+
         Make sure mail is actually sent.
         """
         self.mail.send()
 
     def test_send_mail_sendgrid(self):
-        """
-            Call mail.send() using sendgrid API
-            Make sure mail is actually sent.
+        """Call mail.send() using sendgrid API
 
-            This should be mocked later, right now its checking for a 401 HttpError sent by CircleCI
-             because the SENDGRID_API_KEY is wrong in circle.yml
+        Make sure mail is actually sent.
 
-            urllib.error.HTTPError: HTTP Error 401: Unauthorized
+        This should be mocked later, right now its checking for a 401 HttpError sent by CircleCI
+        because the SENDGRID_API_KEY is wrong in circle.yml
+
+        urllib.error.HTTPError: HTTP Error 401: Unauthorized
         """
         with self.assertRaises(HTTPError):
             self.mail.send(sendgrid_api=True)
@@ -156,7 +156,13 @@ class SendMailInfoTest(TestCase):
         template.save()
 
         # Create valid Mail object
-        self.mail = Mail.objects.create_mail("test_template", {'name':'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
+        self.mail = Mail.objects.create_mail(
+            "test_template",
+            {'name': 'Cheryl'},
+            'mailtest@sink.sendgrid.net',
+            'test@example.com',
+            subject="Custom subject"
+        )
 
     def test_mail_with_template_name(self):
 
@@ -166,23 +172,23 @@ class SendMailInfoTest(TestCase):
     def test_mail_with_template_object(self):
 
         template = MailTemplate.objects.get(name="test_template")
-        self.mail = Mail.objects.create_mail(template, {'name':'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
+        self.mail = Mail.objects.create_mail(
+            template, {'name': 'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
 
         # Send the mail and record time sent
         self.mail.send()
 
     def test_send_mail_subject(self):
-        """Check that correct subject is recorded.
-        """
-
+        """Check that correct subject is recorded."""
         self.assertEqual(self.mail.subject, "Custom subject", msg="Mail subject recorded incorrectly")
-    #
-    # def test_send_mail_date(self):
-    #     """Check that correct sent datetime is recorded.
-    #     """
-    #
-    #     self.assertTrue((self.mail.time_sent - timezone.now()) < timedelta(seconds=2), msg="Mail time_sent recorded inaccurately")
-    #
+
+    def test_send_mail_date(self):
+        """Check that correct sent datetime is recorded."""
+        # self.assertTrue(
+        #     (self.mail.time_sent - timezone.now()) < timedelta(seconds=2),
+        #     msg="Mail time_sent recorded inaccurately"
+        # )
+
     def tearDown(self):
         self.mail = None
 
@@ -200,31 +206,29 @@ class MailTemplateTest(TestCase):
         self.context = {'name': 'Cheryl'}
 
     def test_make_subject(self):
-        """Check that the correct subject line is generated.
-        """
-        self.assertEqual(self.mail_template.make_subject(self.context), "Message for Cheryl", msg="Mail template generated incorrect subject")
+        """Check that the correct subject line is generated."""
+        self.assertEqual(
+            self.mail_template.make_subject(self.context),
+            "Message for Cheryl",
+            msg="Mail template generated incorrect subject"
+        )
 
     def test_make_output(self):
-        """Check that the correct html and text output is produced when both templates are provided.
-        """
+        """Check that the correct html and text output is produced when both templates are provided."""
         self.mail_template.text_template = "Hello, {{ name }}!"
         self.mail_template.save()
-        
+
         self.assertInHTML("<p><b>Hello</b>, Cheryl!</p>", self.mail_template.make_output(self.context)['html'])
         self.assertInHTML("Hello, Cheryl!", self.mail_template.make_output(self.context)['text'])
 
     def test_html_to_text(self):
-        """Check that html_to_text() produces correct output.
-        """
-
+        """Check that html_to_text() produces correct output."""
         test_html = "<p><strong>Bold test</strong> and <em>Italics test</p>\n<p>And finally a <a href='https://www.example.com/'>Link test</a>"
         test_expected_output = "**Bold test** and _Italics test\n\nAnd finally a [Link test](https://www.example.com/)\n\n"
         self.assertInHTML(test_expected_output, self.mail_template.html_to_text(test_html), )
-        
+
     def test_make_output_html_only(self):
-        """
-        Check that the correct html and text output is produced when only html template is provided.
-        """
+        """Check that the correct html and text output is produced when only html template is provided."""
         self.assertInHTML("<p><b>Hello</b>, Cheryl!</p>", self.mail_template.make_output(self.context)['html'])
         self.assertInHTML("**Hello**, Cheryl!\n\n", self.mail_template.make_output(self.context)['text'])
 

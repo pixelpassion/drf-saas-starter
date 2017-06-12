@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 
 
 class TenantAccessRequiredMixin(AccessMixin):
-    """ CBV mixin which verifies that the current user is authenticated. """
+    """CBV mixin which verifies that the current user is authenticated."""
 
     def dispatch(self, request, *args, **kwargs):
 

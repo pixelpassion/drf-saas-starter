@@ -1,6 +1,5 @@
 import datetime
 import logging
-import os
 import sys
 
 import cssutils
@@ -212,9 +211,9 @@ if ON_HEROKU:
     # https://devcenter.heroku.com/articles/http-routing#heroku-headers
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SESSION_COOKIE_SECURE = True    # https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_SECURE
-    CSRF_COOKIE_HTTPONLY = True     # https://docs.djangoproject.com/en/1.10/ref/settings/#session-cookie-httponly
-    CSRF_COOKIE_SECURE= True        # https://docs.djangoproject.com/en/1.10/ref/settings/#csrf-cookie-secure
+    SESSION_COOKIE_SECURE = True  # https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SESSION_COOKIE_SECURE
+    CSRF_COOKIE_HTTPONLY = True   # https://docs.djangoproject.com/en/1.10/ref/settings/#session-cookie-httponly
+    CSRF_COOKIE_SECURE = True     # https://docs.djangoproject.com/en/1.10/ref/settings/#csrf-cookie-secure
 
     INSTALLED_APPS += (
         'raven.contrib.django.raven_compat',
@@ -259,7 +258,7 @@ if ON_HEROKU:
         },
         'handlers': {
             'sentry': {
-                'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
+                'level': 'ERROR',  # To capture more than ERROR, change to WARNING, INFO, etc.
                 'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
                 'tags': {'custom-tag': 'x'},
             },
@@ -322,8 +321,8 @@ else:
         'disable_existing_loggers': False,
         'formatters': {
             'verbose': {
-                'format' : "%(asctime)s %(levelname)s - %(filename)s:%(lineno)s %(funcName)s() - %(message)s",
-                'datefmt' : "%d/%b/%Y %H:%M:%S"
+                'format': "%(asctime)s %(levelname)s - %(filename)s:%(lineno)s %(funcName)s() - %(message)s",
+                'datefmt': "%d/%b/%Y %H:%M:%S"
             },
             'simple': {
                 'format': '%(asctime)s %(levelname)s - %(message)s'
@@ -376,7 +375,7 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
     'debug_toolbar.panels.redirects.RedirectsPanel',
-    #'channels_panel.panel.ChannelsDebugPanel',
+    # 'channels_panel.panel.ChannelsDebugPanel',
 ]
 
 ########################################################################################################################
@@ -392,7 +391,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_ADAPTER = 'apps.users.adapters.AccountAdapter'
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
-#ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
 
 EMAIL_VERIFICATION_REDIRECT_URL = env.str('EMAIL_VERIFICATION_REDIRECT_URL', None)
 
@@ -436,7 +435,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
         # optional path for password black list (default path: django/contrib/auth/common-passwords.txt.gz)
         'OPTIONS': {
-            #'password_list_path': '/path/to/passwordBlackList.txt.gz',
+            # 'password_list_path': '/path/to/passwordBlackList.txt.gz',
         }
     },
     {
@@ -501,9 +500,9 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "ROUTING": "main.routing.channel_routing",
-        #"ROUTING": "apps.databinding.databinding.routing.channel_routing",
+        # "ROUTING": "apps.databinding.databinding.routing.channel_routing",
 
-        #"ROUTING": "django_nyt.routing.channel_routing",
+        # "ROUTING": "django_nyt.routing.channel_routing",
         "CONFIG": {
             "hosts": [REDIS_URL],
         }

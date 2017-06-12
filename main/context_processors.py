@@ -1,9 +1,8 @@
-"""
-Updates the context sent to all templates with every request
-"""
+"""Update the context sent to all templates with every request."""
 
-import sys
 import os
+import re
+import sys
 from datetime import datetime
 
 import django
@@ -11,13 +10,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
-import re
 
 User = get_user_model()
 
 
 def admin_settings(request):
-    """Collects settings for the admin"""
+    """Collect settings for the admin."""
 
     python_version = "%s.%s.%s" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
 
@@ -33,7 +31,7 @@ def admin_settings(request):
     ctx = {
         'MAILHOG_MANAGEMENT_URL': settings.MAILHOG_MANAGEMENT_URL,
         'RABBITMQ_MANAGEMENT_URL': settings.RABBITMQ_MANAGEMENT_URL,
-        'SENTRY_MANAGEMENT_URL':  settings.SENTRY_MANAGEMENT_URL,
+        'SENTRY_MANAGEMENT_URL': settings.SENTRY_MANAGEMENT_URL,
         'SPHINX_DOCUMENTATION_URL': settings.SPHINX_DOCUMENTATION_URL,
         'REDIS_BROWSER_MANAGEMENT_URL': settings.REDIS_BROWSER_MANAGEMENT_URL,
         'PROJECT_NAME': settings.PROJECT_NAME,
@@ -68,7 +66,7 @@ def admin_settings(request):
 
     if settings.ON_HEROKU:
         ctx.update({
-            'HEROKU_RELEASE_CREATED_AT':  datetime.strptime(settings.HEROKU_RELEASE_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"),
+            'HEROKU_RELEASE_CREATED_AT': datetime.strptime(settings.HEROKU_RELEASE_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"),
             'HEROKU_RELEASE_VERSION': settings.HEROKU_RELEASE_VERSION,
             'HEROKU_SLUG_COMMIT': settings.HEROKU_SLUG_COMMIT[:8],
             'HEROKU_SLUG_DESCRIPTION': settings.HEROKU_SLUG_DESCRIPTION,

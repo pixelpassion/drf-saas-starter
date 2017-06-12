@@ -33,8 +33,8 @@ import sphinx_rtd_theme
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.coverage']
+              'sphinx.ext.doctest',
+              'sphinx.ext.coverage']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -158,6 +158,3 @@ texinfo_documents = [
      author, 'django-saas-starter', 'Template for Heroku Saas Apps.',
      'Miscellaneous'),
 ]
-
-
-

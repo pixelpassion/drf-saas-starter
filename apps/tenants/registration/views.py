@@ -12,26 +12,21 @@ from ..models import Tenant
 
 
 class TenantRegisterView(RegisterView):
-    """
-        Sign up for a tenant, usually for a product or a Software as a area of the web service.
-     
-        A company / project name and a sub domain are needed.
-    
-        Also the credentials of the first user (the admin) are needed.
-    
-        We can overwrite the view because we are using our own Serializer (given with REST_AUTH_REGISTER_SERIALIZERS)
-    """
+    """Sign up for a tenant, usually for a product or a Software as a area of the web service.
 
+    A company / project name and a sub domain are needed.
+    Also the credentials of the first user (the admin) are needed.
+
+    We can overwrite the view because we are using our own Serializer (given with REST_AUTH_REGISTER_SERIALIZERS)
+    """
     pass
 
 
 class TenantUserRegisterView(RegisterView):
-    """
-    Sign up for the user of the tenant. 
-    
-    When the tenant is registered and activated, users can register for the tenants space.    
-    """
+    """Sign up for the user of the tenant.
 
+    When the tenant is registered and activated, users can register for the tenants space.
+    """
     serializer_class = CreateUserSerializer
 
     def create(self, request, tenant_name=None, *args, **kwargs):
@@ -44,12 +39,18 @@ class TenantUserRegisterView(RegisterView):
             raise Http404
 
         if not site.tenant:
-            return Response({'error_message': _('There is no tenant for this site.')}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error_message': _('There is no tenant for this site.')},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         tenant = site.tenant
 
         if not tenant.is_active:
-            return Response({'error_message': _('Tenant is deactivated, no registration is possible')}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error_message': _('Tenant is deactivated, no registration is possible')},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

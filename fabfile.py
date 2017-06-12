@@ -1,5 +1,4 @@
 import os
-import random
 
 from fabric.api import env, lcd, local, task
 
@@ -37,14 +36,14 @@ def flake8():
 
 @task
 def isort():
-    """Use isort to automatically (re-)order the import statements on the top of files"""
+    """Use isort to automatically (re-)order the import statements on the top of files."""
     with lcd(_relative_to_fabfile()):
         local('isort -rc .')
 
 
 @task
 def build():
-    """Prepares the code to be commited"""
+    """Prepare the code to be commited."""
     clean()
     isort()
     flake8()
@@ -58,7 +57,7 @@ def test():
 
 @task
 def commit(message):
-    """ Git Commit with a message """
+    """Git Commit with a message."""
     build()
     local('git add .')
     local('git commit -m "%s"' % message)
@@ -66,30 +65,28 @@ def commit(message):
 
 @task
 def push():
-    """ Push to Git """
+    """Push to Git."""
     local('git push')
 
 
 @task
 def commit_and_push(message):
-    """ Commit and push in once """
+    """Commit and push in once."""
     build()
     commit(message)
     push()
 
 
-
-
 @task
 def coverage():
-    """ Run coverage """
+    """Run coverage."""
     local('coverage py.test')
     local('coverage html')
 
 
 @task
 def update():
-    """ Local setup for a new developer """
+    """Local setup for a new developer."""
 
     if "VIRTUAL_ENV" not in os.environ:
         print("No virtual env found - please run:")
@@ -98,6 +95,7 @@ def update():
 
     local('pip install -r requirements/local.txt')
     local('python manage.py migrate')
+
 
 @task
 def pull_and_update(branch="master"):
@@ -138,15 +136,14 @@ def create_heroku_app(app_name):
 
     local('heroku git:remote --app %s' % app_name)
 
-    #local('heroku config:set SENTRY_DSN=%s --app %s' % (os.getenv('SENTRY_DSN'), app_name))
-
+    # local('heroku config:set SENTRY_DSN=%s --app %s' % (os.getenv('SENTRY_DSN'), app_name))
     #
     # local('heroku run python manage.py createsuperuser --app %s' % app_name)
 
 
 @task
 def licenses():
-    """Updates the licenses of all installed pip packages"""
+    """Update the licenses of all installed pip packages."""
     local("echo '# Licenses' > docs/licenses.md")
     local("echo '' >> docs/licenses.md")
     local("echo 'A list of the used packages and their licenses (can be updated with the command 'fab licenses') > docs/licenses.md' >> docs/licenses.md")
@@ -156,8 +153,6 @@ def licenses():
 
 @task
 def pip(update="none"):
-    """ Updates the pip requirements """
+    """Update the pip requirements."""
 
     print("DEPRECATED, use make pip-compile, make pip-update or make pip-install")
-
-

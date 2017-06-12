@@ -3,7 +3,7 @@ from main.mixins import UUIDMixin
 from django.conf import settings
 from django.contrib.sites.models import Site, _simple_domain_name_validator
 from django.core.exceptions import ImproperlyConfigured, ValidationError
-from django.db import IntegrityError, models
+from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils import timezone
@@ -13,10 +13,9 @@ from apps.mails.utils import create_and_send_mail
 
 
 def validate_default_site(value):
-    """ This validates the given Site - the default Site can not be used for a tenant
+    """This validates the given Site - the default Site can not be used for a tenant.
 
-        TODO: Check, if the site URL is part of TENANT_ROOT_DOMAIN root
-
+    TODO: Check, if the site URL is part of TENANT_ROOT_DOMAIN root
     """
 
     tenant_root_domain = Tenant.objects.get_tenant_root_domain()
@@ -46,8 +45,8 @@ class TenantManager(models.Manager):
         return tenant
 
     def get_tenant_root_domain(self):
-        """
-        Return the current Site based on the TENANT_ROOT_SITE_ID in the project's settings.
+        """Return the current Site based on the TENANT_ROOT_SITE_ID in the project's settings.
+
         If TENANT_ROOT_SITE_ID isn't defined, return an error
         """
 
@@ -62,7 +61,7 @@ class TenantManager(models.Manager):
 
 
 class Tenant(UUIDMixin):
-    """ The Tenant is the client on the platform. """
+    """The Tenant is the client on the platform."""
 
     name = models.CharField(max_length=100, help_text=_(u"Name of the tenant (the agency or company)"), unique=True)
 
@@ -74,7 +73,13 @@ class Tenant(UUIDMixin):
 
     date_joined = models.DateTimeField(_('date joined'), help_text=_("When did the user join?"), default=timezone.now)
 
-    site = models.OneToOneField(Site, null=False, blank=False, validators=[validate_default_site, ])
+    site = models.OneToOneField(
+        Site,
+        null=False,
+        blank=False,
+        validators=[validate_default_site, ],
+        on_delete=models.CASCADE
+    )
 
     objects = TenantManager()
 
@@ -96,12 +101,12 @@ class Tenant(UUIDMixin):
 
 @receiver(post_delete, sender=Tenant)
 def auto_delete_site_with_tenant(sender, instance, **kwargs):
-    """ The site will can be deleted, when the tenant is deleted """
+    """The site will be deleted, when the tenant is deleted."""
     instance.site.delete()
 
 
 class Domain(models.Model):
-    """ Every tenant can have several extra-domains leading to his site subdomain. """
+    """Every tenant can have several extra-domains leading to his site subdomain."""
 
     domain = models.CharField(
         _('domain name'),
@@ -126,16 +131,15 @@ class Domain(models.Model):
 
 
 class TenantMixin(models.Model):
-    """ A mixin for models to be part of a Tenant """
-
-    tenant = models.ForeignKey(Tenant, null=False, blank=False)
+    """A mixin for models to be part of a Tenant."""
+    tenant = models.ForeignKey(Tenant, null=False, blank=False, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
 
 
 class Invite(TenantMixin):
-    """ An invite to join in a tenants team """
+    """An invite to join in a tenants team."""
 
     email = models.EmailField(null=False, blank=False)
     first_name = models.CharField(_('first name'),

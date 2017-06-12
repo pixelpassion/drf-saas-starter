@@ -15,7 +15,8 @@ class ActivitiesViewSet(ReadOnlyModelViewSet):
         The original list method doesn't forward any kwargs to the filter_queryset method,
         this is why we (have to) overwrite the whole thing.
         """
-        queryset = self.queryset.filter(target_content_type=kwargs['content_type']).filter(target_object_id=kwargs['pk'])
+        queryset = self.queryset.filter(
+            target_content_type=kwargs['content_type']).filter(target_object_id=kwargs['pk'])
 
         page = self.paginate_queryset(queryset)
         if page is not None:

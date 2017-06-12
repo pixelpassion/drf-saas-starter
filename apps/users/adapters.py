@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.utils import get_current_site
-from rest_framework import status
-from rest_framework.response import Response
 
-import django.contrib.auth.password_validation as validators
 from django.conf import settings
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from apps.mails.utils import create_and_send_mail
 from apps.users.models import User
@@ -19,7 +14,7 @@ class AccountAdapter(DefaultAccountAdapter):
         return getattr(settings, 'ACCOUNT_ALLOW_REGISTRATION', True)
 
     def generate_unique_username(self, txts, regex=None):
-        """Use a given username and find the next free ID - if not use the first part of an email """
+        """Use a given username and find the next free ID - if not use the first part of an email."""
 
         username = txts[3]
 
@@ -35,16 +30,16 @@ class AccountAdapter(DefaultAccountAdapter):
             'email': email,
             'site_domain': context["current_site"].domain,
             'site_name': context["current_site"].name,
-            'activate_url':  context["activate_url"],
-            'key':  context["key"],
+            'activate_url': context["activate_url"],
+            'key': context["key"],
         }
 
         create_and_send_mail(template_name=template_prefix, context=context_dict, to_address=email)
 
     def get_email_confirmation_redirect_url(self, request):
-        """ The URL to return to after successful e-mail confirmation. """
+        """The URL to return to after successful e-mail confirmation."""
 
-        # TODO: Maybe have an JSON response, when content-type=JSON? Needs to be done higher in the stack
+        # TODO: Maybe have a JSON response, when content-type=JSON? Needs to be done higher in the stack
 
         if settings.EMAIL_VERIFICATION_REDIRECT_URL:
             return settings.EMAIL_VERIFICATION_REDIRECT_URL

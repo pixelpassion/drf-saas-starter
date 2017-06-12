@@ -344,11 +344,11 @@ class TestPasswordResetInitiate(APITestCase):
         assert str(response.data['detail']) == 'Password reset e-mail has been sent.'
 
     def test_password_reset_email_sent(self):
-        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
         assert len(mail.outbox) == 1
 
     def test_password_reset_email_subject(self):
-        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
         assert mail.outbox[0].subject == 'Password reset on example.com'
 
     def test_password_reset_unregistered_email_status(self):
@@ -360,7 +360,7 @@ class TestPasswordResetInitiate(APITestCase):
         assert str(response.data['detail']) == 'Password reset e-mail has been sent.'
 
     def test_password_reset_unregistered_email_not_sent(self):
-        response = self.client.post(self.password_reset_path, data={"email": "unregistered@test.com"})
+        self.client.post(self.password_reset_path, data={"email": "unregistered@test.com"})
         assert len(mail.outbox) == 0
 
     def test_empty_password_reset_status(self):

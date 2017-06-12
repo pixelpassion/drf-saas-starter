@@ -8,20 +8,17 @@ from apps.tenants.models import Domain
 
 
 class TenantMiddleware(object):
-    """
-        The TenantMiddleware sets the tenant of the request depending on the URL.
+    """The TenantMiddleware sets the tenant of the request depending on the URL.
 
-        There are 2 types of domains:
-        - subdomains of the TENANT_ROOT_SITE_ID (a.example.com, bar.example.com, foo.example.com) - each tenant has one
-        - Additional, optional domains - they are registered in the Domain model
-         
-        We are NOT giving 404, if an Site is not existing. Only for the subdomains of the tenant domain.
-        
-        Would be interesting to check out
-        - django.contrib.sites CurrentSiteMiddleware
-        - https://github.com/bernardopires/django-tenant-schemas
+    There are 2 types of domains:
+    - subdomains of the TENANT_ROOT_SITE_ID (a.example.com, bar.example.com, foo.example.com) - each tenant has one
+    - Additional, optional domains - they are registered in the Domain model
 
+    We are NOT giving 404, if an Site is not existing. Only for the subdomains of the tenant domain.
 
+    Would be interesting to check out
+    - django.contrib.sites CurrentSiteMiddleware
+    - https://github.com/bernardopires/django-tenant-schemas
     """
     def __init__(self, get_response):
         self.get_response = get_response

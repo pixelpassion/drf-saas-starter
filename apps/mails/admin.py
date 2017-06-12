@@ -7,12 +7,11 @@ from .tasks import send_asynchronous_mail
 
 @admin.register(MailTemplate)
 class MailTemplateAdmin(admin.ModelAdmin):
-    
     list_display = ('name', 'subject')
     search_fields = []
-    ordering = ('name', )
-
+    ordering = ('name',)
     actions = []
+
 
 @admin.register(Mail)
 class MailAdmin(admin.ModelAdmin):
@@ -33,11 +32,12 @@ class MailAdmin(admin.ModelAdmin):
 
     send_mail_now.short_description = "Send mail now"
 
-    list_display = ('id', 'time_created', 'from_address', 'to_address', 'template', 'subject', 'context', )
+    list_display = ('id', 'time_created', 'from_address', 'to_address', 'template', 'subject', 'context',)
     search_fields = ['from_address', 'to_address', 'subject', 'context', ]
-    ordering = ('-time_created', )
+    ordering = ('-time_created',)
     list_filter = ('time_created', 'template')
 
     actions = [send_mail_now, ]
 
-    readonly_fields = ('time_created', 'time_sent', 'time_delivered', 'used_backend', 'delivery_mail_id', 'delivery_status' )
+    readonly_fields = (
+        'time_created', 'time_sent', 'time_delivered', 'used_backend', 'delivery_mail_id', 'delivery_status')

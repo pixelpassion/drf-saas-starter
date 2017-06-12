@@ -5,5 +5,5 @@ from apps.tenants.mixins import TenantAccessRequiredMixin
 
 
 class TenantDashboardView(LoginRequiredMixin, TenantAccessRequiredMixin, TemplateView):
-    """ A tenant dashboard - just for testing, because all the logic should be in the frontend"""
+    """A tenant dashboard - just for testing, because all the logic should be in the frontend."""
     template_name = "tenants/dashboard.html"

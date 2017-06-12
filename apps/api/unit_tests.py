@@ -11,11 +11,8 @@ logger = logging.getLogger(name=__name__)
 
 
 class APITestCase(TestCase):
-    """ """
 
     def setUp(self):
-        """ """
-        super(APITestCase, self).setUp()
 
         # Create an already existing up test user
         self.already_registered_user = User.objects.create(

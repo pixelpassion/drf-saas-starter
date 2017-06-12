@@ -7,7 +7,7 @@ from rest_framework_jwt.settings import api_settings
 
 
 def payload_handler(user):
-    """Function to generate the token payload
+    """Function to generate the token payload.
 
     {
       "iss": "einhorn-starter",
@@ -22,14 +22,10 @@ def payload_handler(user):
       "is_superuser": true
     }
 
-
     Who this person is (sub, short for subject)
     What this person can access with this token (scope)
     When the token expires (exp)
     Who issued the token (iss, short for issuer)
-
-
-
     """
 
     username_field = get_username_field()

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.sites.models import Site
 
 from .models import Domain, Invite, Tenant
 
@@ -17,16 +16,14 @@ class DomainAdmin(admin.ModelAdmin):
 
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'site', 'is_active', 'date_joined' )
+    list_display = ('id', 'name', 'site', 'is_active', 'date_joined', )
     list_editable = ('name', 'is_active')
     search_fields = ('name', )
 
 
 @admin.register(Invite)
 class InviteAdmin(admin.ModelAdmin):
-    """
-        Show invitations and gives the admin the chance to send an invite.
-    """
+    """Show invitations and give the admin the chance to send an invite."""
 
     # TODO: #63 - Show the status of the invitation (clicked, used) and the date/time of the sending
 

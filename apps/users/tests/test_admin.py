@@ -44,7 +44,7 @@ class TestMyUserCreationForm(TestCase):
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class AdminSecurityTestCase(TestCase):
-    """ Test the security of the admin"""
+    """Test the security of the admin."""
 
     def setUp(self):
 
@@ -68,7 +68,7 @@ class AdminSecurityTestCase(TestCase):
             "password": "test1235"
         }
 
-        self.completely_wrong_login_data= {
+        self.completely_wrong_login_data = {
             "username": "wrongusername",
             "password": "test1235"
         }

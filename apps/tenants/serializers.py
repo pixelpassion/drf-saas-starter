@@ -20,9 +20,9 @@ def unique_site_domain(value):
 
 
 class TenantSignUpSerializer(serializers.ModelSerializer):
-    """
-        Serialize data from the tenant (the administration user, who registers for the SaaS.
-        A name and domain is used to start an tenant environment. The given user will be the first admin.
+    """Serialize data from the tenant (the administration user, who registers for the SaaS.
+
+    A name and domain is used to start an tenant environment. The given user will be the first admin.
     """
 
     subdomain = serializers.CharField(
@@ -34,7 +34,6 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
     user = CreateUserSerializer(write_only=True)
 
     class Meta:
-        """ """
         model = Tenant
         fields = ('id', 'name', 'subdomain', 'user')
         extra_kwargs = {'name': {'write_only': True}}
@@ -54,6 +53,10 @@ class TenantSignUpSerializer(serializers.ModelSerializer):
         user_serializer.is_valid(raise_exception=True)
         user = user_serializer.save(request)
 
-        Tenant.objects.create_tenant(user=user, name=self.cleaned_data["name"], subdomain=self.cleaned_data["subdomain"])
+        Tenant.objects.create_tenant(
+            user=user,
+            name=self.cleaned_data["name"],
+            subdomain=self.cleaned_data["subdomain"]
+        )
 
         return user

@@ -1,37 +1,34 @@
-import json
 import os
-import platform
 import random
 import subprocess
 import sys
 import venv
 
 
-class EinhornEnvBuilder(venv.EnvBuilder): 
-    """
-    This builder configures a virtualenv for use with EinhornStarter.
+class EinhornEnvBuilder(venv.EnvBuilder):
+    """This builder configures a virtualenv for use with EinhornStarter.
 
-    Currently: It installs requirements.txt file after venv setup. 
-    
+    Currently: It installs requirements.txt file after venv setup.
+
     This class may be easily modified to add more post-setup configuration steps.
     """
 
     # Constructor
-    def __init__(self, requirements_path, *args, **kwargs): 
+    def __init__(self, requirements_path, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         self.requirements_path = requirements_path
 
     # Helper methods for pip and pip install
-    def pip(self, context, *args): 
+    def pip(self, context, *args):
         output = subprocess.check_output([context.env_exe, '-m', 'pip'] + list(args))
         print(str(output.decode()))
 
-    def pip_install(self, context, *args): 
+    def pip_install(self, context, *args):
         self.pip(context, 'install', *args)
 
     # This method is run after the virtualenv is created
-    def post_setup(self, context): 
+    def post_setup(self, context):
         super().post_setup(context)
 
         # Make sure pip is up-to-date
@@ -39,14 +36,14 @@ class EinhornEnvBuilder(venv.EnvBuilder):
         self.pip_install(context, '--upgrade', 'setuptools')
 
         # Install requirements.txt file
-        if self.requirements_path: 
+        if self.requirements_path:
             self.pip_install(context, '-r', self.requirements_path)
 
 
 def create_database(project_name):
 
     try:
-         subprocess.check_output(["createdb", project_name])
+        subprocess.check_output(["createdb", project_name])
     except subprocess.CalledProcessError as e:
         pass
     else:
@@ -54,7 +51,7 @@ def create_database(project_name):
 
 
 def create_venv(requirements_path):
-    """ Creates venv and pip installs everything in the environment """
+    """Create venv and pip install everything in the environment."""
 
     if os.path.exists(".venv"):
         print(".venv folder already exists! Skipping.")
@@ -75,16 +72,16 @@ def create_venv(requirements_path):
 #   return 0
 
 
-def create_env_file(project_name): 
-    """ Creates an .env file - if one is not existing already"""
+def create_env_file(project_name):
+    """Create an .env file - if one is not existing already."""
     def generate_secret_key(count=50):
         return ''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(count)])
 
     env_file_name = ".env"
     env_path = os.path.join(os.getcwd(), env_file_name)
 
-    try: 
-        with open(env_path, 'x') as env_file: 
+    try:
+        with open(env_path, 'x') as env_file:
             print("The .env file was created: {}".format(env_path))
 
             env_file.write("DEBUG=True\n")
@@ -111,7 +108,7 @@ def main(argv):
     #     return 1
 
     project_name = "einhorn-starter"
-    #project_name = sys.argv[1]
+    # project_name = sys.argv[1]
 
     # Maybe some project name validation checking here
 
@@ -119,16 +116,16 @@ def main(argv):
 
     try:
         # Deactivated because we use Docker
-        #create_database(project_name)
-        #create_venv(requirements_path)
+        # create_database(project_name)
+        # create_venv(requirements_path)
 
-#       setup_docker()
+        # setup_docker()
 
         create_env_file(project_name)
     except subprocess.CalledProcessError as e:
-        print("Command: {}\nReturn code: {}\n{}\n{}".format(e.cmd, 
-                                                            e.returncode, 
-                                                            e.output, 
+        print("Command: {}\nReturn code: {}\n{}\n{}".format(e.cmd,
+                                                            e.returncode,
+                                                            e.output,
                                                             e.stderr))
 
     # Everything worked!

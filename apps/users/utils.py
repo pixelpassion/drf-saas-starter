@@ -1,11 +1,11 @@
 from allauth.account.models import EmailAddress
 from allauth.account.utils import send_email_confirmation
 
-from django.contrib.auth import user_logged_in, user_logged_out
+from django.contrib.auth import user_logged_out
 
 
 def logout_user(request):
-    #authtoken.models.Token.objects.filter(user=request.user).delete()
+    # authtoken.models.Token.objects.filter(user=request.user).delete()
 
     # Introduce a session_ID Flag in every session. Logout..
 

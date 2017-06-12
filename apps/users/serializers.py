@@ -131,17 +131,9 @@ class ChangePasswordSerializer(PasswordSerializer, CurrentPasswordSerializer):
 
 
 class CreateUserSerializer(RegisterSerializer):
-    """Overwrite the register_auth RegisterSerializer to enable first_name and last_name."""
-    username = serializers.CharField(
-        max_length=get_username_max_length(),
-        min_length=allauth_settings.USERNAME_MIN_LENGTH,
-        required=allauth_settings.USERNAME_REQUIRED
-    )
+    """Add first_name and last_name to the register_auth's RegisterSerializer."""
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
-    password1 = serializers.CharField(write_only=True)
-    password2 = serializers.CharField(write_only=True)
 
     def get_cleaned_data(self):
         return {

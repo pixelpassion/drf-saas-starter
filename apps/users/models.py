@@ -107,10 +107,6 @@ class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):
         help_text=_("Last Name of the user")
     )
 
-    activation_token = models.CharField(_('activation_token'),
-                                        help_text=_("The activation token of the user"),
-                                        max_length=100, blank=True)
-
     is_active = models.BooleanField(
         _('active'),
         default=True,

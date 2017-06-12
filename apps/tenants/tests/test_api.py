@@ -444,20 +444,11 @@ class UserSignupTests(TestCase):
             "password": "Test1234!?",
         }
         # user = self.user_signup(post_data)
-
-        # # Token should be
-        # self.assertIsNotNone(user.activation_token)
-        #
-        # # Token should have been created and have an decent length
-        # if not settings.AUTO_ACCOUNT_ACTIVATION:
-        #     self.assertTrue(len(user.activation_token) > 50)
         #
         # # Activation email is sent correctly
         # self.assertEqual(len(mail.outbox), 1)
         # self.assertEqual(mail.outbox[0].subject, u"Account Activation")
         #
-        # # The email should contain the generated token
-        # activation_link = self.base_activation_url % user.activation_token
         # self.assertIn("%s%s" % (settings.BASE_URL, activation_link), mail.outbox[0].body)
 
     def test_missing_password1(self):

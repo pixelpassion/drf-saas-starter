@@ -21,7 +21,7 @@ class OldCreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'is_active', 'password')
-        read_only_fields = ('is_active', 'activation_token')
+        read_only_fields = ('is_active', )
 
         extra_kwargs = {
             'password': {'write_only': True, 'help_text': 'Password of the user'},
@@ -67,14 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'is_active', )
-        read_only_fields = ('is_active', 'activation_token', )
-
-
-class ActivateUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'activation_token', 'is_active')
+        read_only_fields = ('is_active', )
 
 
 class ResetPasswordSerializer(serializers.ModelSerializer):

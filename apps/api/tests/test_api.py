@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework_jwt.settings import api_settings
 
+from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 
@@ -325,3 +326,63 @@ class TestPasswordChange(APITestCase):
         assert response.data['new_password1'] == ['This field is required.']
         assert response.data['new_password2'] == ['This field is required.']
 
+
+@override_settings(LANGUAGE_CODE='en')
+class TestPasswordResetInitiate(APITestCase):
+
+    def setUp(self):
+        self.password_reset_path = reverse('rest_password_reset')
+        self.verified_user = UserFactory()
+        VerifiedUserFactory(user=self.verified_user)
+
+    def test_password_reset_status(self):
+        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_password_reset_message(self):
+        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        assert str(response.data['detail']) == 'Password reset e-mail has been sent.'
+
+    def test_password_reset_email_sent(self):
+        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        assert len(mail.outbox) == 1
+
+    def test_password_reset_email_subject(self):
+        response = self.client.post(self.password_reset_path, data={"email": self.verified_user.email})
+        assert mail.outbox[0].subject == 'Password reset on example.com'
+
+    def test_password_reset_unregistered_email_status(self):
+        response = self.client.post(self.password_reset_path, data={"email": "unregistered@test.com"})
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_password_reset_unregistered_email_message(self):
+        response = self.client.post(self.password_reset_path, data={"email": "unregistered@test.com"})
+        assert str(response.data['detail']) == 'Password reset e-mail has been sent.'
+
+    def test_password_reset_unregistered_email_not_sent(self):
+        response = self.client.post(self.password_reset_path, data={"email": "unregistered@test.com"})
+        assert len(mail.outbox) == 0
+
+    def test_empty_password_reset_status(self):
+        response = self.client.post(self.password_reset_path, data={})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_empty_password_reset_message(self):
+        response = self.client.post(self.password_reset_path, data={})
+        assert response.data['email'] == ['This field is required.']
+
+    def test_empty_email_password_reset_status(self):
+        response = self.client.post(self.password_reset_path, data={"email": ""})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_empty_email_password_reset_message(self):
+        response = self.client.post(self.password_reset_path, data={"email": ""})
+        assert response.data['email'] == ['This field may not be blank.']
+
+    def test_none_email_password_reset_status(self):
+        response = self.client.post(self.password_reset_path, data={"email": None})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_none_email_password_reset_message(self):
+        response = self.client.post(self.password_reset_path, data={"email": None})
+        assert response.data['email'] == ['Enter a valid email address.']

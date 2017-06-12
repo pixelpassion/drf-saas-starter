@@ -1,4 +1,4 @@
-from rest_auth.registration.views import RegisterView
+from rest_auth.registration.views import RegisterView, VerifyEmailView
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -63,3 +63,21 @@ class TenantUserRegisterView(RegisterView):
         return Response(self.get_response_data(user),
                         status=status.HTTP_201_CREATED,
                         headers=headers)
+
+
+class GetAllowedVerifyEmailView(VerifyEmailView):
+    """Re-enable GET for verifying an email-address.
+
+    rest-auth disabled the GET-method, even though allauth supports it.
+    It now doesn't check for CONFIRM_EMAIL_ON_GET.
+    """
+    allowed_methods = ('GET', 'POST', 'OPTIONS', 'HEAD')
+
+    def get(self, *args, **kwargs):
+        """Use rest-auth's post, but with kwargs instead of request.data in data."""
+        serializer = self.get_serializer(data=kwargs)
+        serializer.is_valid(raise_exception=True)
+        self.kwargs['key'] = serializer.validated_data['key']
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        return Response({'detail': _('ok')}, status=status.HTTP_200_OK)

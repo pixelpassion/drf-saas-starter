@@ -1,14 +1,14 @@
 from allauth.account.views import email_verification_sent
-from rest_auth.registration.views import VerifyEmailView
 
 from django.conf.urls import url
 
-from .views import TenantRegisterView, TenantUserRegisterView
+from .views import GetAllowedVerifyEmailView, TenantRegisterView, TenantUserRegisterView
 
 urlpatterns = [
     url(r'^tenant/$', TenantRegisterView.as_view(), name='tenant_rest_register'),
     url(r'^tenant/(?P<tenant_name>[-:\w]+)/user/$', TenantUserRegisterView.as_view(), name='user_rest_register'),
 
+    # FIXME Do we need this active?
     # This url is used by django-allauth and empty TemplateView is
     # defined just to allow reverse() call inside app, for example when email
     # with verification link is being sent, then it's required to render email
@@ -24,5 +24,5 @@ urlpatterns = [
     #     name='account_confirm_email'),
 
     url(r'^confirm-email/$', email_verification_sent, name='account_email_verification_sent'),
-    url(r'^confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(), name='account_confirm_email'),
+    url(r'^confirm-email/(?P<key>[-:\w]+)/$', GetAllowedVerifyEmailView.as_view(), name='account_confirm_email'),
 ]

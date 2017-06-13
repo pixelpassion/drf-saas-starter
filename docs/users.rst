@@ -1,12 +1,12 @@
 Users & tenants
-============
+===============
 
 User
---------------------
+----
 
 
 Tenants
---------------------
+-------
 
 Important settings in :doc:`settings`::
 

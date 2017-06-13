@@ -1,16 +1,18 @@
 Get started
-============
+===========
 
 Concepts
---------------------
+--------
 
 This template is used for Saas applications.
 
-It is supposed to work for User-tenant-applications. The client can choose to register only one tenant (and all user registrations work for this one) or to add several tenants (adminstrators / billed partners of a platform), which can add users on their own.
+It is supposed to work for user-tenant-applications. The client can choose to register only one tenant (and all user registrations work for this one) or to add several tenants (adminstrators / billed partners of a platform), which can add users on their own.
 
-The Package provides an backend with Restful API endpoints. The admin is only for system operators. It needs an Javascript frontend for user and tenants.
+The Package provides a backend with RESTful API endpoints. The admin is only for system operators. It needs a Javascript frontend for users and tenants.
+
 
 Users
+
 * need to be activated by the tenant.
 * can edit their profile informations.
 * can add comments to other users (or other objects in the system).
@@ -20,11 +22,11 @@ The application is ready for business objects to be added to the system. Objects
 
 
 Installation
---------------------
+------------
 
 Install Docker as described in  :doc:`docker`
 
-Clone the Github repository::
+Clone the GitHub repository::
 
     $ git clone git@github.com/jensneuhaus/einhorn-starter
 
@@ -48,8 +50,7 @@ django-saas-starter is available on PyPI - to install it, just run::
 
     pip install -U django-saas-starter
 
-
-It will install an package ``django-saas-starter`` and add it to ``INSTALLED_APPS``::
+It will install a package ``django-saas-starter`` and add it to ``INSTALLED_APPS``::
 
     INSTALLED_APPS = (
         ...
@@ -59,7 +60,6 @@ It will install an package ``django-saas-starter`` and add it to ``INSTALLED_APP
         'django_saas_starter.comments',
         'django_saas_starter.activity_stream',
     )
-
 
 That's it!
 

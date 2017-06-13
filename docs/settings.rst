@@ -1,4 +1,4 @@
 Settings
-============
+========
 
 Lorem ipsum.

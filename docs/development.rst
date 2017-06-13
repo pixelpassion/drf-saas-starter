@@ -1,8 +1,8 @@
 Onboarding & Local development
-============
+==============================
 
 New to Django?
---------------------
+--------------
 
 Check out these resources to learn Python and Django
 
@@ -10,23 +10,23 @@ Check out these resources to learn Python and Django
 * Python Tutorial auf Deutsch: https://media.readthedocs.org/pdf/py-tutorial-de/python-3.3/py-tutorial-de.pdf
 * Django Documentation: https://docs.djangoproject.com/en/1.10/
 * Django Tutorial: https://docs.djangoproject.com/en/1.10/intro/
-* Two Scoops for Django: https://www.twoscoopspress.com/products/two-scoops-of-django-1-8
+* Two Scoops for Django: https://www.twoscoopspress.com/products/two-scoops-of-django-1-11
 * Hello Web App: https://hellowebapp.com
 
 Get started
---------------------
+-----------
 
-Did you read, how to :doc:`get_started` ?
+Did you read, how to :doc:`get_started`?
 
 Docker
---------------------
+------
 
 Please read the :doc:`docker` information next.
 
 .env
---------------------
+----
 
-The project needs an .env file - it contains secret incredentials or such which should not be contained into the code.
+The project needs an .env file - it contains secret credentials or such which should not be contained in the code.
 
 A basic .env file is created automatically, when calling ``python local_setup.py``:
 
@@ -41,45 +41,44 @@ The following entries are needed::
     JWT_SECRET='<a generated secret>'
 
 requirements
---------------------
+------------
 
 We are using pip-compile for management of requirements.
 
-If you want to add new requirements, you need to add them to one of the ``.in``files, the `.txt` files are generated with the following command::
+If you want to add new requirements, you need to add them to one of the `.in` files, the `.txt` files are generated with the following command::
 
-    fab pip
-
+    make pip-compile
 
 Update requirements to the newest version, only excluding pinned packages::
 
-    fab pip:update
+    make pip-update
 
 There are different requirement files:
 
 * base.txt (for packages needed in development & production)
 * local.txt (only locally needed)
 * production.txt (only production use)
-* documentation.txt (For the Sphinx Docker container)
+* documentation.txt (for the Sphinx Docker container)
 
 
 Pycharm
---------------------
+-------
 
 We recommend Pycharm for development. We included some files for easier onboarding. (TODO)
 
 Testing
---------------------
+-------
 
-Read more informations regarding :doc:`testing`.
+Read more information regarding :doc:`testing`.
 
 Mailhog
---------------------
+-------
 
-We are using `Mailhog <https://github.com/mailhog/MailHog>`_ as a local mailserver in development. It receives mails at localhost:1025 and provides an mail client, served under https://localhost:8025/ (when using docker-compose).
+We are using `Mailhog <https://github.com/mailhog/MailHog>`_ as a local mailserver in development. It receives mails at localhost:1025 and provides a mail client, served under `<http://localhost:8025>`_ (when using docker-compose).
 
 
 Fabfile
---------------------
+-------
 
 This package contains a fab file with some useful commands.
 
@@ -131,7 +130,7 @@ Deployment with Heroku::
     # Push to Heroku and makes migrations on the production database
     $ fab push_to_heroku
 
-    # Create an heroku app
+    # Create a heroku app
     $ fab create_heroku_app:name_of_cool_app
 
 Other commands::
@@ -151,7 +150,7 @@ Other commands::
 
 
 Subdomains
-------------------------------
+----------
 
 To test and work with subdomains locally, you must change your ``/etc/hosts`` file::
 
@@ -172,7 +171,7 @@ Now ``a`` and ``a.localhost`` can be pinged or reached within any Browser.
 
 
 What else
---------------------
+---------
 
 You should get used to the concepts of :doc:`celery` and :doc:`channels`.
 

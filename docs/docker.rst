@@ -1,13 +1,13 @@
 Docker
-============
+======
 
 Local development
---------------------
+-----------------
 
-You need to install Docker. Follow the instructions for your OS <https://docs.docker.com/engine/installation/>`:
+You need to install Docker. Follow the instructions for your OS https://docs.docker.com/engine/installation/:
 
- - On Mac OS X: `Docker for Mac`_`
- - On Windows: `Docker for Windows`_`
+ - On Mac OS X: `Docker for Mac`_
+ - On Windows: `Docker for Windows`_
  - On Linux: `docker-engine`_
 .. _`Docker for Mac`: https://docs.docker.com/engine/installation/mac/
 .. _`Docker for Windows`: https://docs.docker.com/engine/installation/windows/
@@ -21,12 +21,12 @@ Build and start the containers::
 
 It will start different services locally.
 
- * ``Django``: The webapplication itself (http://localhost:8000), based on `Python 3.6 Slim <https://github.com/docker-library/python/blob/master/3.6/slim/Dockerfile>`
+ * ``Django``: The webapplication itself (http://localhost:8000), based on `Python 3.6 Slim <https://github.com/docker-library/python/blob/master/3.6/slim/Dockerfile>`_
  * ``Sphinx``: Automated Sphinx :doc:`documentation` with autobuild (http://localhost:8007)
  * ``Mailhog``: A simple local mailserver for debugging mails, check out :doc:`email` (http://localhost:8025)
- * ``Postgres``: The used database, is used in ``DATABASE_URL`` (postgres:///einhorn-starter)
+ * ``Postgres``: The used database, is defined in ``DATABASE_URL`` (postgres:///einhorn-starter)
  * ``Redis``: Key-Value store for caching & :doc:`channels`, used as ``REDIS_URL`` (localhost:6379)
- * ``Redis Browser``: For debugging Redis key/values (http://localhost:8019/)
+ * ``Redis Browser``: For debugging Redis key/values (http://localhost:8019)
  * ``RabbitMQ Management``: For monitoring & debugging RabbitMQ, used for :doc:`celery` (http://localhost:15672)
  * A :doc:`channels` worker
  * A :doc:`celery` worker
@@ -41,9 +41,9 @@ We are using Docker healthchecks:
  * compose: https://docs.docker.com/compose/compose-file/#healthcheck
  * Example healthchecks: https://github.com/docker-library/healthcheck
 
-For more informations regarding Docker:
- * `Docker <https://docs.docker.com/get-started/>`
- * `Docker compose <https://docs.docker.com/compose/overview/>`
+For more information regarding Docker:
+ * `Docker <https://docs.docker.com/get-started/>`_
+ * `Docker compose <https://docs.docker.com/compose/overview/>`_
 
 
 
@@ -62,7 +62,6 @@ You can access the Python shell::
 
     $ docker-compose run django python manage.py shell_plus
 
-
 Also you can access the bash command line of the docker container::
 
     $ docker-compose run django bash
@@ -71,7 +70,7 @@ Also you can access the bash command line of the docker container::
 
 
 Use in production
---------------------
+-----------------
 
 The docker files can be used to be deployed into production. This is unsupported right now in favor of Heroku.
 
@@ -98,13 +97,13 @@ Delete `dangling images <http://www.projectatomic.io/blog/2015/07/what-are-docke
 
    docker rmi $(docker images -f "dangling=true" -q)
 
-Fore more informations:
+Fore more information:
 
 * https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
 
 
 Postgres
------------------------------
+--------
 
 .. warning::
    The Port ``5432`` is not exposed to the outside, they will not interfer with any local Postgres databases. If you want to expose the ports, you need to add ``ports: "5432:5432"`` to the Postgres service in the ``docker-compose.yml``.
@@ -129,7 +128,7 @@ Some useful commands::
 
 
 Dry
-------
+---
 
 ``Dry <https://moncho.github.io/dry/>`` is a terminal application to manage and monitor Docker containers.
 
@@ -138,10 +137,9 @@ Installation ::
    $ curl -sSf https://moncho.github.io/dry/dryup.sh | sudo sh
    $ sudo chmod 755 /usr/local/bin/dry
 
- Start it::
+Start it::
 
    $ dry
-
 
 Press ``1`` to see the running containers, ``2`` for images and ``3`` for network informations.
 

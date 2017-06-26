@@ -492,7 +492,7 @@ CELERY_EVENT_QUEUE_EXPIRES = 60         # Will delete all celeryev. queues witho
 # returns. That is, tasks will be executed locally instead of being sent to the queue. This forces all calls to
 # .delay()/.apply_async() that would normally get delegated to the worker to instead execute synchronously.
 if STAGE == 'local':
-    CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_ALWAYS_EAGER', default=True)
+    CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER', default=True)
 elif STAGE == 'test':
     CELERY_TASK_ALWAYS_EAGER = True
 

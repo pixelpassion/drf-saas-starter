@@ -82,8 +82,8 @@ class TenantSignupTests(TestCase):
         # Tenant should not be active
         self.assertFalse(tenant.is_active)
 
-        # An activation email should be sent (uncommented, fails on CircleCI)
-        # self.assertEqual(len(mail.outbox), 1)
+        # An activation email should be sent
+        self.assertEqual(len(mail.outbox), 1)
 
     def sign_up_error(self, post_data, expected_error, expected_status_code=400):
         """Helper method for an faulty signup."""
@@ -390,10 +390,8 @@ class UserSignupTests(TestCase):
         elif expected_status_code:
             self.assertEqual(response.status_code, expected_status_code)
 
-        # FIXME Fails on CircleCI
-        # if expected_status_code == 200 or expected_status_code == 201:
-        #
-        #     self.assertEqual(len(mail.outbox), 1)
+        if expected_status_code == 200 or expected_status_code == 201:
+            self.assertEqual(len(mail.outbox), 1)
 
     def test_correct_signup_data(self):
         post_data = {

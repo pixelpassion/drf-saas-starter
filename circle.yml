@@ -11,7 +11,7 @@ machine:
     DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
     REDIS_URL: redis://127.0.0.1:6379
     CLOUDAMQP_URL: amqp://localhost:5672
-    EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+    EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
 dependencies:
   pre:
     # Only install packages listed on https://devcenter.heroku.com/articles/stack-packages

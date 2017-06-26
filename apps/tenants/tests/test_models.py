@@ -1,10 +1,13 @@
 from django.contrib.sites.models import Site
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
-from apps.tenants.models import Domain, Tenant
+from apps.tenants.models import Domain, Invite, Tenant
+from apps.tenants.tests.factories import TenantFactory
 from apps.users.models import User
+from apps.users.tests.factories import UserFactory
 
 
 class SiteCreationTest(TestCase):
@@ -62,3 +65,23 @@ class TenantDomainTests(TestCase):
 
         with self.assertRaises(ValidationError):
             Tenant.objects.create_tenant(user, "A", "a")
+
+
+class TestInviteModel(TestCase):
+
+    def setUp(self):
+        inviter = UserFactory()
+        tenant = TenantFactory()
+        self.invite = Invite.objects.create(tenant=tenant, inviter=inviter, email='somebody@somewhere.com')
+
+    def test_str(self):
+        assert str(self.invite) == 'somebody@somewhere.com'
+
+    # TODO Test once it is implemented the proper way
+    def test_get_activation_url(self):
+        pass
+        # assert self.invite.get_activation_url() == 'x'
+
+    def test_send_invite(self):
+        self.invite.send_invite()
+        assert len(mail.outbox) == 1

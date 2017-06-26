@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 
 from .models import Domain, Invite, Tenant
 
@@ -24,25 +25,22 @@ class TenantAdmin(admin.ModelAdmin):
 @admin.register(Invite)
 class InviteAdmin(admin.ModelAdmin):
     """Show invitations and give the admin the chance to send an invite."""
-
-    # TODO: #63 - Show the status of the invitation (clicked, used) and the date/time of the sending
+    list_display = ('tenant', 'first_name', 'last_name', 'email', )
+    search_fields = ('tenant', 'first_name', 'last_name', 'email', )
+    actions = ['send_invite']
 
     def send_invite(self, request, queryset):
 
         rows_updated = 0
 
-        for object in queryset:
-            object.send_invite()
+        for invite in queryset:
+            invite.send_invite()
             rows_updated += 1
 
         if rows_updated == 1:
-            message_bit = "1 Invite was"
+            message = _("1 Invite was sent.")
         else:
-            message_bit = "%s Invites were" % rows_updated
-        self.message_user(request, "%s sent." % message_bit)
+            message = _("%s Invites were sent.") % rows_updated
+        self.message_user(request, message)
 
-    send_invite.short_description = "Sent an invite"
-
-    list_display = ('tenant', 'first_name', 'last_name', 'email', )
-    search_fields = ('tenant', 'first_name', 'last_name', 'email', )
-    actions = [send_invite, ]
+    send_invite.short_description = _("Send an invite")

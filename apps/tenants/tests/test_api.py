@@ -1,14 +1,22 @@
 import json
+from copy import deepcopy
+from datetime import timedelta
 
 import pytest
+from rest_framework import status
+from rest_framework.test import APITestCase
 
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.tenants.models import Tenant
+from apps.tenants.tests.factories import InviteFactory
 from apps.users.models import User
+from apps.users.tests.factories import UserFactory, UserTenantRelationshipFactory
 
 
 @override_settings(LANGUAGE_CODE='en')
@@ -533,3 +541,181 @@ class UserSignupTests(TestCase):
             "password2": "Test1234!?"
         }
         self.user_signup(post_data, expected_status_code=400, expected_error_message="Enter a valid email address")
+
+
+@override_settings(LANGUAGE_CODE='en')
+class TestInviteCreate(APITestCase):
+
+    def setUp(self):
+        user_tenant_relationship = UserTenantRelationshipFactory()
+        self.user = user_tenant_relationship.user
+        self.tenant = user_tenant_relationship.tenant
+
+        self.invite_path = reverse('rest_invite', kwargs={'tenant_name': self.tenant.name})
+
+    def test_post_invite_without_login_status(self):
+        post_data = {"email": "invitee@other-domain.com"}
+        response = self.client.post(self.invite_path, data=post_data)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_post_invite_without_login_message(self):
+        post_data = {"email": "invitee@other-domain.com"}
+        response = self.client.post(self.invite_path, data=post_data)
+        assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+    def test_post_invite_status(self):
+        self.client.force_authenticate(user=self.user)
+        post_data = {"email": "invitee@other-domain.com"}
+        response = self.client.post(self.invite_path, data=post_data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_invitee_is_already_user(self):
+        existing_user_email = 'invitee@other-domain.com'
+        existing_user = UserFactory(email=existing_user_email)
+        UserTenantRelationshipFactory(user=existing_user)
+        self.client.force_authenticate(user=self.user)
+        post_data = {"email": existing_user_email}
+        response = self.client.post(self.invite_path, data=post_data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+    # TODO Write test(s) when implemented
+    def test_inviter_is_from_different_tenant(self):
+        pass
+        # other_tenant = TenantFactory()
+        # different_invite_path = reverse('rest_invite', kwargs={'tenant_name': other_tenant.name})
+        # self.client.force_authenticate(user=self.user)
+        # post_data = {"email": "invitee@other-domain.com"}
+        # response = self.client.post(different_invite_path, data=post_data)
+        # assert response.status_code != status.HTTP_201_CREATED
+
+    def test_email_sent(self):
+        post_data = {"email": "invitee@other-domain.com"}
+        self.client.force_authenticate(user=self.user)
+        self.client.post(self.invite_path, data=post_data)
+        assert len(mail.outbox) == 1
+
+
+@override_settings(LANGUAGE_CODE='en')
+class TestInviteRetrieve(APITestCase):
+
+    def setUp(self):
+        self.invite = InviteFactory(first_name='Peter', last_name='Pan')
+        self.retrieve_path = reverse(
+            'rest_invite_retrieve',
+            kwargs={'tenant_name': self.invite.tenant.name, 'pk': self.invite.pk}
+        )
+
+        no_name_invite = InviteFactory()
+        self.no_name_retrieve_path = reverse(
+            'rest_invite_retrieve',
+            kwargs={'tenant_name': no_name_invite.tenant.name, 'pk': no_name_invite.pk}
+        )
+
+    def test_status(self):
+        response = self.client.get(self.retrieve_path)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_first_name(self):
+        response = self.client.get(self.retrieve_path)
+        assert response.data['first_name'] == 'Peter'
+
+    def test_last_name(self):
+        response = self.client.get(self.retrieve_path)
+        assert response.data['last_name'] == 'Pan'
+
+    def test_active(self):
+        response = self.client.get(self.retrieve_path)
+        assert response.data['is_active'] == True
+
+    def test_first_clicked(self):
+        self.client.get(self.retrieve_path)
+        self.invite.refresh_from_db()
+        assert self.invite.first_clicked
+
+    def test_first_clicked_not_updated(self):
+        """Test whether clicking on the invite a second time would change the value of first_clicked."""
+        self.client.get(self.retrieve_path)
+        self.invite.refresh_from_db()
+        first_clicked = deepcopy(self.invite.first_clicked)
+        self.client.get(self.retrieve_path)
+        self.invite.refresh_from_db()
+        assert first_clicked == self.invite.first_clicked
+
+    def test_no_first_name(self):
+        response = self.client.get(self.no_name_retrieve_path)
+        assert response.data['first_name'] == ''
+
+    def test_no_last_name(self):
+        response = self.client.get(self.no_name_retrieve_path)
+        assert response.data['last_name'] == ''
+
+    def test_not_active(self):
+        expired_creation_date = timezone.now() - timedelta(days=settings.TENANT_INVITE_EXPIRATION_IN_DAYS, hours=1)
+        old_invite = InviteFactory(time_created=expired_creation_date)
+        old_retrieve_path = reverse(
+            'rest_invite_retrieve',
+            kwargs = {'tenant_name': old_invite.tenant.name, 'pk': old_invite.pk}
+        )
+        response = self.client.get(old_retrieve_path)
+        assert response.data['is_active'] == False
+
+    def test_existing_user(self):
+        existing_user = UserFactory()
+        existing_user_invite = InviteFactory(email=existing_user.email)
+        existing_user_retrieve_path = reverse(
+            'rest_invite_retrieve',
+            kwargs={'tenant_name': existing_user_invite.tenant.name, 'pk': existing_user_invite.pk}
+        )
+        response = self.client.get(existing_user_retrieve_path)
+        assert response.data['detail'] == f'Your account is now successfully connected to {existing_user_invite.tenant.name}.'
+
+
+@override_settings(LANGUAGE_CODE='en')
+class TestInviteActivation(APITestCase):
+
+    def setUp(self):
+        self.invite = InviteFactory(first_name='Peter', last_name='Pan')
+        self.activation_url = self.invite.get_activation_url()
+        self.password = 'test1234?!'
+        self.post_data = {
+            "user": {
+                "password1": self.password,
+                "password2": self.password
+            }
+        }
+        self.response = self.client.patch(self.activation_url, data=self.post_data, format='json')
+
+    def test_activation(self):
+        assert self.response.status_code == status.HTTP_200_OK
+
+    def test_user_created(self):
+        User.objects.get(email=self.invite.email)
+
+    def test_user_tenant_relationship_created(self):
+        user = User.objects.get(email=self.invite.email)
+        tenant = self.invite.tenant
+        assert user.usertenantrelationship_set.filter(tenant=tenant)
+
+    def test_user_can_login(self):
+        login_path = reverse('rest_login')
+        post_data = {"email": self.invite.email, "password": self.password}
+        response = self.client.post(login_path, post_data)
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_invite_already_used(self):
+        response = self.client.patch(self.activation_url, data=self.post_data, format='json')
+        assert response.data['error'] == 'The invitation was already used.'
+
+    def test_existing_user(self):
+        existing_user = UserFactory()
+        existing_user_invite = InviteFactory(email=existing_user.email)
+        existing_user_activation_url = existing_user_invite.get_activation_url()
+        response = self.client.patch(existing_user_activation_url, data=self.post_data, format='json')
+        assert response.data['error'] == 'You are already a user, please use the link from the email.'
+
+    def test_inactive_invite(self):
+        expired_creation_date = timezone.now() - timedelta(days=settings.TENANT_INVITE_EXPIRATION_IN_DAYS, hours=1)
+        old_invite = InviteFactory(time_created=expired_creation_date)
+        old_invite_activation_url = old_invite.get_activation_url()
+        response = self.client.patch(old_invite_activation_url, data=self.post_data, format='json')
+        assert response.data['error'] == 'The invitation was not used while it was active.'

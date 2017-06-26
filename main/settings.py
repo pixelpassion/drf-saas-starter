@@ -604,3 +604,5 @@ if STAGE == 'local' or STAGE == 'testing':
     DEFAULT_PROTOCOL = 'http'
 
 TENANT_ROOT_SITE_ID = env.int('TENANT_ROOT_SITE_ID', default=SITE_ID)
+
+TENANT_INVITE_EXPIRATION_IN_DAYS = 1

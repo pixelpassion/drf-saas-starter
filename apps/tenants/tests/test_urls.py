@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve, reverse
 
-from apps.tenants.tests.factories import TenantFactory
+from apps.tenants.tests.factories import InviteFactory, TenantFactory
 
 
 class TestTenantsURLs(TestCase):
@@ -27,6 +27,33 @@ class TestTenantsURLs(TestCase):
 
     def test_tenants_registration_user_rest_register_resolve(self):
         assert resolve(f'/api/sign-up/tenant/{self.tenant.name}/user/').view_name == 'user_rest_register'
+
+    def test_tenants_registration_rest_invite_reverse(self):
+        kwargs = {'tenant_name': self.tenant.name}
+        assert reverse('rest_invite', kwargs=kwargs) == f'/api/sign-up/tenant/{self.tenant.name}/invite/'
+
+    def test_tenants_registration_rest_invite_resolve(self):
+        assert resolve(f'/api/sign-up/tenant/{self.tenant.name}/invite/').view_name == 'rest_invite'
+
+    def test_tenants_registration_rest_invite_retrieve_reverse(self):
+        invite = InviteFactory()
+        assert reverse('rest_invite_retrieve', kwargs={'tenant_name': self.tenant.name, 'pk': invite.pk}) ==\
+               f'/api/sign-up/tenant/{self.tenant.name}/invite/{invite.pk}/'
+
+    def test_tenants_registration_rest_invite_retrieve_resolve(self):
+        invite = InviteFactory()
+        assert resolve(f'/api/sign-up/tenant/{self.tenant.name}/invite/{invite.pk}/').view_name ==\
+               'rest_invite_retrieve'
+
+    def test_tenants_registration_rest_invite_activation_reverse(self):
+        invite = InviteFactory()
+        assert reverse('rest_invite_activation', kwargs={'tenant_name': self.tenant.name, 'pk': invite.pk}) ==\
+               f'/api/sign-up/tenant/{self.tenant.name}/invite/{invite.pk}/activate/'
+
+    def test_tenants_registration_rest_invite_activation_resolve(self):
+        invite = InviteFactory()
+        assert resolve(f'/api/sign-up/tenant/{self.tenant.name}/invite/{invite.pk}/activate/').view_name ==\
+               'rest_invite_activation'
 
     def test_tenants_registration_email_verification_sent_reverse(self):
         assert reverse('account_email_verification_sent') == '/api/sign-up/confirm-email/'

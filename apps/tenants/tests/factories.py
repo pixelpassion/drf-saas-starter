@@ -15,3 +15,12 @@ class TenantFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'tenants.Tenant'
+
+
+class InviteFactory(factory.django.DjangoModelFactory):
+    tenant = factory.SubFactory(TenantFactory)
+    inviter = factory.SubFactory('apps.users.tests.factories.UserFactory')
+    email = factory.Sequence(lambda n: 'user-{0}@other-domain.com'.format(n))
+
+    class Meta:
+        model = 'tenants.Invite'

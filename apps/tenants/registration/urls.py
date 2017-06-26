@@ -2,11 +2,20 @@ from allauth.account.views import email_verification_sent
 
 from django.conf.urls import url
 
-from .views import GetAllowedVerifyEmailView, TenantRegisterView, TenantUserRegisterView
+from .views import GetAllowedVerifyEmailView, InviteActivationView, InviteCreateView, \
+    InviteRetrieveView, TenantRegisterView, TenantUserRegisterView
 
 urlpatterns = [
     url(r'^tenant/$', TenantRegisterView.as_view(), name='tenant_rest_register'),
     url(r'^tenant/(?P<tenant_name>[-:\w]+)/user/$', TenantUserRegisterView.as_view(), name='user_rest_register'),
+
+    url(r'^tenant/(?P<tenant_name>[-:\w]+)/invite/$', InviteCreateView.as_view(), name='rest_invite'),
+    url(r'^tenant/(?P<tenant_name>[-:\w]+)/invite/(?P<pk>[0-9a-f-]+)/$',
+        InviteRetrieveView.as_view(),
+        name='rest_invite_retrieve'),
+    url(r'^tenant/(?P<tenant_name>[-:\w]+)/invite/(?P<pk>[0-9a-f-]+)/activate/$',
+        InviteActivationView.as_view(),
+        name='rest_invite_activation'),
 
     # FIXME Do we need this active?
     # This url is used by django-allauth and empty TemplateView is

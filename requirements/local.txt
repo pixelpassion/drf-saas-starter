@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
--e git+git://github.com/unicorn-supplies/pytest-env.git#egg=pytest_env
 amqp==2.1.4
 appnope==0.1.0            # via ipython
 argon2-cffi==16.3.0
@@ -102,8 +101,9 @@ pytest-cov==2.5.1         # via pytest-cover
 pytest-cover==3.0.0       # via pytest-coverage
 pytest-coverage==0.0
 pytest-django==3.1.2
+pytest-env==0.6.2
 pytest-sugar==0.8.0
-pytest==3.0.7             # via pytest-cov, pytest-django, pytest-sugar
+pytest==3.0.7             # via pytest-cov, pytest-django, pytest-env, pytest-sugar
 python-dateutil==2.6.0    # via faker
 python-http-client==2.2.1
 python3-openid==3.1.0

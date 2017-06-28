@@ -78,15 +78,28 @@ Mailhog
 We are using `Mailhog <https://github.com/mailhog/MailHog>`_ as a local mailserver in development. It receives mails at localhost:1025 and provides a mail client, served under `<http://localhost:8025>`_ (when using docker-compose).
 
 
-Fabfile
--------
+Fabfile / Makefile
+------------------
 
-This package contains a fab file with some useful commands.
+.. warning::
+   We are moving from ``Fabric`` to ``make``. The following content is work in progress.
+
+For a list of ``make`` commands, type in::
+
+    $ make
+
+
+For adding colors to a make command::
+
+	@echo "\033[92mGreen!\033[0m"
+	@echo "\x1b[33;01mYellow!\033[0m"
+	@echo "\x1b[31;01mRed!\033[0m"
+
 
 Cleaning and testing code::
 
     # Remove generated files like *.pyc etc.
-    $ fab clean
+    $ make clean
 
     # Use flake8 to check Python style, PEP8 and McCabe complexity
     $ fab flake8
@@ -95,14 +108,13 @@ Cleaning and testing code::
     $ fab isort
 
     # Start tests
-    $ fab test
+    $ make test
 
     # Prepare code to be commited, it integrates clean, flake8, isort, test
-    $ fab build
+    $ make build
 
     # generate a coverage report
     $ fab coverage
-
 
 Committing and pushing code::
 
@@ -134,20 +146,16 @@ Deployment with Heroku::
     # Create a heroku app
     $ fab create_heroku_app:name_of_cool_app
 
-Other commands::
+Handling of requirements::
 
     # Get licenses of installed pip packaes, uses yolk
     $ fab licenses
 
     # Adding pip requirements (after adding packates to base.in, local.in or production.in)
-    # fab pip
+    # make pip-compile
 
     # Updating pip requirements
-    # fab pip:update
-
-    # Create documentation
-    # fab doc
-    # fab doc:autobuild
+    # make pip-update
 
 
 Subdomains

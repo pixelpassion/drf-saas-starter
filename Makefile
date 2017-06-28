@@ -4,7 +4,7 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 test: ## Run tests
-	@echo "Testing..."
+	@echo "\033[92mTesting...\033[0m"
 	@docker-compose run --rm django py.test
 
 isort: ## Sorts the imports
@@ -18,10 +18,10 @@ pep8: ## PEP8 Check with Flake8
 	flake8 --statistics --exit-zero
 
 build: isort clean pep8 test  ## Prepares built (isort, clean, PEP8 check, testing)
-	@echo "Prepares a changed codebase..."
+	@echo "\033[1;91mPrepares a changed codebase...\033[0m"
 
 deploy: ## Deploy to Heroku
-	@echo "Not implemented yet"
+	@echo "\x1b[31;01mNot implemented yet!\033[0m"
 
 install: ## Local installation for developers
 	@echo "Please start local_setup.py for now."
@@ -40,17 +40,16 @@ docker-status: ## See the status of the Docker Container
 
 docker-restart:	docker-stop docker-start	## Restart the Docker container
 
-pip-compile: ## Creates new pip requirement files
-	@echo "Creating new requirement-files from *.in-Files ..."
+pip-compile: ## Creates new pip requirement files, add  --generate-hashes
+	@echo "\033[92mCreating new requirement-files from *.in-Files...\033[0m"
 	pip-compile --output-file requirements/base.txt requirements/base.in
 	pip-compile --output-file requirements/local.txt requirements/local.in
 	pip-compile --output-file requirements/production.txt requirements/production.in
 	pip-compile --output-file requirements/documentation.txt requirements/documentation.in
 	@echo "\nYou can use 'make pip-update' to update the requirements and 'make pip-install to install the requirments locally"
 
-
-pip-update: ## Updates the pip requirements
-	@echo "Updating all pip requirements..."
+pip-update: ## Updates the pip requirements, add  --generate-hashes
+	@echo "\033[92mUpdating all pip requirements...\033[0m"
 	pip-compile -U --output-file requirements/base.txt requirements/base.in
 	pip-compile -U --output-file requirements/local.txt requirements/local.in
 	pip-compile -U --output-file requirements/production.txt requirements/production.in
@@ -66,6 +65,10 @@ django-shell: # Opens the Django shell
 django-bash: # Opens the Django bash
 	docker-compose run django bash
 
+colors:
+	@echo "\033[92mGreen!\033[0m"
+	@echo "\x1b[33;01mYellow!\033[0m"
+	@echo "\x1b[31;01mRed!\033[0m"
 
 #release: ## Release the given version
 #ifndef version

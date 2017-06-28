@@ -27,4 +27,10 @@ Swagger is used to print an API documentation, accessible within http://localhos
 
 You need to be signed in to access all endpoints.
 
+If you want to access protected endpoints, you need to set the Authorization token::
 
+.. image:: swagger_authorization.png
+   :scale: 50 %
+   :alt: Authorization Token
+
+   How to set the Authorization header in the Swagger documentation.

@@ -45,7 +45,7 @@ requirements
 
 We are using pip-compile for management of requirements.
 
-If you want to add new requirements, you need to add them to one of the `.in` files, the `.txt` files are generated with the following command::
+If you want to add new requirements, you need to add them to one of the ``.in``files, the `.txt` files are generated with the following command::
 
     make pip-compile
 
@@ -60,6 +60,7 @@ There are different requirement files:
 * production.txt (only production use)
 * documentation.txt (for the Sphinx Docker container)
 
+We are `saving hashes <https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode> `_ for more secure pip packages
 
 Pycharm
 -------

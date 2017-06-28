@@ -30,6 +30,7 @@ Clone the GitHub repository::
 
     $ git clone git@github.com/jensneuhaus/einhorn-starter
 
+
 Start the local setup, it creates the required .env file::
 
     $ python local_setup.py
@@ -65,4 +66,12 @@ That's it!
 
 Now you can run :doc:`docker` for development or to run it locally. For deployment you should read :doc:`heroku`.
 
+Local development
+--------------------
+
+If you want to develop locally, you need to have an virtual environment (for Pycharm and some console tools)::
+
+    $ virtualenv -p python3 .venv
+    $ source .venv/bin/activate
+    $ pip install -r requirements/local.txt
 

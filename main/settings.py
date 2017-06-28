@@ -535,6 +535,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 CORS_ORIGIN_WHITELIST = (
     '0.0.0.0:8000',
     'localhost:8000',
+    'localhost:3000',
     '127.0.0.1:8000',
 )
 

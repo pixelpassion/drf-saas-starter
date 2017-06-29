@@ -26,7 +26,7 @@ class CreateMailTest(TestCase):
         self.valid_from_address = "mail-test@mailtest.com"
         self.valid_subject = "Hello there {{ name }}"
         self.valid_context = {
-            'name': 'Cheryl'
+            'name': 'Max'
         }
 
     def create_mail(self, template=None, context=None, to_address=None,
@@ -117,7 +117,7 @@ class SendMailTest(TestCase):
 
         # Create valid Mail object
         self.mail = Mail.objects.create_mail(
-            "test_template", {'name': 'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com')
+            "test_template", {'name': 'Max'}, 'mailtest@sink.sendgrid.net', 'test@example.com')
 
     def test_send_mail_anymail(self):
         """Call mail.send().
@@ -158,7 +158,7 @@ class SendMailInfoTest(TestCase):
         # Create valid Mail object
         self.mail = Mail.objects.create_mail(
             "test_template",
-            {'name': 'Cheryl'},
+            {'name': 'Max'},
             'mailtest@sink.sendgrid.net',
             'test@example.com',
             subject="Custom subject"
@@ -173,7 +173,7 @@ class SendMailInfoTest(TestCase):
 
         template = MailTemplate.objects.get(name="test_template")
         self.mail = Mail.objects.create_mail(
-            template, {'name': 'Cheryl'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
+            template, {'name': 'Max'}, 'mailtest@sink.sendgrid.net', 'test@example.com', subject="Custom subject")
 
         # Send the mail and record time sent
         self.mail.send()
@@ -203,13 +203,13 @@ class MailTemplateTest(TestCase):
             html_template="<p><b>Hello</b>, {{ name }}!</p>"
         )
         self.mail_template.save()
-        self.context = {'name': 'Cheryl'}
+        self.context = {'name': 'Max'}
 
     def test_make_subject(self):
         """Check that the correct subject line is generated."""
         self.assertEqual(
             self.mail_template.make_subject(self.context),
-            "Message for Cheryl",
+            "Message for Max",
             msg="Mail template generated incorrect subject"
         )
 
@@ -218,8 +218,8 @@ class MailTemplateTest(TestCase):
         self.mail_template.text_template = "Hello, {{ name }}!"
         self.mail_template.save()
 
-        self.assertInHTML("<p><b>Hello</b>, Cheryl!</p>", self.mail_template.make_output(self.context)['html'])
-        self.assertInHTML("Hello, Cheryl!", self.mail_template.make_output(self.context)['text'])
+        self.assertInHTML("<p><b>Hello</b>, Max!</p>", self.mail_template.make_output(self.context)['html'])
+        self.assertInHTML("Hello, Max!", self.mail_template.make_output(self.context)['text'])
 
     def test_html_to_text(self):
         """Check that html_to_text() produces correct output."""
@@ -229,8 +229,8 @@ class MailTemplateTest(TestCase):
 
     def test_make_output_html_only(self):
         """Check that the correct html and text output is produced when only html template is provided."""
-        self.assertInHTML("<p><b>Hello</b>, Cheryl!</p>", self.mail_template.make_output(self.context)['html'])
-        self.assertInHTML("**Hello**, Cheryl!\n\n", self.mail_template.make_output(self.context)['text'])
+        self.assertInHTML("<p><b>Hello</b>, Max!</p>", self.mail_template.make_output(self.context)['html'])
+        self.assertInHTML("**Hello**, Max!\n\n", self.mail_template.make_output(self.context)['text'])
 
     def tearDown(self):
         self.mail_template = None

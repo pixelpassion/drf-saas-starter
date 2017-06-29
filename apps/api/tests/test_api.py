@@ -228,7 +228,7 @@ class TestPasswordChange(APITestCase):
 
     def test_change_password_message(self):
         response = self.change_password(new_password1='new56789', new_password2='new56789')
-        assert 'detail' in response.data  # FIXME Because of some translation issue I can't access the content
+        assert str(response.data['detail']) == 'New password has been saved.'
 
     def test_new_password_login(self):
         self.change_password(new_password1='new56789', new_password2='new56789')
@@ -238,7 +238,7 @@ class TestPasswordChange(APITestCase):
     def test_old_password_login(self):
         self.change_password(new_password1='new56789', new_password2='new56789')
         self.client.logout()
-        assert self.client.login(self.login_path, email=self.verified_user.email, password='test1234') == False
+        assert not self.client.login(self.login_path, email=self.verified_user.email, password='test1234')
 
     def test_short_password_change_status(self):
         response = self.change_password(new_password1='short', new_password2='short')
@@ -276,7 +276,7 @@ class TestPasswordChange(APITestCase):
 
     def test_old_password_change_message(self):
         response = self.change_password(new_password1='test1234', new_password2='test1234')
-        assert 'detail' in response.data  # FIXME Because of some translation issue I can't access the content
+        assert str(response.data['detail']) == 'New password has been saved.'
 
     def test_different_passwords_status(self):
         response = self.change_password(new_password1='new56789', new_password2='diff7654')

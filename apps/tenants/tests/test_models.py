@@ -49,20 +49,14 @@ class TenantDomainTests(TestCase):
 
     def test_domains(self):
         """Can the tenant set external domains?"""
-        self.domain = Domain.objects.create(domain="a.com", tenant=self.tenant)
+        Domain.objects.create(domain="a.com", tenant=self.tenant)
 
     def test_create_tenant_method(self):
-        """Can the tenant set external domains?"""
-
         user = User.objects.create(email="newtenant@example.com", first_name="Taylor", last_name="Tenant")
-
         Tenant.objects.create_tenant(user, "B", "b")
 
     def test_create_tenant_with_already_existing_domain(self):
-        """Can the tenant set external domains?"""
-
         user = User.objects.create(email="newtenant@example.com", first_name="Taylor", last_name="Tenant")
-
         with self.assertRaises(ValidationError):
             Tenant.objects.create_tenant(user, "A", "a")
 

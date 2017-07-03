@@ -94,4 +94,3 @@ You can check the status of domains & automated SSL handling::
 
     heroku domains
     heroku certs:auto
-

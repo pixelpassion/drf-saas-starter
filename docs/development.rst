@@ -4,10 +4,10 @@ Onboarding & Local development
 New to Django?
 --------------
 
-Check out these resources to learn Python and Django
+Check out these resources to learn Python and Django:
 
 * Python Tutorial: https://docs.python.org/3/tutorial/
-* Python Tutorial auf Deutsch: https://media.readthedocs.org/pdf/py-tutorial-de/python-3.3/py-tutorial-de.pdf
+* Python Tutorial auf Deutsch: https://py-tutorial-de.readthedocs.io/de/python-3.3/
 * Django Documentation: https://docs.djangoproject.com/en/1.10/
 * Django Tutorial: https://docs.djangoproject.com/en/1.10/intro/
 * Two Scoops for Django: https://www.twoscoopspress.com/products/two-scoops-of-django-1-11
@@ -28,7 +28,7 @@ Please read the :doc:`docker` information next.
 
 The project needs an .env file - it contains secret credentials or such which should not be contained in the code.
 
-A basic .env file is created automatically, when calling ``python local_setup.py``:
+A basic .env file is created automatically, when calling ``python local_setup.py``.
 
 The following entries are needed::
 
@@ -40,12 +40,12 @@ The following entries are needed::
     SECRET_KEY='<a generated secret>'
     JWT_SECRET='<a generated secret>'
 
-requirements
+Requirements
 ------------
 
 We are using pip-compile for management of requirements.
 
-If you want to add new requirements, you need to add them to one of the ``.in``files, the `.txt` files are generated with the following command::
+If you want to add new requirements, you need to add them to one of the ``.in`` files, the ``.txt`` files are generated with the following command::
 
     make pip-compile
 
@@ -60,7 +60,7 @@ There are different requirement files:
 * production.txt (only production use)
 * documentation.txt (for the Sphinx Docker container)
 
-We are `saving hashes <https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode> `_ for more secure pip packages
+We are `saving hashes <https://pip.pypa.io/en/stable/reference/pip_install/#hash-checking-mode>`_ for more secure pip packages.
 
 Pycharm
 -------
@@ -183,5 +183,3 @@ What else
 ---------
 
 You should get used to the concepts of :doc:`celery` and :doc:`channels`.
-
-

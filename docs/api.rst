@@ -6,8 +6,8 @@ We are using django-rest-framework to provide an API.
 The API provides functionality for the django-rest-framework integration:
 
 * Sign in and Sign up for tenants and users.
-* Password reset / forget endpoints
-* Users listing / details with comments & activation-stream Endpoints
+* Password reset / forget endpoints.
+* Users listing / details with comments & activation-stream Endpoints.
 * A notification endpoint.
 
 Authentication
@@ -17,17 +17,17 @@ django-rest-auth and django-allauth are used to provide authentication::
 
 We are using `JWT <https://jwt.io>`_ (`RFC7159 <https://tools.ietf.org/html/rfc7519>`_).
 
-After succesful login, a JWT token is sent back to the client. The token needs to be safed in the client.
+After successful login, a JWT token is sent back to the client. The token needs to be saved in the client.
 
 
 
-For protected endpoints an HTTP Authentica`tion header needs to be sent from the client::
+For protected endpoints an HTTP Authentication header needs to be sent from the client::
 
     Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....
 
 
 Pagination
---------------------
+----------
 
 You can use the ``page`` parameter in the URL to paginate a list of results. The size of the page can be set with ``page_size`` parameter.
 
@@ -48,7 +48,7 @@ Response::
     }
 
 HTTP Status codes
---------------------
+-----------------
 
 Everything is okay:
 
@@ -69,7 +69,7 @@ An error happened:
 Endpoints
 ---------
 
-You find some basic informations here, more infos within Swagger.
+You find some basic information here, more info within Swagger.
 
 current_user
 ~~~~~~~~~~~~
@@ -77,7 +77,7 @@ current_user
 login
 ~~~~~
 
-The following informations are sent after a successful sign in::
+The following information is sent after a successful sign in::
 
     {
       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....",
@@ -103,5 +103,3 @@ users
 ~~~~~
 
 with comments
-
-

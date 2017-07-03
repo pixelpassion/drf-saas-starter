@@ -6,4 +6,3 @@ React
 
 Angular JS
 ----------
-

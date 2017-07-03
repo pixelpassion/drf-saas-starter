@@ -95,9 +95,9 @@ Delete all images::
 
 Delete `dangling images <http://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/>`_::
 
-   docker rmi $(docker images -f "dangling=true" -q)
+    docker rmi $(docker images -f "dangling=true" -q)
 
-Fore more information:
+For more information:
 
 * https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
 
@@ -106,25 +106,25 @@ Postgres
 --------
 
 .. warning::
-   The Port ``5432`` is not exposed to the outside, they will not interfer with any local Postgres databases. If you want to expose the ports, you need to add ``ports: "5432:5432"`` to the Postgres service in the ``docker-compose.yml``.
+   The Port ``5432`` is not exposed to the outside, they will not interfere with any local Postgres databases. If you want to expose the ports, you need to add ``ports: "5432:5432"`` to the Postgres service in the ``docker-compose.yml``.
 
 To access ``psql``, you need to get the ID of the Postgres container::
 
-   $ docker ps -aqf name=postgres
-   9b92a5a93aa5
+    $ docker ps -aqf name=postgres
+    9b92a5a93aa5
 
 Then you can start ``psql`` within the Container::
 
-   docker exec -ti 9b9 psql -U postgres
+    docker exec -ti 9b9 psql -U postgres
 
 Some useful commands::
 
-   # Get all tables
-   \dt
-   # Get help for SQL commands
-   \help
-   # Exit
-   \quit
+    # Get all tables
+    \dt
+    # Get help for SQL commands
+    \help
+    # Exit
+    \quit
 
 
 Dry
@@ -134,13 +134,13 @@ Dry
 
 Installation ::
 
-   $ curl -sSf https://moncho.github.io/dry/dryup.sh | sudo sh
-   $ sudo chmod 755 /usr/local/bin/dry
+    $ curl -sSf https://moncho.github.io/dry/dryup.sh | sudo sh
+    $ sudo chmod 755 /usr/local/bin/dry
 
 Start it::
 
-   $ dry
+    $ dry
 
-Press ``1`` to see the running containers, ``2`` for images and ``3`` for network informations.
+Press ``1`` to see the running containers, ``2`` for images and ``3`` for network information.
 
 You can check stats, see logs or restart a container etc.

@@ -13,8 +13,6 @@ django-environ
 
 * `django-environ <https://github.com/joke2k/django-environ>`_: Configuration by environment variables according to 12Factor model (`License <https://github.com/joke2k/django-environ/blob/develop/LICENSE.txt>`_, `Documentation <https://django-environ.readthedocs.io>`_)
 
-Configuration by environment variables according to 12Factor model
-
 
 django-allauth
 --------------

@@ -32,8 +32,7 @@ Basics
 Channels
 ~~~~~~~~
 
-We are using the ``channels.test.ChannelTestCase`` base class - it swaps out the channel layer for a captive
-in-memory layer, meaning we don't need an external server to running to run tests.
+We are using the ``channels.test.ChannelTestCase`` base class - it swaps out the channel layer for a captive in-memory layer, meaning we don't need an external server to running to run tests.
 
 Celery
 ~~~~~~
@@ -61,5 +60,3 @@ The circle.yml file..
 
 Coverage
 --------
-
-

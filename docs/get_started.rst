@@ -14,9 +14,9 @@ The Package provides a backend with RESTful API endpoints. The admin is only for
 Users
 
 * need to be activated by the tenant.
-* can edit their profile informations.
+* can edit their profile information.
 * can add comments to other users (or other objects in the system).
-* can get notifications, when things happen (f.e. a comment is received)
+* can get notifications, when things happen (f.e. a comment is received).
 
 The application is ready for business objects to be added to the system. Objects can have an activity stream (= a timeline) with actions regarding that object. The user itself has an activity stream as well (e.g. for comments).
 
@@ -74,4 +74,3 @@ If you want to develop locally, you need to have an virtual environment (for Pyc
     $ virtualenv -p python3 .venv
     $ source .venv/bin/activate
     $ pip install -r requirements/local.txt
-

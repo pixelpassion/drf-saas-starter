@@ -8,4 +8,3 @@ We are using Celery with RabbitMQ / CloudAMQP as a message broker.
 
 Requirements
 ------------
-

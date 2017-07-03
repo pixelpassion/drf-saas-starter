@@ -39,10 +39,14 @@ Fore more information read :doc:`email`.
 Comments
 --------
 
-The functionality to add comments to a given object, e.g. a user:
+The functionality to add comments of objects in any model, e.g. an individual user:
 
-* Feature 1
-* Feature 2
+* Can be used for any model.
+* Doesn't change the commented model.
+* Fast setup for ViewSets.
+
+Fore more information read :doc:`comments`.
+
 
 Activity stream
 ---------------

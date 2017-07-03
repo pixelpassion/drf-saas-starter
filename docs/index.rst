@@ -11,6 +11,7 @@ A boilerplate for building production SaaS apps. The goal is providing a boilerp
    api
    apps
    users
+   comments
    email
    channels
    celery

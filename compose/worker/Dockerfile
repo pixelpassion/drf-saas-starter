@@ -1,5 +1,5 @@
-# 1 Use the Python 3.6.1 Slim
-FROM python:3.6.1-slim
+# 1 Use the Python Slim
+FROM python:3.6.2-slim
 
 # 2 Force stdin, stdout and stderr to be totally unbuffered and don´t write .pyc or .pyo files
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1

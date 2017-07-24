@@ -24,7 +24,7 @@ def validate_default_site(value):
     tenant_domain_site_id = Site.objects.get(domain=tenant_root_domain).id
 
     if value == tenant_domain_site_id:
-        raise ValidationError(f'The root domain {{tenant_root_domain}}can not be used.')
+        raise ValidationError(f'The root domain {{tenant_root_domain}} can not be used.')
 
 
 class TenantManager(models.Manager):

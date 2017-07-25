@@ -15,6 +15,14 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_DB=starter
 
+  # Postgres admin (Default login: pgadmin4@pgadmin.org / admin)
+  pgadmin:
+    image: fenglc/pgadmin4
+    ports:
+      - "5050:5050"
+    links:
+      - postgres
+
   # Key/Value store for Caching and channels
   redis:
     restart: always

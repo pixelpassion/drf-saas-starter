@@ -579,6 +579,7 @@ PROJECT_NAME = env.str('PROJECT_NAME', default='Untitled Project')
 SENTRY_MANAGEMENT_URL = env.str('SENTRY_MANAGEMENT_URL', default="#")
 MAILHOG_MANAGEMENT_URL = env.str('MAILHOG_MANAGEMENT_URL', default="http://localhost:8025")
 RABBITMQ_MANAGEMENT_URL = env.str('RABBITMQ_MANAGEMENT_URL', default="http://localhost:15672")
+POSTGRES_MANAGEMENT_URL = env.str('POSTGRES_MANAGEMENT_URL', default="http://localhost:5050")
 SPHINX_DOCUMENTATION_URL = env.str('SPHINX_DOCUMENTATION_URL', default="http://localhost:8007")
 REDIS_BROWSER_MANAGEMENT_URL = env.str('REDIS_BROWSER_MANAGEMENT_URL', default="http://localhost:8019")
 

@@ -1,5 +1,5 @@
-actstream-drf
-=============
+Activities
+==========
 
 This app provides an integration of `Django Activity Stream <http://django-activity-stream.readthedocs.io/en/latest/index.html>`_ with the Django REST Framework.
 
@@ -7,9 +7,9 @@ This app provides an integration of `Django Activity Stream <http://django-activ
 Creating actions
 ----------------
 
-Import action from actstream::
+Import action from activities::
 
-    from actstream import action
+    from activities import action
 
 If you would call it from the save method of a Comment model it could look like this::
 
@@ -20,14 +20,14 @@ If you would call it from the save method of a Comment model it could look like 
 For more information on the usage of Django Activity Stream please read the documentation: http://django-activity-stream.readthedocs.io/en/latest/index.html
 
 
-Adding serializers to actstream_drf
+Adding serializers to activities
 -----------------------------------
 
 In order to access the information that you have created by the action, you need to define serializers for the models involved.
 
 .. warning:: Think about what serializer to use. Which fields should be serialized and transmitted?
 
-In ``serializers.py`` of actstream_drf change and add serializers to the to_representation method of ActionObjectGenericRelatedField.
+In ``serializers.py`` of activities change and add serializers to the to_representation method of ActionObjectGenericRelatedField.
 
 
 Accessing activities that correspond to a model
@@ -35,7 +35,7 @@ Accessing activities that correspond to a model
 
 Import the ActivitiesMixin in your ``views.py``::
 
-    from ..actstream_drf.mixins import ActivitiesMixin
+    from ..activities.mixins import ActivitiesMixin
 
 Add the ActivitiesMixin to your ViewSet like in this example::
 

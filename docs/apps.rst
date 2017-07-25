@@ -48,9 +48,9 @@ The functionality to add comments of objects in any model, e.g. an individual us
 Fore more information read :doc:`comments`.
 
 
-actstream-drf
--------------
+Activities
+----------
 
 Connection between Django Activity Stream and Django REST Framework.
 
-Fore more information read :doc:`actstream_drf`.
+Fore more information read :doc:`activities`.

@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 
-from ..actstream_drf.mixins import ActivitiesMixin
+from ..activities.mixins import ActivitiesMixin
 from ..comments.mixins import CommentsMixin
 from .models import User
 from .serializers import UserSerializer

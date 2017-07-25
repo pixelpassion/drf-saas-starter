@@ -18,8 +18,6 @@ RUN pip install -r /requirements/local.txt \
     && groupadd -r django \
     && useradd -r -g django django
 
-RUN pip install -e git+https://github.com/unicorn-supplies/django-saas-email@657d75a889eaf76ace0f385533300ec4ca2ee4cf#egg=django-saas-email
-
 # 6 Copy the project folder
 COPY . /app/
 

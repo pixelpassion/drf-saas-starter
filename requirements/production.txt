@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements/production.txt requirements/production.in
 #
--e git+https://github.com/unicorn-supplies/django-saas-email@657d75a889eaf76ace0f385533300ec4ca2ee4cf#egg=django-saas-email
+-e git+https://github.com/unicorn-supplies/django-saas-email@b5e8553c92a5334c1dbf09886593b3bb791d64b4#egg=django-saas-email
 amqp==2.2.1
 argon2-cffi==16.3.0
 asgi-redis==1.4.2

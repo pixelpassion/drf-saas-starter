@@ -9,7 +9,7 @@ Creating actions
 
 Import action from activities::
 
-    from activities import action
+    from actstream import action
 
 If you would call it from the save method of a Comment model it could look like this::
 

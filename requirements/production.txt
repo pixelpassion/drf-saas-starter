@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements/production.txt requirements/production.in
 #
+-e git+https://github.com/unicorn-supplies/django-saas-email@657d75a889eaf76ace0f385533300ec4ca2ee4cf#egg=django-saas-email
 amqp==2.2.1
 argon2-cffi==16.3.0
 asgi-redis==1.4.2
@@ -27,8 +28,10 @@ daphne==1.3.0
 defusedxml==0.5.0
 django-activity-stream==0.6.4
 django-allauth==0.30.0
+django-anymail==0.11.1
 django-cors-headers==2.1.0
 django-environ==0.4.3
+django-model-utils==3.0.0
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -39,6 +42,7 @@ djangorestframework-jwt==1.11.0
 djangorestframework==3.6.3
 h2==3.0.1
 hpack==3.0.0
+html2text==2016.9.19
 hyperframe==5.1.0
 hyperlink==17.3.0
 idna==2.5
@@ -57,12 +61,14 @@ pyasn1==0.2.3
 pycparser==2.18
 pyjwt==1.5.2
 pyopenssl==17.2.0
+python-http-client==2.4.0
 python3-openid==3.1.0
 pytz==2017.2
 raven==6.1.0
 redis==2.10.5
 requests-oauthlib==0.8.0
 requests==2.18.1
+sendgrid==4.2.0
 service-identity==17.0.0
 simplejson==3.11.1
 six==1.10.0

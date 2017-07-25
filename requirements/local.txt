@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
+-e git+https://github.com/unicorn-supplies/django-saas-email@657d75a889eaf76ace0f385533300ec4ca2ee4cf#egg=django-saas-email
 amqp==2.2.1
 appnope==0.1.0            # via ipython
 argon2-cffi==16.3.0
@@ -32,12 +33,14 @@ decorator==4.1.2          # via ipython, traitlets
 defusedxml==0.5.0
 django-activity-stream==0.6.4
 django-allauth==0.30.0
+django-anymail==0.11.1
 django-channels-panel==0.0.5
 django-cors-headers==2.1.0
 django-coverage-plugin==1.5.0
 django-debug-toolbar==1.8
 django-environ==0.4.3
 django-extensions==1.8.1
+django-model-utils==3.0.0
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -53,6 +56,7 @@ first==2.0.1              # via pip-tools
 flake8==3.3.0
 h2==3.0.1
 hpack==3.0.0
+html2text==2016.9.19
 hyperframe==5.1.0
 hyperlink==17.3.0
 idna==2.5
@@ -101,11 +105,13 @@ pytest-env==0.6.2
 pytest-sugar==0.8.0
 pytest==3.1.3             # via pytest-cov, pytest-django, pytest-env, pytest-sugar
 python-dateutil==2.6.1    # via faker
+python-http-client==2.4.0
 python3-openid==3.1.0
 pytz==2017.2
 redis==2.10.5
 requests-oauthlib==0.8.0
 requests==2.18.1
+sendgrid==4.2.0
 service-identity==17.0.0
 simplegeneric==0.8.1      # via ipython
 simplejson==3.11.1

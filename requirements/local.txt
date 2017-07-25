@@ -4,128 +4,123 @@
 #
 #    pip-compile --output-file requirements/local.txt requirements/local.in
 #
-amqp==2.1.4
+amqp==2.2.1
 appnope==0.1.0            # via ipython
 argon2-cffi==16.3.0
-asgi-redis==1.3.0
-asgiref==1.1.1
+asgi-redis==1.4.2
+asgiref==1.1.2
 asn1crypto==0.22.0
-astroid==1.5.2            # via pylint, pylint-celery, pylint-plugin-utils
-attrs==16.3.0
-autobahn==17.5.1
-automat==0.5.0
-billiard==3.5.0.2
-celery==4.0.2
+astroid==1.5.3            # via pylint, pylint-celery, pylint-plugin-utils
+attrs==17.2.0
+autobahn==17.7.1
+automat==0.6.0
+bcrypt==3.1.3             # via paramiko
+billiard==3.5.0.3
+celery==4.1.0
+certifi==2017.4.17
 cffi==1.10.0
-channels==1.1.3
+channels==1.1.6
+chardet==3.0.4
 click==6.7                # via pip-tools
 constantly==15.1.0
-coreapi==2.3.0
+coreapi==2.3.1
 coreschema==0.0.4
 coverage==4.4.1
-cryptography==1.8.2
-cssselect==1.0.1
-cssutils==1.0.2
-daphne==1.2.0
-decorator==4.0.11         # via ipython, traitlets
+cryptography==2.0
+daphne==1.3.0
+decorator==4.1.2          # via ipython, traitlets
 defusedxml==0.5.0
-django-activity-stream==0.6.3
+django-activity-stream==0.6.4
 django-allauth==0.30.0
-django-anymail==0.9
 django-channels-panel==0.0.5
-django-cors-headers==2.0.2
+django-cors-headers==2.1.0
 django-coverage-plugin==1.5.0
 django-debug-toolbar==1.8
 django-environ==0.4.3
-django-extensions==1.7.9
+django-extensions==1.8.1
 django-nyt==1.0b3
-django-premailer==0.2.0
 django-redis==4.8.0
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
 django-tinymce==2.6.0
 django==1.10.7
-djangorestframework-jwt==1.10.0
+djangorestframework-jwt==1.11.0
 djangorestframework==3.6.3
 fabric3==1.13.1.post1
 factory-boy==2.8.1
-faker==0.7.12             # via factory-boy
+faker==0.7.18             # via factory-boy
 first==2.0.1              # via pip-tools
 flake8==3.3.0
-h2==2.6.2
+h2==3.0.1
 hpack==3.0.0
-html2text==2016.9.19
 hyperframe==5.1.0
+hyperlink==17.3.0
 idna==2.5
-incremental==16.10.1
+incremental==17.5.0
 ipython-genutils==0.2.0   # via traitlets
-ipython==6.0.0
-isort==4.2.5
+ipython==6.1.0
+isort==4.2.15
 itypes==1.1.0
 jedi==0.10.2              # via ipython
 jinja2==2.9.6
-kombu==4.0.2
+kombu==4.1.0
 lazy-object-proxy==1.3.1  # via astroid
-lxml==3.7.3
 markupsafe==1.0
 mccabe==0.6.1             # via flake8, pylint
 msgpack-python==0.4.8
 oauthlib==2.0.2
-openapi-codec==1.3.1
-packaging==16.8
-paramiko==2.1.2           # via fabric3
+openapi-codec==1.3.2
+paramiko==2.2.1           # via fabric3
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
 pip-tools==1.9.0
-premailer==3.0.0
 priority==1.3.0
 prompt-toolkit==1.0.14    # via ipython
-psycopg2==2.7.1
-ptyprocess==0.5.1         # via pexpect
-py==1.4.33                # via pytest
-pyasn1-modules==0.0.8
+psycopg2==2.7.3
+ptyprocess==0.5.2         # via pexpect
+py==1.4.34                # via pytest
+pyasn1-modules==0.0.9
 pyasn1==0.2.3
 pycodestyle==2.3.1        # via flake8
-pycparser==2.17
+pycparser==2.18
 pyflakes==1.5.0           # via flake8
 pygments==2.2.0           # via ipython
-pyjwt==1.5.0
+pyjwt==1.5.2
 pylint-celery==0.3
 pylint-common==0.2.5
 pylint-django==0.7.2
 pylint-plugin-utils==0.2.6  # via pylint-celery, pylint-common, pylint-django
-pylint==1.7.1
-pyopenssl==17.0.0
-pyparsing==2.2.0
+pylint==1.7.2
+pynacl==1.1.2             # via paramiko
+pyopenssl==17.2.0
 pytest-cov==2.5.1         # via pytest-cover
 pytest-cover==3.0.0       # via pytest-coverage
 pytest-coverage==0.0
 pytest-django==3.1.2
 pytest-env==0.6.2
 pytest-sugar==0.8.0
-pytest==3.0.7             # via pytest-cov, pytest-django, pytest-env, pytest-sugar
-python-dateutil==2.6.0    # via faker
-python-http-client==2.2.1
+pytest==3.1.3             # via pytest-cov, pytest-django, pytest-env, pytest-sugar
+python-dateutil==2.6.1    # via faker
 python3-openid==3.1.0
 pytz==2017.2
 redis==2.10.5
 requests-oauthlib==0.8.0
-requests==2.14.2
-sendgrid==4.1.0
+requests==2.18.1
 service-identity==17.0.0
 simplegeneric==0.8.1      # via ipython
-simplejson==3.10.0
+simplejson==3.11.1
 six==1.10.0
 sqlparse==0.2.3           # via django-debug-toolbar
 termcolor==1.1.0          # via pytest-sugar
 traitlets==4.3.2          # via ipython
-twisted[http2,tls]==17.1.0
-txaio==2.7.1
+twisted[http2,tls]==17.5.0
+txaio==2.8.1
 uritemplate==3.0.0
-vine==1.1.3
+urllib3==1.21.1
+vine==1.1.4
 wcwidth==0.1.7            # via prompt-toolkit
-werkzeug==0.12.1
+werkzeug==0.12.2
 whitenoise==3.3.0
 wrapt==1.10.10            # via astroid
 yolk3k==0.9
-zope.interface==4.4.1
+zope.interface==4.4.2

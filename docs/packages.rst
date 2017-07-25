@@ -85,4 +85,3 @@ Old list
 
 
 * `django-localflavor <https://github.com/django/django-localflavor>`_: (`License <https://github.com/django/django-localflavor/blob/master/LICENSE>`_), `Documentation <https://django-localflavor.readthedocs.io/en/latest/>`_)
-* django-premailer            # Inline CSS in HTML email templates

@@ -4,77 +4,70 @@
 #
 #    pip-compile --output-file requirements/base.txt requirements/base.in
 #
-amqp==2.1.4               # via kombu
+amqp==2.2.1               # via kombu
 argon2-cffi==16.3.0
-asgi-redis==1.3.0
-asgiref==1.1.1            # via asgi-redis, channels, daphne
+asgi-redis==1.4.2
+asgiref==1.1.2            # via asgi-redis, channels, daphne
 asn1crypto==0.22.0        # via cryptography
-attrs==16.3.0             # via automat, service-identity
-autobahn==17.5.1          # via daphne
-automat==0.5.0            # via twisted
-billiard==3.5.0.2         # via celery
-celery==4.0.2
+attrs==17.2.0             # via automat, service-identity
+autobahn==17.7.1          # via daphne
+automat==0.6.0            # via twisted
+billiard==3.5.0.3         # via celery
+celery==4.1.0
+certifi==2017.4.17        # via requests
 cffi==1.10.0              # via argon2-cffi, cryptography
-channels==1.1.3
+channels==1.1.6
+chardet==3.0.4            # via requests
 constantly==15.1.0        # via twisted
-coreapi==2.3.0            # via django-rest-swagger, openapi-codec
+coreapi==2.3.1            # via django-rest-swagger, openapi-codec
 coreschema==0.0.4         # via coreapi
-cryptography==1.8.2       # via pyopenssl
-cssselect==1.0.1          # via premailer
-cssutils==1.0.2           # via premailer
-daphne==1.2.0             # via channels
+cryptography==2.0         # via pyopenssl
+daphne==1.3.0             # via channels
 defusedxml==0.5.0         # via python3-openid
-django-activity-stream==0.6.3
+django-activity-stream==0.6.4
 django-allauth==0.30.0
-django-anymail==0.9
-django-cors-headers==2.0.2
+django-cors-headers==2.1.0
 django-environ==0.4.3
 django-nyt==1.0b3
-django-premailer==0.2.0
 django-redis==4.8.0
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
 django-tinymce==2.6.0
-django==1.10.7
-djangorestframework-jwt==1.10.0
+django==1.10.7            # via channels, django-allauth, django-environ, django-nyt, django-rest-auth
+djangorestframework-jwt==1.11.0
 djangorestframework==3.6.3
-h2==2.6.2                 # via twisted
+h2==3.0.1                 # via twisted
 hpack==3.0.0              # via h2
-html2text==2016.9.19
 hyperframe==5.1.0         # via h2
-idna==2.5                 # via cryptography, twisted
-incremental==16.10.1      # via twisted
+hyperlink==17.3.0         # via twisted
+idna==2.5                 # via cryptography, requests, twisted
+incremental==17.5.0       # via twisted
 itypes==1.1.0             # via coreapi
 jinja2==2.9.6             # via coreschema
-kombu==4.0.2              # via celery
-lxml==3.7.3               # via premailer
+kombu==4.1.0              # via celery
 markupsafe==1.0           # via jinja2
 msgpack-python==0.4.8     # via asgi-redis
 oauthlib==2.0.2           # via requests-oauthlib
-openapi-codec==1.3.1      # via django-rest-swagger
-packaging==16.8           # via cryptography
-premailer==3.0.0          # via django-premailer
+openapi-codec==1.3.2      # via django-rest-swagger
 priority==1.3.0           # via twisted
-psycopg2==2.7.1
-pyasn1-modules==0.0.8     # via service-identity
+psycopg2==2.7.3
+pyasn1-modules==0.0.9     # via service-identity
 pyasn1==0.2.3             # via pyasn1-modules, service-identity
-pycparser==2.17           # via cffi
-pyjwt==1.5.0              # via djangorestframework-jwt
-pyopenssl==17.0.0         # via service-identity, twisted
-pyparsing==2.2.0          # via packaging
-python-http-client==2.2.1  # via sendgrid
+pycparser==2.18           # via cffi
+pyjwt==1.5.2              # via djangorestframework-jwt
+pyopenssl==17.2.0         # via service-identity, twisted
 python3-openid==3.1.0     # via django-allauth
 pytz==2017.2              # via celery
 redis==2.10.5             # via asgi-redis, django-redis
 requests-oauthlib==0.8.0  # via django-allauth
-requests==2.14.2          # via coreapi, django-allauth, django-anymail, premailer, requests-oauthlib
-sendgrid==4.1.0
+requests==2.18.1          # via coreapi, django-allauth, requests-oauthlib
 service-identity==17.0.0  # via twisted
-simplejson==3.10.0        # via django-rest-swagger
-six==1.10.0               # via argon2-cffi, asgi-redis, asgiref, autobahn, automat, cryptography, django-anymail, django-environ, django-nyt, django-rest-auth, packaging, pyopenssl, txaio
-twisted[http2,tls]==17.1.0
-txaio==2.7.1              # via autobahn
+simplejson==3.11.1        # via django-rest-swagger
+six==1.10.0               # via argon2-cffi, asgi-redis, asgiref, autobahn, automat, cryptography, django-environ, django-nyt, django-rest-auth, pyopenssl, txaio
+twisted[http2,tls]==17.5.0  # via daphne
+txaio==2.8.1              # via autobahn
 uritemplate==3.0.0        # via coreapi
-vine==1.1.3               # via amqp
+urllib3==1.21.1           # via requests
+vine==1.1.4               # via amqp
 whitenoise==3.3.0
-zope.interface==4.4.1     # via twisted
+zope.interface==4.4.2     # via twisted

@@ -5,11 +5,8 @@ Django<1.11                 # Basics and boilerplate stuff
 django-environ              # Configuration by environment variables according to 12Factor model
 psycopg2                    # Database connector
 whitenoise                  # Static file serving
-sendgrid                    # just for testing, we should use django-anymail to be more flexible
 django-allauth==0.30.0      # For user registration, either via email or Open ID Providers
 celery                      # Asynchronous tasks
-django-anymail              # Email handling
-django-premailer            # Inline CSS in HTML email templates
 djangorestframework         # RESTful API
 django-rest-swagger         # Documentation for the API
 django-cors-headers         # Adds CORS (Cross-Origin Resource Sharing) headers to responses
@@ -18,7 +15,6 @@ djangorestframework-jwt     # JSON Web token support
 argon2-cffi                 # password hashing
 django-redis                # Redis handling
 django-tinymce              # HTMLField for models
-html2text                   # Convert HTML to Markdown
 django-nyt==1.0b3           # Notification system (needs to be pinned because --pre is not working)
 channels                    # Django channels
 Twisted[tls,http2]          # Twisted with TLS & https2 support

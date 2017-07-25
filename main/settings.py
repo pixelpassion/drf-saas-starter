@@ -1,8 +1,6 @@
 import datetime
 import logging
 import sys
-
-import cssutils
 import environ
 
 ########################################################################################################################
@@ -93,7 +91,6 @@ INSTALLED_APPS = [
 
     'apps.tenants',
     'apps.users.apps.UsersConfig',
-    'apps.mails',
     'apps.comments.apps.CommentsConfig',
 
     # API & Authentication
@@ -113,9 +110,6 @@ INSTALLED_APPS = [
 
     # Other apps
     'main.celery.CeleryConfig',
-    'django_premailer',
-    'tinymce',
-    'anymail',
     'actstream',
 
 ]
@@ -235,10 +229,6 @@ if ON_HEROKU:
 ########################################################################################################################
 #                                                Logging & Debugging                                                   #
 ########################################################################################################################
-
-# Disable CSSutils warnings (django_premailer)
-
-cssutils.log.setLevel(logging.ERROR)
 
 if ON_HEROKU:
 

@@ -17,6 +17,7 @@ from apps.tenants.models import Tenant
 from apps.tenants.tests.factories import InviteFactory
 from apps.users.models import User
 from apps.users.tests.factories import UserFactory, UserTenantRelationshipFactory
+from django_saas_email.models import MailTemplate
 
 
 @override_settings(LANGUAGE_CODE='en')
@@ -42,6 +43,8 @@ class TenantSignupTests(TestCase):
 
         Tenant.objects.create(name=self.already_registered_company_name, site=already_existing_site)
         User.objects.create(email=self.already_registered_user_email, first_name="Was", last_name="First")
+
+        MailTemplate.objects.create(name="email_confirmation_signup", html_template="<a href='{{ activation_url }}'>Confirm email address</a")
 
         # Clean the mail outbox, it would count to the tests if not
         mail.outbox = []
@@ -379,6 +382,8 @@ class UserSignupTests(TestCase):
 
         self.signup_url = reverse('user_rest_register', kwargs={'tenant_name': self.tenant.name})
 
+        MailTemplate.objects.create(name="email_confirmation_signup", html_template="<a href='{{ activation_url }}'>Confirm email address</a")
+
     def user_signup(self, post_data, expected_status_code=201, expected_error_message=None):
         response = self.client.post(self.signup_url, post_data)
 
@@ -552,6 +557,9 @@ class TestInviteCreate(APITestCase):
         self.tenant = user_tenant_relationship.tenant
 
         self.invite_path = reverse('rest_invite', kwargs={'tenant_name': self.tenant.name})
+
+        MailTemplate.objects.create(name="invite", html_template="<p>Invite</p>")
+
 
     def test_post_invite_without_login_status(self):
         post_data = {"email": "invitee@other-domain.com"}

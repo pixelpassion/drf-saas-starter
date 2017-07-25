@@ -14,10 +14,11 @@ RUN apt-get update \
 COPY ./requirements/local.txt /requirements/local.txt
 
 # 5 Update PIP and install the local requirements
-RUN pip install --upgrade pip  \
-    && pip install -r /requirements/local.txt \
+RUN pip install -r /requirements/local.txt \
     && groupadd -r django \
     && useradd -r -g django django
+
+RUN pip install -e git+https://github.com/unicorn-supplies/django-saas-email@657d75a889eaf76ace0f385533300ec4ca2ee4cf#egg=django-saas-email
 
 # 6 Copy the project folder
 COPY . /app/

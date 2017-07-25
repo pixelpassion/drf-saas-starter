@@ -93,6 +93,8 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.comments.apps.CommentsConfig',
 
+    'django_saas_email.apps.DjangoSaasEmailConfig',
+
     # API & Authentication
     'rest_framework',
     'rest_framework.authtoken',
@@ -439,6 +441,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ########################################################################################################################
 
 SENDGRID_API_KEY = env("SENDGRID_API_KEY", default=None)
+DJANGO_SAAS_TEST_EMAIL_ADDRESS = env("DJANGO_SAAS_TEST_EMAIL_ADDRESS", default="test@example.org")
 
 if ON_HEROKU:
 

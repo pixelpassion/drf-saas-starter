@@ -4,7 +4,8 @@ from allauth.utils import get_current_site
 from django.conf import settings
 from django.urls import reverse
 
-from apps.mails.utils import create_and_send_mail
+from django_saas_email.utils import create_and_send_mail
+
 from apps.users.models import User
 
 

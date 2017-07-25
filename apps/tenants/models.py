@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from main.mixins import UUIDMixin
-from ..mails.utils import create_and_send_mail
+from django_saas_email.utils import create_and_send_mail
 
 
 def validate_default_site(value):

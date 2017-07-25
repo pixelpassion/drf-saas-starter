@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = django-saas-starter
+SPHINXPROJ    = drf-saas-starter
 SOURCEDIR     = .
 BUILDDIR      = _build
 

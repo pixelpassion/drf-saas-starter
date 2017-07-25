@@ -47,11 +47,11 @@ You should be able to open http://localhost:8000 in your browser.
 
 Run the cookiecutter setup (TODO)
 
-django-saas-starter is available on PyPI - to install it, just run::
+drf-saas-starter is available on PyPI - to install it, just run::
 
-    pip install -U django-saas-starter
+    pip install -U drf-saas-starter
 
-It will install a package ``django-saas-starter`` and add it to ``INSTALLED_APPS``::
+It will install a package ``drf-saas-starter`` and add it to ``INSTALLED_APPS``::
 
     INSTALLED_APPS = (
         ...

@@ -1,4 +1,4 @@
-django-saas-starter
+drf-saas-starter
 ===================
 
 A boilerplate for building production SaaS apps. The goal is providing a boilerplate package for modern SaaS web applications - including the basic stuff, they often need.

@@ -15,7 +15,7 @@ It will accept SMTP mails via ``localhost:1025`` and provide a web frontend for 
 In production
 =============
 
-django-saas-starter uses django-anymail to stay flexible, it uses the `Sendgrid <https://www.sendgrid.com/>`_ adapter but it can be switched for Mailgun etc.
+drf-saas-starter uses django-anymail to stay flexible, it uses the `Sendgrid <https://www.sendgrid.com/>`_ adapter but it can be switched for Mailgun etc.
 
 For Sendgrid you need to set::
 

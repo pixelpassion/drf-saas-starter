@@ -1,7 +1,7 @@
 Integrated apps
 ===============
 
-django-saas-starter ships with some apps.
+drf-saas-starter ships with some apps.
 
 User
 ----

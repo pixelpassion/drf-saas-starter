@@ -60,7 +60,7 @@ runtime.txt
 
 The runtime names the Python version, used for deployment.
 
-Heroku supports different versions (TODO: Link), django-saas-starter only works with Python 3.6+.
+Heroku supports different versions (TODO: Link), drf-saas-starter only works with Python 3.6+.
 
 
 .slugignore

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# django-saas-starter documentation build configuration file, created by
+# drf-saas-starter documentation build configuration file, created by
 # sphinx-quickstart on Mon May 29 19:28:14 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'django-saas-starter'
+project = 'drf-saas-starter'
 copyright = '2017, Jens Neuhaus'
 author = 'Jens Neuhaus'
 
@@ -106,7 +106,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'django-saas-starterdoc'
+htmlhelp_basename = 'drf-saas-starterdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -133,7 +133,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'django-saas-starter.tex', 'django-saas-starter Documentation',
+    (master_doc, 'drf-saas-starter.tex', 'drf-saas-starter Documentation',
      'Jens Neuhaus', 'manual'),
 ]
 
@@ -143,7 +143,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'django-saas-starter', 'django-saas-starter Documentation',
+    (master_doc, 'drf-saas-starter', 'drf-saas-starter Documentation',
      [author], 1)
 ]
 
@@ -154,7 +154,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'django-saas-starter', 'django-saas-starter Documentation',
-     author, 'django-saas-starter', 'Template for Heroku Saas Apps.',
+    (master_doc, 'drf-saas-starter', 'drf-saas-starter Documentation',
+     author, 'drf-saas-starter', 'Template for Heroku Saas Apps.',
      'Miscellaneous'),
 ]

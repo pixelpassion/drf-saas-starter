@@ -48,10 +48,9 @@ The functionality to add comments of objects in any model, e.g. an individual us
 Fore more information read :doc:`comments`.
 
 
-Activity stream
----------------
+actstream-drf
+-------------
 
-A custom user with some special features:
+Connection between Django Activity Stream and Django REST Framework.
 
-* Feature 1
-* Feature 2
+Fore more information read :doc:`actstream_drf`.

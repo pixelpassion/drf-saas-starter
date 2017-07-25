@@ -1,4 +1,4 @@
-[![einhornmanufaktur](https://img.shields.io/badge/made%20by-unicorn-supplies-blue.svg)](https://www.unicorn.supplies/)
+[![unicorn.supplies](https://img.shields.io/badge/made%20by-unicorn.supplies-blue.svg)](https://www.unicorn.supplies/)
 [![Build Status](https://circleci.com/gh/jensneuhaus/einhorn-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/jensneuhaus/einhorn-starter/)
 
 # `drf-saas-starter`

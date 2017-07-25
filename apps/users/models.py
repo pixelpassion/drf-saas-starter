@@ -170,7 +170,7 @@ class UserTenantRelationship(models.Model):
 @receiver(user_logged_in)
 def on_user_login(sender, **kwargs):
     user = kwargs.get('user')
-    user.signed_in = datetime.now()
+    user.signed_in = timezone.now()
     user.save()
 
 

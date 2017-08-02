@@ -30,7 +30,13 @@
 
 Read our documentation at ..
 
-## Local setup
+## Quickstart
+
+Copy .env.example to .env:
+
+```
+$ cp .env.example .env
+```
 
 Download & install the Docker Community edition
 * https://www.docker.com/community-edition
@@ -41,5 +47,21 @@ Run the following commands, it will build & start the needed containers (Django,
 $ docker-compose build
 $ docker-compose up
 ```
+
+Create a superuser so that you can access the admin:
+
+```
+$ docker-compose run django python manage.py createsuperuser
+```
+
+### Local development
+
+```
+$ python3 -m venv .venv
+$ pip install -r requirements/local.txt
+$ python manage.py runserver
+```
+
+
 
 Open your browser and go to http://localhost:8000/

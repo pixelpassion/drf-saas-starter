@@ -16,7 +16,7 @@
 * Based on an API build with the awesome [django-rest-framework](#)
 * API documentation build with [Swagger](#)
 * Optimized testing with [py.test](https://docs.pytest.org/en/latest/) & coverage of > 90%
-* [Fabric](#) for faster and easier deployments
+* an nice [Makefile](#) for faster and easier deployments
 * Send emails via [Anymail](#) (using [Sendgrid](#) as default)
 * Serving dynamic HTML E-Mail Templates, editable with [Tinymce](#)
 * [Docker-compose](#) File for easier development

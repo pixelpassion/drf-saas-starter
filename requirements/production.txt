@@ -15,7 +15,7 @@ autobahn==17.7.1
 automat==0.6.0
 billiard==3.5.0.3
 celery==4.1.0
-certifi==2017.4.17
+certifi==2017.7.27.1
 cffi==1.10.0
 channels==1.1.6
 chardet==3.0.4
@@ -23,7 +23,7 @@ constantly==15.1.0
 contextlib2==0.5.5        # via raven
 coreapi==2.3.1
 coreschema==0.0.4
-cryptography==2.0
+cryptography==2.0.2
 daphne==1.3.0
 defusedxml==0.5.0
 django-activity-stream==0.6.4
@@ -32,7 +32,7 @@ django-anymail==0.11.1
 django-cors-headers==2.1.0
 django-environ==0.4.3
 django-model-utils==3.0.0
-django-nyt==1.0b3
+django-nyt==1.0b5
 django-redis==4.8.0
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
@@ -56,8 +56,8 @@ oauthlib==2.0.2
 openapi-codec==1.3.2
 priority==1.3.0
 psycopg2==2.7.3
-pyasn1-modules==0.0.9
-pyasn1==0.2.3
+pyasn1-modules==0.0.10
+pyasn1==0.3.1
 pycparser==2.18
 pyjwt==1.5.2
 pyopenssl==17.2.0
@@ -67,7 +67,7 @@ pytz==2017.2
 raven==6.1.0
 redis==2.10.5
 requests-oauthlib==0.8.0
-requests==2.18.1
+requests==2.18.2
 sendgrid==4.2.0
 service-identity==17.0.0
 simplejson==3.11.1
@@ -75,7 +75,7 @@ six==1.10.0
 twisted[http2,tls]==17.5.0
 txaio==2.8.1
 uritemplate==3.0.0
-urllib3==1.21.1
+urllib3==1.22
 vine==1.1.4
 whitenoise==3.3.0
 zope.interface==4.4.2

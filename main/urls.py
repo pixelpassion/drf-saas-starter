@@ -1,5 +1,3 @@
-from django_nyt.urls import get_pattern as get_nyt_pattern
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -23,10 +21,6 @@ urlpatterns = [
     url(r'^tenant/', include('apps.tenants.urls', namespace="tenants")),
 
     url(r'^crossdomain\.xml$', RedirectView.as_view(url=settings.STATIC_URL + 'crossdomain.xml')),
-
-    # TODO: The url structure of nyt should fit into our /api/ structure
-    url(r'^nyt/', get_nyt_pattern()),
-
 ]
 
 if settings.DEBUG:

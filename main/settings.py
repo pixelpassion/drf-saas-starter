@@ -494,14 +494,14 @@ CHANNEL_LAYERS = {
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "ROUTING": "main.routing.channel_routing",
         # "ROUTING": "apps.databinding.databinding.routing.channel_routing",
-
-        # "ROUTING": "django_nyt.routing.channel_routing",
+        "ROUTING": "django_nyt.routing.channel_routing",
         "CONFIG": {
             "hosts": [REDIS_URL],
         }
     }
 }
 
+NYT_SEND_EMAILS = False
 NYT_ENABLE_ADMIN = True
 
 

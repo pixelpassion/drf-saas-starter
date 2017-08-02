@@ -1,4 +1,3 @@
-from django_nyt.urls import get_pattern as get_nyt_pattern
 from rest_auth.views import LoginView, LogoutView, PasswordChangeView, \
     PasswordResetConfirmView, PasswordResetView, UserDetailsView
 
@@ -28,8 +27,6 @@ urlpatterns = [
     url(r'^current-user/$', UserDetailsView.as_view(), name='rest_user_details'),
 
     url(r'^users/', include('apps.users.urls', namespace='users')),
-
-    url(r'^notifications/', get_nyt_pattern()),
 
     url(r'^docs/$', get_swagger_view(title='Project API'), name='api_docs'),
 

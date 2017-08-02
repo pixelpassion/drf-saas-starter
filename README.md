@@ -1,7 +1,9 @@
 [![unicorn.supplies](https://img.shields.io/badge/made%20by-unicorn.supplies-blue.svg)](https://www.unicorn.supplies/)
 [![Build Status](https://circleci.com/gh/jensneuhaus/einhorn-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/jensneuhaus/einhorn-starter/)
 
-# `drf-saas-starter`
+# `drf-saas-starter (Metronom Pro)`
+
+`This is the Metronom Pro fork - we are keeping things the same as possible`
 
 ## Basic idea
 
@@ -30,13 +32,7 @@
 
 Read our documentation at ..
 
-## Quickstart
-
-Copy .env.example to .env:
-
-```
-$ cp .env.example .env
-```
+## Local setup
 
 Download & install the Docker Community edition
 * https://www.docker.com/community-edition
@@ -47,21 +43,5 @@ Run the following commands, it will build & start the needed containers (Django,
 $ docker-compose build
 $ docker-compose up
 ```
-
-Create a superuser so that you can access the admin:
-
-```
-$ docker-compose run django python manage.py createsuperuser
-```
-
-### Local development
-
-```
-$ python3 -m venv .venv
-$ pip install -r requirements/local.txt
-$ python manage.py runserver
-```
-
-
 
 Open your browser and go to http://localhost:8000/

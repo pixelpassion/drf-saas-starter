@@ -17,16 +17,18 @@ isort
 # Package and dependency management
 pip-tools
 
-# Testing and linting
+# Testing
 coverage
 django-coverage-plugin
 flake8
 factory_boy
+pytest
 pytest-django
 pytest-coverage
 pytest-sugar
-pytest-env                  # Not needed on CircleCI, because environment variables can be set in circle.yml
+pytest-env
 
+# Linters
 pylint
 pylint-celery
 pylint-common

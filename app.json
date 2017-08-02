@@ -6,14 +6,13 @@
     "pr-predestroy": "bin/heroku_review_destroy.sh"
   },
   "env": {
-    "ACME_KEY": {
-      "required": true
-    },
-    "ACME_TOKEN": {
-      "required": true
-    },
     "ALLOWED_HOSTS": {
+      "description": "The allowed URLs for CORS handling",
       "required": true
+    },
+    "APP_BASE": {
+      "description": "The folder for this Heroku app, used by the monorepository buildpack",
+      "value": "backend-django"
     },
     "AWS_ACCESS_KEY_ID": {
       "required": true
@@ -27,61 +26,32 @@
     "CACHE_TIMEOUT": {
       "required": true
     },
-    "CLOUDAMQP_URL": {
-      "required": true
-    },
     "EMAIL_BACKEND": {
-      "required": true
-    },
-    "HEROKU_APP_ID": {
-      "required": true
-    },
-    "HEROKU_APP_NAME": {
-      "required": true
-    },
-    "HEROKU_RELEASE_CREATED_AT": {
-      "required": true
-    },
-    "HEROKU_RELEASE_VERSION": {
-      "required": true
-    },
-    "HEROKU_SLUG_COMMIT": {
-      "required": true
-    },
-    "HEROKU_SLUG_DESCRIPTION": {
+      "description": "Which Email backend should be used?",
+      "value": "anymail.backends.sendgrid.SendGridBackend",
       "required": true
     },
     "JWT_SECRET": {
-      "required": true
-    },
-    "LIBRATO_PASSWORD": {
-      "required": true
-    },
-    "LIBRATO_TOKEN": {
-      "required": true
-    },
-    "LIBRATO_USER": {
-      "required": true
-    },
-    "REDIS_URL": {
-      "required": true
+      "description": "The JWT Secret for the Encryption of JSON Web Tokens",
+      "generator": "secret"
     },
     "SECRET_KEY": {
-      "required": true
+      "description": "The Secret Key for Django",
+      "generator": "secret"
     },
     "SECURE_SSL_REDIRECT": {
       "required": true
     },
     "SENDGRID_API_KEY": {
+      "description": "The Sendgrid API Key for sending emails",
       "required": true
     },
     "SENTRY_DSN": {
       "required": true
     },
-    "SENTRY_URL": {
-      "required": true
-    },
     "STAGE": {
+      "description": "The stage of this environment (production, staging, testing)",
+      "value": "production",
       "required": true
     },
     "STATIC_URL": {
@@ -99,6 +69,9 @@
     "heroku-redis"
   ],
   "buildpacks": [
+    {
+      "url": "https://github.com/lstoll/heroku-buildpack-monorepo"
+    },
     {
       "url": "heroku/python"
     }

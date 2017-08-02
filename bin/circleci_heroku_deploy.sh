@@ -1,4 +1,5 @@
 #!/bin/sh -e
+
 APP_NAME=$1
 
 git remote add heroku git@heroku.com:$APP_NAME.git

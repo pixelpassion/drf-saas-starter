@@ -43,6 +43,7 @@ docker-restart:	docker-stop docker-start	## Restart the Docker container
 pip-compile: ## Creates new pip requirement files, add  --generate-hashes
 	@echo "\033[92mCreating new requirement-files from *.in-Files...\033[0m"
 	pip-compile --output-file requirements/base.txt requirements/base.in
+	pip-compile --output-file requirements/circleci.txt requirements/circleci.in
 	pip-compile --output-file requirements/local.txt requirements/local.in
 	pip-compile --output-file requirements/production.txt requirements/production.in
 	pip-compile --output-file requirements/documentation.txt requirements/documentation.in
@@ -51,6 +52,7 @@ pip-compile: ## Creates new pip requirement files, add  --generate-hashes
 pip-update: ## Updates the pip requirements, add  --generate-hashes
 	@echo "\033[92mUpdating all pip requirements...\033[0m"
 	pip-compile -U --output-file requirements/base.txt requirements/base.in
+	pip-compile -U --output-file requirements/circleci.txt requirements/circleci.in
 	pip-compile -U --output-file requirements/local.txt requirements/local.in
 	pip-compile -U --output-file requirements/production.txt requirements/production.in
 	pip-compile -U --output-file requirements/documentation.txt requirements/documentation.in

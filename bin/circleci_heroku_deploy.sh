@@ -7,7 +7,7 @@ git remote add heroku git@heroku.com:$APP_NAME.git
 PREV_WORKERS=$(heroku ps --app $APP_NAME | grep "^worker." | wc -l | tr -d ' ')
 
 # deploy code changes (and implicitly restart the app and any running workers)
-git push heroku master
+git push heroku master -f
 
 MIGRATION_CHANGES=$(heroku run python manage.py showmigrations | grep '\[ \]' | wc -l | tr -d ' ')
 echo "$MIGRATION_CHANGES db changes since last deploy."

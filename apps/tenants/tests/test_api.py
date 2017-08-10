@@ -327,7 +327,7 @@ class TenantSignupTests(TestCase):
         self.sign_up_error(post_data, "This password is too short")
 
     @pytest.mark.skip(
-        reason="This is not running through for now - check https://github.com/jensneuhaus/einhorn-starter/issues/65")
+        reason="This is not running through for now - check issue #65")
     def test_password_too_close_to_email(self):
         post_data = {
             "name": "Awesome customer",

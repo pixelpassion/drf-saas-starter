@@ -28,7 +28,7 @@ Install Docker as described in  :doc:`docker`
 
 Clone the GitHub repository::
 
-    $ git clone git@github.com/jensneuhaus/einhorn-starter
+    $ git clone git@github.com/jensneuhaus/drf-saas-starter
 
 
 Start the local setup, it creates the required .env file::

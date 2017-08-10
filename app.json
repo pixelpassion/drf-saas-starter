@@ -1,5 +1,5 @@
 {
-  "name": "einhorn-starter",
+  "name": "drf-saas-starter",
   "description": "",
   "scripts": {
     "postdeploy": "bin/heroku_review_deploy.sh",

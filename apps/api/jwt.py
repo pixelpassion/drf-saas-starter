@@ -10,10 +10,10 @@ def payload_handler(user):
     """Function to generate the token payload.
 
     {
-      "iss": "einhorn-starter",
+      "iss": "drf-saas-starter",
       "user_id": "4d92a809-4f68-4c19-b115-eaa1a0e5a170",
-      "sub": "jens",
-      "email": "kontakt@jensneuhaus.de",
+      "sub": "john",
+      "email": "john@example.org",
       "groups": [
         "HR",
         "Test"

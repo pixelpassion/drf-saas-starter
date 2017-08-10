@@ -107,7 +107,7 @@ def pull_and_update(branch="master"):
 @task
 def push_to_heroku():
     local("git push heroku master")
-    local('heroku run "python manage.py migrate" --app einhorn-starter')
+    local('heroku run "python manage.py migrate" --app drf-saas-starter')
 
 
 @task

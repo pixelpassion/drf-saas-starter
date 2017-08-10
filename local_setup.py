@@ -107,7 +107,7 @@ def main(argv):
     #     print("name:   the name of the project to be created")
     #     return 1
 
-    project_name = "einhorn-starter"
+    project_name = "drf-saas-starter"
     # project_name = sys.argv[1]
 
     # Maybe some project name validation checking here

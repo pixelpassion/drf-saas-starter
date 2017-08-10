@@ -24,7 +24,7 @@ It will start different services locally.
  * ``Django``: The webapplication itself (http://localhost:8000), based on `Python 3.6 Slim <https://github.com/docker-library/python/blob/master/3.6/slim/Dockerfile>`_
  * ``Sphinx``: Automated Sphinx :doc:`documentation` with autobuild (http://localhost:8007)
  * ``Mailhog``: A simple local mailserver for debugging mails, check out :doc:`email` (http://localhost:8025)
- * ``Postgres``: The used database, is defined in ``DATABASE_URL`` (postgres:///einhorn-starter)
+ * ``Postgres``: The used database, is defined in ``DATABASE_URL`` (postgres:///drf-saas-starter)
  * ``Redis``: Key-Value store for caching & :doc:`channels`, used as ``REDIS_URL`` (localhost:6379)
  * ``Redis Browser``: For debugging Redis key/values (http://localhost:8019)
  * ``RabbitMQ Management``: For monitoring & debugging RabbitMQ, used for :doc:`celery` (http://localhost:15672)

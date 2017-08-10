@@ -1,7 +1,9 @@
 [![unicorn.supplies](https://img.shields.io/badge/made%20by-unicorn.supplies-blue.svg)](https://www.unicorn.supplies/)
-[![Build Status](https://circleci.com/gh/jensneuhaus/einhorn-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/jensneuhaus/einhorn-starter/)
+[![Build Status](https://circleci.com/gh/unicorn-supplies/drf-saas-starter.png?style=shield&circle-token=36515d7bdb2ff036a488c3b58bea07e80bf2fad1)](https://circleci.com/gh/unicorn-supplies/drf-saas-starter/)
 
 # `drf-saas-starter`
+
+`This is work in progress and not ready for production yet`
 
 ## Basic idea
 
@@ -35,9 +37,10 @@ Read our documentation at ..
 Download & install the Docker Community edition
 * https://www.docker.com/community-edition
 
-Run the following commands, it will build & start the needed containers (Django, Worker, Postgres DB, Redis, Mailhog)*[]:
+Run the following commands, it will build & start the needed containers (Django, Worker, Postgres DB, Redis, Mailhog):
 
 ```
+$ cp .env.example .env
 $ docker-compose build
 $ docker-compose up
 ```

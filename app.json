@@ -57,9 +57,9 @@
   "formation": {},
   "addons": [
     "cloudamqp",
-    "librato",
     "heroku-postgresql",
-    "heroku-redis"
+    "heroku-redis",
+    "newrelic"
   ],
   "buildpacks": [
     {

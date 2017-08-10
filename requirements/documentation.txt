@@ -7,9 +7,9 @@
 alabaster==0.7.10         # via sphinx
 argh==0.26.2              # via sphinx-autobuild, watchdog
 babel==2.4.0              # via sphinx
-certifi==2017.4.17        # via requests
+certifi==2017.7.27.1      # via requests
 chardet==3.0.4            # via requests
-docutils==0.13.1          # via sphinx
+docutils==0.14            # via sphinx
 idna==2.5                 # via requests
 imagesize==0.7.1          # via sphinx
 jinja2==2.9.6             # via sphinx
@@ -20,7 +20,7 @@ port_for==0.3.1           # via sphinx-autobuild
 pygments==2.2.0           # via sphinx
 pytz==2017.2              # via babel
 pyyaml==3.12              # via sphinx-autobuild, watchdog
-requests==2.18.2          # via sphinx
+requests==2.18.3          # via sphinx
 six==1.10.0               # via livereload, sphinx
 snowballstemmer==1.2.1    # via sphinx
 sphinx-autobuild==0.7.1

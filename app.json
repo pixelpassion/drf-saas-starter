@@ -10,21 +10,10 @@
       "description": "The allowed URLs for CORS handling",
       "required": true
     },
-    "APP_BASE": {
-      "description": "The folder for this Heroku app, used by the monorepository buildpack",
-      "value": "backend-django"
-    },
-    "AWS_ACCESS_KEY_ID": {
-      "required": true
-    },
-    "AWS_S3_BUCKET_NAME": {
-      "required": true
-    },
-    "AWS_SECRET_ACCESS_KEY": {
-      "required": true
-    },
     "CACHE_TIMEOUT": {
-      "required": true
+      "description": "The default timeout for caching",
+      "required": false,
+      "value": 86400
     },
     "EMAIL_BACKEND": {
       "description": "Which Email backend should be used?",
@@ -40,6 +29,7 @@
       "generator": "secret"
     },
     "SECURE_SSL_REDIRECT": {
+      "description": "Should http always be redirected to https?",
       "required": true
     },
     "SENDGRID_API_KEY": {
@@ -47,7 +37,8 @@
       "required": true
     },
     "SENTRY_DSN": {
-      "required": true
+      "description": "The Sentry URL for working with the error monitoring solution",
+      "required": false
     },
     "STAGE": {
       "description": "The stage of this environment (production, staging, testing)",
@@ -55,9 +46,11 @@
       "required": true
     },
     "STATIC_URL": {
+      "description": "the Static URL, can be set to a CDN with https://.../",
       "required": true
     },
     "TENANT_DOMAIN": {
+      "description": "The domain, where tenants can get subdomains",
       "required": true
     }
   },
@@ -69,9 +62,6 @@
     "heroku-redis"
   ],
   "buildpacks": [
-    {
-      "url": "https://github.com/lstoll/heroku-buildpack-monorepo"
-    },
     {
       "url": "heroku/python"
     }

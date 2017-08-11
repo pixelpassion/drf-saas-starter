@@ -1,0 +1,12 @@
+-r base.txt
+
+# Testing
+coverage
+django-coverage-plugin
+flake8
+factory_boy
+pytest
+pytest-django
+pytest-coverage
+pytest-sugar
+pytest-env

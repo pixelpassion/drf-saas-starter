@@ -1,3 +1,4 @@
 -r base.txt
 
 raven                       # Error handling
+newrelic                    # Performance monitoring with New Relic (Heroku addon)

@@ -534,7 +534,7 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 JWT_SECRET = env('JWT_SECRET')       # Raises ImproperlyConfigured exception if JWT_SECRET not set
-JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='einhorn-starter')
+JWT_ISSUER_NAME = env.str('JWT_ISSUER_NAME', default='drf-saas-starter')
 
 JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'apps.api.jwt.payload_handler',
@@ -545,7 +545,7 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=60*60*12),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-    'JWT_ISSUER': 'einhorn-starter',
+    'JWT_ISSUER': 'drf-saas-starter',
 }
 
 REST_USE_JWT = True

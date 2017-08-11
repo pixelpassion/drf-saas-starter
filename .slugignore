@@ -3,4 +3,4 @@ tests.py
 tests.pyc
 node_modules
 docs
-compose
+docker

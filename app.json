@@ -1,102 +1,65 @@
 {
-  "name": "einhorn-starter",
+  "name": "drf-saas-starter",
   "description": "",
   "scripts": {
     "postdeploy": "bin/heroku_review_deploy.sh",
     "pr-predestroy": "bin/heroku_review_destroy.sh"
   },
   "env": {
-    "ACME_KEY": {
-      "required": true
-    },
-    "ACME_TOKEN": {
-      "required": true
-    },
     "ALLOWED_HOSTS": {
-      "required": true
-    },
-    "AWS_ACCESS_KEY_ID": {
-      "required": true
-    },
-    "AWS_S3_BUCKET_NAME": {
-      "required": true
-    },
-    "AWS_SECRET_ACCESS_KEY": {
+      "description": "The allowed URLs for CORS handling",
       "required": true
     },
     "CACHE_TIMEOUT": {
-      "required": true
-    },
-    "CLOUDAMQP_URL": {
-      "required": true
+      "description": "The default timeout for caching",
+      "required": false,
+      "value": 86400
     },
     "EMAIL_BACKEND": {
-      "required": true
-    },
-    "HEROKU_APP_ID": {
-      "required": true
-    },
-    "HEROKU_APP_NAME": {
-      "required": true
-    },
-    "HEROKU_RELEASE_CREATED_AT": {
-      "required": true
-    },
-    "HEROKU_RELEASE_VERSION": {
-      "required": true
-    },
-    "HEROKU_SLUG_COMMIT": {
-      "required": true
-    },
-    "HEROKU_SLUG_DESCRIPTION": {
+      "description": "Which Email backend should be used?",
+      "value": "anymail.backends.sendgrid.SendGridBackend",
       "required": true
     },
     "JWT_SECRET": {
-      "required": true
-    },
-    "LIBRATO_PASSWORD": {
-      "required": true
-    },
-    "LIBRATO_TOKEN": {
-      "required": true
-    },
-    "LIBRATO_USER": {
-      "required": true
-    },
-    "REDIS_URL": {
-      "required": true
+      "description": "The JWT Secret for the Encryption of JSON Web Tokens",
+      "generator": "secret"
     },
     "SECRET_KEY": {
-      "required": true
+      "description": "The Secret Key for Django",
+      "generator": "secret"
     },
     "SECURE_SSL_REDIRECT": {
+      "description": "Should http always be redirected to https?",
       "required": true
     },
     "SENDGRID_API_KEY": {
+      "description": "The Sendgrid API Key for sending emails",
       "required": true
     },
     "SENTRY_DSN": {
-      "required": true
-    },
-    "SENTRY_URL": {
-      "required": true
+      "description": "The Sentry URL for working with the error monitoring solution",
+      "required": false
     },
     "STAGE": {
+      "description": "The stage of this environment (production, staging, testing)",
+      "value": "production",
       "required": true
     },
     "STATIC_URL": {
+      "description": "the Static URL, can be set to a CDN with https://.../",
       "required": true
     },
     "TENANT_DOMAIN": {
+      "description": "The domain, where tenants can get subdomains",
       "required": true
     }
   },
   "formation": {},
   "addons": [
     "cloudamqp",
-    "librato",
     "heroku-postgresql",
-    "heroku-redis"
+    "heroku-redis",
+    "newrelic"
   ],
   "buildpacks": [
     {

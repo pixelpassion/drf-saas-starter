@@ -23,7 +23,7 @@ COPY . /app/
 
 # 7 Copy the starting script
 
-COPY ./compose/django/start_daphne.sh /start_daphne.sh
+COPY ./docker/django/start_daphne.sh /start_daphne.sh
 
 # 8 Set the rights to access the files
 RUN sed -i 's/\r//' /start_daphne.sh \

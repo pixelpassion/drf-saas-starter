@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from main.mixins import UUIDMixin
-
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -11,6 +9,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from apps.tenants.models import Tenant
+from main.mixins import UUIDMixin
 
 
 class UserManager(BaseUserManager):

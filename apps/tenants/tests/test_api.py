@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import timedelta
 
 import pytest
+from django_saas_email.models import MailTemplate
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -17,7 +18,6 @@ from apps.tenants.models import Tenant
 from apps.tenants.tests.factories import InviteFactory
 from apps.users.models import User
 from apps.users.tests.factories import UserFactory, UserTenantRelationshipFactory
-from django_saas_email.models import MailTemplate
 
 
 @override_settings(LANGUAGE_CODE='en')

@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from django_saas_email.utils import create_and_send_mail
-from main.mixins import UUIDMixin
 
 from django.conf import settings
 from django.contrib.sites.models import Site, _simple_domain_name_validator
@@ -12,6 +11,8 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+from main.mixins import UUIDMixin
 
 
 def validate_default_site(value):

@@ -1,10 +1,9 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.utils import get_current_site
+from django_saas_email.utils import create_and_send_mail
 
 from django.conf import settings
 from django.urls import reverse
-
-from django_saas_email.utils import create_and_send_mail
 
 from apps.users.models import User
 

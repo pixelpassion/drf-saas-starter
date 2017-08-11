@@ -1,10 +1,9 @@
-from main.logging import logger
-
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.http import Http404
 
 from apps.tenants.models import Domain
+from main.logging import logger
 
 
 class TenantMiddleware(object):

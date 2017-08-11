@@ -1,4 +1,4 @@
-from datetime import datetime
+from allauth.account.models import EmailAddress
 
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -67,7 +67,15 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, username, **extra_fields)
+        superuser = self._create_user(email, password, username, **extra_fields)
+
+        # (Force-)Verify email of superuser
+        verification, created = EmailAddress.objects.get_or_create(user=superuser, email=superuser.email)
+        verification.verified = True
+        verification.set_as_primary()
+        verification.save()
+
+        return superuser
 
 
 class User(AbstractBaseUser, UUIDMixin, PermissionsMixin):

@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'apps.comments.apps.CommentsConfig',
 
     'django_saas_email.apps.DjangoSaasEmailConfig',
+    'tinymce',
 
     # API & Authentication
     'rest_framework',
@@ -465,6 +466,15 @@ DEFAULT_FROM_EMAIL = "mail@example.org"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'width': '70%',
+    'height': '500px'
+}
+
 
 ########################################################################################################################
 #                                                 7 - Celery & Websockets                                              #
@@ -577,14 +587,6 @@ POSTGRES_MANAGEMENT_URL = env.str('POSTGRES_MANAGEMENT_URL', default="http://loc
 SPHINX_DOCUMENTATION_URL = env.str('SPHINX_DOCUMENTATION_URL', default="http://localhost:8007")
 REDIS_BROWSER_MANAGEMENT_URL = env.str('REDIS_BROWSER_MANAGEMENT_URL', default="http://localhost:8019")
 
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,spellchecker,paste,searchreplace",
-    'theme': "advanced",
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 10,
-    'width': '70%',
-    'height': '500px'
-}
 
 ########################################################################################################################
 #                                                 10 - Tenants                                                         #

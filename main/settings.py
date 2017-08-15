@@ -133,17 +133,17 @@ MIDDLEWARE = [
 ]
 
 if DEBUG is True and STAGE == 'local':
+    import socket
 
-        INSTALLED_APPS += [
-            'debug_toolbar',
-            'django_extensions',
-        ]
+    INSTALLED_APPS += [
+        'debug_toolbar',
+        'django_extensions',
+    ]
 
-        MIDDLEWARE = [
-            'debug_toolbar.middleware.DebugToolbarMiddleware',
-        ] + MIDDLEWARE
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
-        INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
+    ip = socket.gethostbyname(socket.gethostname())
+    INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ip[:-1] + '1']
 
 
 ########################################################################################################################
@@ -355,6 +355,10 @@ else:
             },
         }
     }
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_COLLAPSED': True,
+}
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',

@@ -110,7 +110,7 @@ INSTALLED_APPS = [
     # Channels
     'channels',
     'django_nyt',
-    # 'channels_panel',     # There is a problem for now
+    'channels_panel',
 
     # Other apps
     'main.celery.CeleryConfig',
@@ -373,7 +373,7 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
     'debug_toolbar.panels.redirects.RedirectsPanel',
-    # 'channels_panel.panel.ChannelsDebugPanel',
+    'channels_panel.panel.ChannelsDebugPanel',
 ]
 
 ########################################################################################################################

@@ -20,4 +20,4 @@ channels                    # Django channels
 Twisted[tls,http2]          # Twisted with TLS & https2 support
 asgi-redis                  # ASGI handling with Redis
 django-activity-stream      # Use of activity streams for objects
--e git+https://github.com/unicorn-supplies/django-saas-email@b5e8553c92a5334c1dbf09886593b3bb791d64b4#egg=django-saas-email
+django-saas-email           # Email manager for sending emails with templates, mail history and admin

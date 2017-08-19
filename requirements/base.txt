@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file requirements/base.txt requirements/base.in
 #
--e git+https://github.com/unicorn-supplies/django-saas-email@b5e8553c92a5334c1dbf09886593b3bb791d64b4#egg=django-saas-email
 amqp==2.2.1               # via kombu
 argon2-cffi==16.3.0
 asgi-redis==1.4.2
@@ -27,21 +26,22 @@ daphne==1.3.0             # via channels
 defusedxml==0.5.0         # via python3-openid
 django-activity-stream==0.6.4
 django-allauth==0.30.0
-django-anymail==0.11.1
+django-anymail==0.11.1    # via django-saas-email
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0
+django-model-utils==3.0.0  # via django-saas-email
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
 django-rest-swagger==2.1.2
+django-saas-email==0.1.0
 django-tinymce==2.6.0
-django==1.10.7            # via channels, django-allauth, django-anymail, django-environ, django-model-utils, django-nyt, django-rest-auth
+django==1.10.7
 djangorestframework-jwt==1.11.0
 djangorestframework==3.6.3
 h2==3.0.1                 # via twisted
 hpack==3.0.0              # via h2
-html2text==2016.9.19
+html2text==2016.9.19      # via django-saas-email
 hyperframe==5.1.0         # via h2
 hyperlink==17.3.0         # via twisted
 idna==2.5                 # via cryptography, requests, twisted
@@ -66,11 +66,11 @@ pytz==2017.2              # via celery
 redis==2.10.5             # via asgi-redis, django-redis
 requests-oauthlib==0.8.0  # via django-allauth
 requests==2.18.3          # via coreapi, django-allauth, django-anymail, requests-oauthlib
-sendgrid==4.2.1
+sendgrid==4.2.1           # via django-saas-email
 service-identity==17.0.0  # via twisted
 simplejson==3.11.1        # via django-rest-swagger
 six==1.10.0               # via argon2-cffi, asgi-redis, asgiref, autobahn, automat, cryptography, django-anymail, django-environ, django-nyt, django-rest-auth, pyopenssl, txaio
-twisted[http2,tls]==17.5.0  # via daphne
+twisted[http2,tls]==17.5.0
 txaio==2.8.1              # via autobahn
 uritemplate==3.0.0        # via coreapi
 urllib3==1.22             # via requests

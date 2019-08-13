@@ -26,10 +26,9 @@ daphne==1.3.0             # via channels
 defusedxml==0.5.0         # via python3-openid
 django-activity-stream==0.6.4
 django-allauth==0.30.0
-django-anymail==0.11.1    # via django-saas-email
+django-anymail==1.2.1     # via django-saas-email
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0  # via django-saas-email
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1

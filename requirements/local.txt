@@ -124,7 +124,7 @@ uritemplate==3.0.0
 urllib3==1.22
 vine==1.1.4
 wcwidth==0.1.7            # via prompt-toolkit
-werkzeug==0.12.2
+werkzeug==0.15.5
 whitenoise==3.3.0
 wrapt==1.10.10            # via astroid
 yolk3k==0.9

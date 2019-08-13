@@ -31,7 +31,6 @@ django-anymail==0.11.1
 django-cors-headers==2.1.0
 django-coverage-plugin==1.5.0
 django-environ==0.4.3
-django-model-utils==3.0.0
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -52,7 +51,7 @@ hyperlink==17.3.0
 idna==2.5
 incremental==17.5.0
 itypes==1.1.0
-jinja2==2.9.6
+jinja2==2.10.1
 kombu==4.1.0
 markupsafe==1.0
 mccabe==0.6.1             # via flake8

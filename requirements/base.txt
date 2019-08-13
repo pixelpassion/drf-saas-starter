@@ -29,7 +29,6 @@ django-allauth==0.30.0
 django-anymail==0.11.1    # via django-saas-email
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0  # via django-saas-email
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -47,7 +46,7 @@ hyperlink==17.3.0         # via twisted
 idna==2.5                 # via cryptography, requests, twisted
 incremental==17.5.0       # via twisted
 itypes==1.1.0             # via coreapi
-jinja2==2.9.6             # via coreschema
+jinja2==2.10.1            # via coreschema
 kombu==4.1.0              # via celery
 markupsafe==1.0           # via jinja2
 msgpack-python==0.4.8     # via asgi-redis

@@ -19,7 +19,7 @@ pathtools==0.1.2          # via sphinx-autobuild, watchdog
 port_for==0.3.1           # via sphinx-autobuild
 pygments==2.2.0           # via sphinx
 pytz==2017.2              # via babel
-pyyaml==3.12              # via sphinx-autobuild, watchdog
+pyyaml==5.1               # via sphinx-autobuild, watchdog
 requests==2.18.3          # via sphinx
 six==1.10.0               # via livereload, sphinx
 snowballstemmer==1.2.1    # via sphinx

@@ -30,7 +30,6 @@ django-allauth==0.30.0
 django-anymail==0.11.1
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -68,7 +67,7 @@ pytz==2017.2
 raven==6.1.0
 redis==2.10.5
 requests-oauthlib==0.8.0
-requests==2.18.3
+requests==2.20.0
 sendgrid==4.2.1
 service-identity==17.0.0
 simplejson==3.11.1

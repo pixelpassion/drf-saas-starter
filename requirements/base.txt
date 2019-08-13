@@ -29,7 +29,6 @@ django-allauth==0.30.0
 django-anymail==0.11.1    # via django-saas-email
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0  # via django-saas-email
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -65,7 +64,7 @@ python3-openid==3.1.0     # via django-allauth
 pytz==2017.2              # via celery
 redis==2.10.5             # via asgi-redis, django-redis
 requests-oauthlib==0.8.0  # via django-allauth
-requests==2.18.3          # via coreapi, django-allauth, django-anymail, requests-oauthlib
+requests==2.20.0          # via coreapi, django-allauth, django-anymail, requests-oauthlib
 sendgrid==4.2.1           # via django-saas-email
 service-identity==17.0.0  # via twisted
 simplejson==3.11.1        # via django-rest-swagger

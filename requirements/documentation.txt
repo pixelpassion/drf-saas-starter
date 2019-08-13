@@ -20,7 +20,7 @@ port_for==0.3.1           # via sphinx-autobuild
 pygments==2.2.0           # via sphinx
 pytz==2017.2              # via babel
 pyyaml==3.12              # via sphinx-autobuild, watchdog
-requests==2.18.3          # via sphinx
+requests==2.20.0          # via sphinx
 six==1.10.0               # via livereload, sphinx
 snowballstemmer==1.2.1    # via sphinx
 sphinx-autobuild==0.7.1

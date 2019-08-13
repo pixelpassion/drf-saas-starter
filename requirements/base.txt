@@ -21,7 +21,7 @@ chardet==3.0.4            # via requests
 constantly==15.1.0        # via twisted
 coreapi==2.3.1            # via django-rest-swagger, openapi-codec
 coreschema==0.0.4         # via coreapi
-cryptography==2.0.3       # via pyopenssl
+cryptography==2.7         # via pyopenssl
 daphne==1.3.0             # via channels
 defusedxml==0.5.0         # via python3-openid
 django-activity-stream==0.6.4
@@ -29,7 +29,6 @@ django-allauth==0.30.0
 django-anymail==0.11.1    # via django-saas-email
 django-cors-headers==2.1.0
 django-environ==0.4.3
-django-model-utils==3.0.0  # via django-saas-email
 django-nyt==1.0b3
 django-redis==4.8.0
 django-rest-auth==0.9.1
@@ -44,7 +43,7 @@ hpack==3.0.0              # via h2
 html2text==2016.9.19      # via django-saas-email
 hyperframe==5.1.0         # via h2
 hyperlink==17.3.0         # via twisted
-idna==2.5                 # via cryptography, requests, twisted
+idna==2.5                 # via requests, twisted
 incremental==17.5.0       # via twisted
 itypes==1.1.0             # via coreapi
 jinja2==2.9.6             # via coreschema
@@ -59,7 +58,7 @@ pyasn1-modules==0.0.11    # via service-identity
 pyasn1==0.3.2             # via pyasn1-modules, service-identity
 pycparser==2.18           # via cffi
 pyjwt==1.5.2              # via djangorestframework-jwt
-pyopenssl==17.2.0         # via service-identity, twisted
+pyopenssl==17.5.0         # via service-identity, twisted
 python-http-client==2.2.1  # via sendgrid
 python3-openid==3.1.0     # via django-allauth
 pytz==2017.2              # via celery
